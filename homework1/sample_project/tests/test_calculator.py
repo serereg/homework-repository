@@ -9,3 +9,7 @@ def test_positive_case():
 def test_negative_case():
     """Testing that non-powers of 2 give False"""
     assert not check_power_of_2(12)    
+
+def test_zero_case():
+    """Testing that zero give False"""
+    assert not check_power_of_2(0)    

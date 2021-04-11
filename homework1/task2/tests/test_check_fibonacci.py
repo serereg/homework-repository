@@ -18,6 +18,8 @@ def test_normal():
 
 #TODO: write test for 65536 (or biggest integer)
 
+#TODO: write test for [1, 1, 2, ...]
+
 def test_last_number_of_sequence():
     """Testing all numbers are cheked """
     assert not check_fibonacci([0, 1, 1, 2, 3, 5, 7])

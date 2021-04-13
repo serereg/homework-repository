@@ -1,6 +1,4 @@
-import pytest
-
-from task02 import check_fibonacci
+from homework1.task02 import check_fibonacci
 
 
 def test_empty_sequence():

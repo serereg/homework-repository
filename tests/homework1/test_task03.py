@@ -1,8 +1,6 @@
 from typing import Sequence
 
-import pytest
-
-from task03 import find_maximum_and_minimum
+from homework1.task03 import find_maximum_and_minimum
 
 
 def _write_sequence_to_file(some_file: str, sequence: Sequence[int]):

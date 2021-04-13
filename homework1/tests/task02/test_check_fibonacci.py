@@ -1,6 +1,6 @@
 import pytest
 
-from check_fibonacci.check_fibonacci import check_fibonacci
+from task02 import check_fibonacci
 
 def test_empty_sequence():
     """Testing empty sequence"""

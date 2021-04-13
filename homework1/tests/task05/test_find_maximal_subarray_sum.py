@@ -1,5 +1,5 @@
 import pytest
-from find_maximal_subarray_sum.find_maximal_subarray_sum import \
+from task05 import \
     find_maximal_subarray_sum
 
 

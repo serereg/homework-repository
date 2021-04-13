@@ -1,5 +1,5 @@
 import pytest
-from check_sum_of_four.check_sum_of_four import check_sum_of_four
+from task04 import check_sum_of_four
 
 
 def test_sum_of_two():

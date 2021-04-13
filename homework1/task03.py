@@ -33,4 +33,3 @@ def find_maximum_and_minimum(file_name: str) -> Tuple[int, int]:
                     max_value = current_value
 
     return (min_value, max_value)
-

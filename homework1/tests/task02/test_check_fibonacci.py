@@ -2,23 +2,28 @@ import pytest
 
 from task02 import check_fibonacci
 
+
 def test_empty_sequence():
     """Testing empty sequence"""
     assert not check_fibonacci([])
-    
+
+
 def test_first_3_sequence():
     """ """
     assert check_fibonacci([0])
     assert check_fibonacci([0, 1])
-    assert check_fibonacci([0, 1, 1])    
+    assert check_fibonacci([0, 1, 1])
+
 
 def test_normal():
     """Testing that zero give False"""
-    assert check_fibonacci([0, 1, 1, 2, 3, 5, 8])    
+    assert check_fibonacci([0, 1, 1, 2, 3, 5, 8])
 
-#TODO: write test for 65536 (or biggest integer)
 
-#TODO: write test for [1, 1, 2, ...]
+# TODO: write test for 65536 (or biggest integer)
+
+# TODO: write test for [1, 1, 2, ...]
+
 
 def test_last_number_of_sequence():
     """Testing all numbers are cheked """

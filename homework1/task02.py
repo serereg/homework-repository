@@ -12,10 +12,11 @@ from typing import Sequence
 def _check_window(x: int, y: int, z: int) -> bool:
     return (x + y) == z
 
+
 def check_fibonacci(data: Sequence[int]) -> bool:
 
     result = False
-    if not data: 
+    if not data:
         result = False
     elif data in ([0], [0, 1], [0, 1, 1]):
         result = True
@@ -33,7 +34,7 @@ def check_fibonacci(data: Sequence[int]) -> bool:
             else:
                 result = True
                 break
-        #else:    
+        # else:
         #    result = True
 
     return result

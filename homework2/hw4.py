@@ -29,19 +29,23 @@ def cache(func: Callable) -> Callable:
 
     Returns:
         Callable: [description]
-    """    
+    """
     memory = {}
+
     def func_with_memory(*x):
         print(x)
-        if (x in memory):
+        if x in memory:
             return memory[x]
         else:
             result = func(*x)
             memory[x] = result
             return result
+
     return func_with_memory
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+
     def func(a, b):
         return (a ** b) ** 2
 

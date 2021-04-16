@@ -27,12 +27,11 @@ def check_fibonacci(potential_fib: Sequence[int]) -> bool:
 
     while potential_fib:
         if not _check_window(a, b, c):
-            result = False
+            return False
             break
         if len(potential_fib) > 3:
             potential_fib = potential_fib[1:]
             a, b, c = b, c, potential_fib[2]
         else:
-            result = True
-            break
+            return True
     return result

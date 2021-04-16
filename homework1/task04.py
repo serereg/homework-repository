@@ -23,9 +23,14 @@ def check_sum_of_four(a: List[int], b: List[int], c: List[int], d: List[int]) ->
     """
     result = 0
     # to exclude equal numbers
-    short_a, short_b, short_c, short_d = set(a), set(b), set(c), set(d)
+    # short_a, short_b, short_c, short_d =
+    # set(a), set(b), set(c), set(d)
 
-    for element in itertools.product(short_a, short_b, short_c, short_d):
-        if not sum(element):
+    for element in itertools.product(a, b, c, d):
+        if sum(element) == 0:
             result += 1
     return result
+
+
+if __name__ == "__main__":
+    check_sum_of_four([1, 2], [-1, 0], [0, 0], [0, 10])

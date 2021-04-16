@@ -1,5 +1,6 @@
 """
-Write down the function, which reads input line-by-line, and find maximum and minimum values.
+Write down the function, which reads input line-by-line,
+    and find maximum and minimum values.
 Function should return a tuple with the max and min values.
 
 For example for [1, 2, 3, 4, 5], function should return [1, 5]
@@ -18,15 +19,9 @@ from typing import Tuple
 
 def find_maximum_and_minimum(file_name: str) -> Tuple[int, int]:
     """Reads input line-by-line, and find maximum and minimum values.
-    Function should return a tuple with the max and min values.
-
-    Args:
-        file_name (str): [description]
-
-    Returns:
-        Tuple[int, int]: [description]
+    Function returns a tuple with the max and min values.
     """
-    min_value, max_value = None, None
+    min_value, max_value = 0, 0
     number_of_values = 0
     with open(file_name) as fi:
         for line in fi:

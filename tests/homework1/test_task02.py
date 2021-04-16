@@ -8,8 +8,8 @@ def test_empty_sequence():
 
 def test_first_3_sequence():
     """ """
-    assert check_fibonacci([0])
-    assert check_fibonacci([0, 1])
+    assert not check_fibonacci([0])
+    assert not check_fibonacci([0, 1])
     assert check_fibonacci([0, 1, 1])
 
 

@@ -15,25 +15,24 @@ def _check_window(x: int, y: int, z: int) -> bool:
     return (x + y) == z
 
 
-def check_fibonacci(data: Sequence[int]) -> bool:
+def check_fibonacci(potential_fib: Sequence[int]) -> bool:
     """Check if the given sequence of int is a Febonacci sequence"""
     result = False
-    if data in (None, [0], [0, 1]):
-        result = False
-    elif data == [0, 1, 1]:
-        result = True
-    elif len(data) > 3:
-        a, b, c = data[0], data[1], data[2]
+    if potential_fib is None or len(potential_fib) < 3:
+        return False
+    elif potential_fib == [0, 1, 1] and len(potential_fib) == 3:
+        return True
 
-        while data:
-            print(a, b, c)
-            if not _check_window(a, b, c):
-                result = False
-                break
-            if len(data) > 3:
-                data = data[1:]
-                a, b, c = b, c, data[2]
-            else:
-                result = True
-                break
+    a, b, c = potential_fib[:3]
+
+    while potential_fib:
+        if not _check_window(a, b, c):
+            result = False
+            break
+        if len(potential_fib) > 3:
+            potential_fib = potential_fib[1:]
+            a, b, c = b, c, potential_fib[2]
+        else:
+            result = True
+            break
     return result

@@ -21,17 +21,14 @@ def find_maximum_and_minimum(file_name: str) -> Tuple[int, int]:
     """Reads input line-by-line, and find maximum and minimum values.
     Function returns a tuple with the max and min values.
     """
-    min_value, max_value = 0, 0
-    number_of_values = 0
+    # First we inicialise min = MaxPossibleValue, max = MinPossibleValue
+    min_value, max_value = float("+inf"), float("-inf")
     with open(file_name) as fi:
         for line in fi:
             current_value = int(line)
-            number_of_values += 1
-            if number_of_values == 1:
-                max_value = min_value = current_value
-            elif current_value < min_value:
+            if current_value < min_value:
                 min_value = current_value
-            elif current_value > max_value:
+            if current_value > max_value:
                 max_value = current_value
 
-    return (min_value, max_value)
+    return (int(min_value), int(max_value))

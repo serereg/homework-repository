@@ -7,7 +7,7 @@ def test_empty_sequence():
 
 
 def test_first_3_sequence():
-    """ """
+    """Testing of 3 first numbers of Fibonacci sequence"""
     assert check_fibonacci([0]) is False
     assert check_fibonacci([0, 1]) is False
     assert check_fibonacci([0, 1, 1]) is True

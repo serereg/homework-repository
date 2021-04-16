@@ -10,6 +10,7 @@
 """
 import itertools
 from typing import List
+from typing import Dict
 
 
 def check_sum_of_four(a: List[int], b: List[int], c: List[int], d: List[int]) -> int:
@@ -20,17 +21,24 @@ def check_sum_of_four(a: List[int], b: List[int], c: List[int], d: List[int]) ->
 
     All A, B, C, D must have same length of N
         where 0 ≤ N ≤ 1000.
-    """
-    result = 0
-    # to exclude equal numbers
-    # short_a, short_b, short_c, short_d =
-    # set(a), set(b), set(c), set(d)
 
-    for element in itertools.product(a, b, c, d):
-        if sum(element) == 0:
-            result += 1
-    return result
+        https://medium.com/@hylei_73413/4-sum-cf5e47f36126
+    """
+    e: Dict[int, int] = {}
+    for element in itertools.product(a, b):
+        e[sum(element)] = e.get(sum(element), 0) + 1
+
+    f: Dict[int, int] = {}
+    for element in itertools.product(c, d):
+        f[sum(element)] = f.get(sum(element), 0) + 1
+
+    count = 0
+    for element in e.keys():
+        if f.get(-element):
+            count += e.get(element) * f.get(-element)
+    return count
 
 
 if __name__ == "__main__":
-    check_sum_of_four([1, 2], [-1, 0], [0, 0], [0, 10])
+    n = check_sum_of_four([1] * 2, [-1] * 2, [0] * 2, [0] * 2)
+    print(n)

@@ -11,11 +11,10 @@ def test_sum_of_empy():
     assert 0 == check_sum_of_four([], [], [], [])
 
 
-# TODO:
-# def test_max_size():
-#     """Testing sequences with max amount of elements"""
-#     a = [0] * 1000
-#     b = [-1] * 1000
-#     c = [1] * 1000
-#     d = [0] * 1000
-#     assert 1 == check_sum_of_four(a, b, c, d)
+def test_max_size():
+    """Testing sequences with max amount of elements"""
+    a = [0] * 1000
+    b = [-1] * 1000
+    c = [1] * 1000
+    d = [0] * 1000
+    assert 1000000000000 == check_sum_of_four(a, b, c, d)

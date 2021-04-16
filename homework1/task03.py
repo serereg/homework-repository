@@ -31,4 +31,4 @@ def find_maximum_and_minimum(file_name: str) -> Tuple[int, int]:
             if current_value > max_value:
                 max_value = current_value
 
-    return (int(min_value), int(max_value))
+    return int(min_value), int(max_value)

@@ -32,10 +32,10 @@ def check_sum_of_four(a: List[int], b: List[int], c: List[int], d: List[int]) ->
     for element in itertools.product(c, d):
         f[sum(element)] = f.get(sum(element), 0) + 1
 
-    count = 0
-    for element in e.keys():
-        if f.get(-element):
-            count += e.get(element) * f.get(-element)
+    count: int = 0
+    for e_key in e.keys():
+        if f.get(-e_key):
+            count += e.get(e_key, 0) * f.get(-e_key, 0)
     return count
 
 

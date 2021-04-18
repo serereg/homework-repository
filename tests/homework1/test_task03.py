@@ -11,7 +11,7 @@ def test_file_with_one_value():
     with open(some_file) as fi:
         for num in fi.readlines():
             sequence.append(int(num))
-    assert (min(sequence), max(sequence)) == find_maximum_and_minimum(some_file)
+    assert (1, 1) == find_maximum_and_minimum(some_file)
 
 
 def test_file_with_two_value():
@@ -21,7 +21,7 @@ def test_file_with_two_value():
     with open(some_file) as fi:
         for num in fi.readlines():
             sequence.append(int(num))
-    assert (min(sequence), max(sequence)) == find_maximum_and_minimum(some_file)
+    assert (1, 2) == find_maximum_and_minimum(some_file)
 
 
 def test_file_with_three_value():
@@ -31,4 +31,4 @@ def test_file_with_three_value():
     with open(some_file) as fi:
         for num in fi.readlines():
             sequence.append(int(num))
-    assert (min(sequence), max(sequence)) == find_maximum_and_minimum(some_file)
+    assert (1, 3) == find_maximum_and_minimum(some_file)

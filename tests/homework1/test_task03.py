@@ -14,9 +14,9 @@ def _read_sequence_from_file(some_file: str) -> Sequence[int]:
     return sequence
 
 
-# def test_file_with_one_value():
+def test_file_with_one_value():
     """Testing file with one value"""
-    some_file = os.path.dirname(__file__) + "/test_data/ask03_case1.txt"
+    some_file = os.path.dirname(__file__) + "/test_data/task03_case1.txt"
     sequence = _read_sequence_from_file(some_file)
     assert (min(sequence), max(sequence)) == find_maximum_and_minimum(some_file)
 

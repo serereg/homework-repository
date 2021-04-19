@@ -3,7 +3,7 @@ from homework2.hw4 import cache
 
 def test_smoke():
     """
-    
+    Testing usual behavior
     """
     def func(a, b):
         return (a ** b) ** 2

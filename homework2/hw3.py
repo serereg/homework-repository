@@ -14,8 +14,20 @@ assert combinations([1, 2], [3, 4]) == [
     [2, 4],
 ]
 """
+import itertools
 from typing import List, Any
 
 
 def combinations(*args: List[Any]) -> List[List]:
-    ...
+    """
+    Returns all combinations of given lists in a list
+    """
+    li = [list(item) for item in itertools.product(*args)]
+    return li
+
+
+if __name__ == "__main__":
+    all_combinations = combinations([1, 2], [4, 3])
+    for i in all_combinations:
+        print(i, type(i))
+    print(all_combinations)

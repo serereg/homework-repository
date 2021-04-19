@@ -2,6 +2,9 @@ from homework2.hw4 import cache
 
 
 def test_smoke():
+    """
+    
+    """
     def func(a, b):
         return (a ** b) ** 2
 

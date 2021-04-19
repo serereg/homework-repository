@@ -23,29 +23,18 @@ from typing import Callable
 
 def cache(func: Callable) -> Callable:
     """Return function with cashing results
-
-    Args:
-        func (Callable): [description]
-
-    Returns:
-        Callable: [description]
     """
     memory = {}
 
     def func_with_memory(*x):
-        print(x)
-        if x in memory:
-            return memory[x]
-        else:
-            result = func(*x)
-            memory[x] = result
-            return result
+        if x not in memory:
+            memory[x] = func(*x)
+        return memory[x]
 
     return func_with_memory
 
 
 if __name__ == "__main__":
-
     def func(a, b):
         return (a ** b) ** 2
 
@@ -56,3 +45,11 @@ if __name__ == "__main__":
     val_2 = cache_func(*some)
 
     assert val_1 is val_2
+
+    # val_1 = cache_func(*some)
+    # val_for_changing_cache = 123456
+    # di = cache.memory
+    # di[some] = val_for_changing_cache
+    # val_for_changing_cache = cache_func(*some)
+    
+    # assert val_1 is val_for_changing_cache

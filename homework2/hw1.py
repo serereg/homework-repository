@@ -15,7 +15,7 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
     """Find 10 longest words consisting from largest amount of unique symbols
     """
     words_with_info = list()
-    with open(file_path, encoding="utf-8") as fi:
+    with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             line.lower()
             line = (line.replace("# ", " ").replace(".", " ").replace(",", " ")
@@ -32,7 +32,7 @@ def get_rarest_char(file_path: str) -> str:
     """Find the rarest char
     """
     counts_of_chars = dict() 
-    with open(file_path, encoding='utf-8') as fi:
+    with open(file_path, encoding='unicode_escape') as fi:
         for line in fi:
             for char in line:
                 if char in counts_of_chars:
@@ -61,5 +61,7 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
 
 
 if __name__ == "__main__":
+    res = get_longest_diverse_words('data.txt')
+    print(res)
     res = get_rarest_char('data.txt')
     print(res)

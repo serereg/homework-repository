@@ -6,6 +6,7 @@ Given a file containing text. Complete using only default collections:
     4) Count every non ascii char
     5) Find most common non ascii char for document
 """
+import string
 from typing import List, Set
 
 
@@ -49,15 +50,38 @@ def get_rarest_char(file_path: str) -> str:
 def count_punctuation_chars(file_path: str) -> int:
     """Count every punctuation char
     """
-    ...
+    counter_of_punctuation = 0 
+    with open(file_path, encoding='unicode_escape') as fi:
+        for line in fi:
+            for char in line:
+                if char in string.punctuation:
+                    counter_of_punctuation += 1
+    return counter_of_punctuation
 
 
 def count_non_ascii_chars(file_path: str) -> int:
-    ...
+    """Count every non ascii char
+    """ 
+    counter_of_non_ascii = 0 
+    with open(file_path, encoding='unicode_escape') as fi:
+        for line in fi:
+            a = len(line)
+            b = len(line.encode("ascii", "ignore"))
+            count_non_ascii_chars += b - a
+    return counters_of_punctuation
 
 
 def get_most_common_non_ascii_char(file_path: str) -> str:
-    ...
+    """Find most common non ascii char for document
+    """
+    counters_of_symbols = {} 
+    with open(file_path, encoding='unicode_escape') as fi:
+        for line in fi:
+            for symbol in line:
+                counters_of_symbols[symbol] = counters_of_symbols.get(symbol, 1) + 1
+        non_ascii_chars = {key:value for (key:value) in counters_of_symbols if key not in string.ascii_letters}
+        most_common = max(non_ascii_chars, key=non_ascii_chars.get)
+    return most_common
 
 
 if __name__ == "__main__":

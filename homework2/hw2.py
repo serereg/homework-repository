@@ -24,5 +24,6 @@ def major_and_minor_elem(inp: List) -> Tuple[int, int]:
     """Getting a major and a minor elements from the given list
     """
     se = set(inp)
-    li = list(se).sort()
-    return li[0], li[-1]
+    li = list(se)
+    li.sort()
+    return li[-1], li[0] 

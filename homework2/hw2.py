@@ -26,7 +26,6 @@ from typing import List, Tuple
 
 def major_and_minor_elem(inp: List) -> Tuple[int, int]:
     """Getting a major and a minor elements from the given list"""
-    se = set(inp)
-    li = list(se)
-    li.sort()
+
+    li = sorted(list(set(inp)))
     return li[-1], li[0]

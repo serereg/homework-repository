@@ -21,16 +21,10 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
     words_with_info = list()
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
-            line.lower()
-            line = (
-                line.replace("# ", " ")
-                .replace(".", " ")
-                .replace(",", " ")
-                .replace("% ", " ")
-                .replace("; ", " ")
-                .replace("- ", " ")
-            )
-            for word in line.split():
+            new_line = line.lower()
+            for subs in ["# ", ".", ",", "% ", "; ", "- "]:
+                new_line = new_line.replace(subs, " ")
+            for word in new_line.split():
                 words_with_info.append((len(set(word)), word))
     words_with_info.sort(reverse=True)
 

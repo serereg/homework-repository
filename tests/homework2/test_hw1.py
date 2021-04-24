@@ -16,15 +16,15 @@ def test_get_longest_diverse_words():
     """Testing function get_longest_divetse_words"""
     assert [
         "unmißverständliche",
-        "Kollektivschuldiger",
-        "Bevölkerungsabschub",
-        "résistance-Bewegungen",
+        "werkstättenlandschaft",
+        "werkstättenlandschaft",
+        "résistance-bewegungen",
         "politisch-strategischen",
-        "Werkstättenlandschaft",
-        "Werkstättenlandschaft",
-        "Selbstverständlich",
-        "Schicksalsfiguren",
+        "kollektivschuldiger",
+        "bevölkerungsabschub",
+        "zwingherrschaft",
         "zoologisch-politischen",
+        "zahlenverhältnis-",
     ] == get_longest_diverse_words(test_data)
 
 

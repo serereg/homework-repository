@@ -1,9 +1,13 @@
 """
-Given an array of size n, find the most common and the least common elements.
-The most common element is the element that appears more than n // 2 times.
-The least common element is the element that appears fewer than other.
+Given an array of size n, find the most common and
+the least common elements.
+The most common element is the element that appears
+more than n // 2 times.
+The least common element is the element that appears
+fewer than other.
 
-You may assume that the array is non-empty and the most common element
+You may assume that the array is non-empty and
+the most common element
 always exist in the array.
 
 Example 1:
@@ -21,9 +25,8 @@ from typing import List, Tuple
 
 
 def major_and_minor_elem(inp: List) -> Tuple[int, int]:
-    """Getting a major and a minor elements from the given list
-    """
+    """Getting a major and a minor elements from the given list"""
     se = set(inp)
     li = list(se)
     li.sort()
-    return li[-1], li[0] 
+    return li[-1], li[0]

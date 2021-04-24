@@ -8,30 +8,35 @@ it behaves as range function:
 import string
 
 
-assert = custom_range(string.ascii_lowercase, 'g') == ['a', 'b', 'c', 'd', 'e', 'f']
-assert = custom_range(string.ascii_lowercase, 'g', 'p') == ['g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
-assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) == ['p', 'n', 'l', 'j', 'h']
+assert = custom_range(string.ascii_lowercase, 'g') ==
+['a', 'b', 'c', 'd', 'e', 'f']
+assert = custom_range(string.ascii_lowercase, 'g', 'p') ==
+['g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
+assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) ==
+['p', 'n', 'l', 'j', 'h']
 
 """
+
+
 def custom_range(iter, *args):
     """function that accept any iterable of unique values and then
     it behaves as range function
 
     Args:
-        iter (iterable, start_elemeng): [description]
-        iter (iterable, start_elemeng, stop_element): [description]
-        iter (iterable, start_elemeng, stop_element, step): [description]
+        iter (iterable, start_elemeng):
+        iter (iterable, start_elemeng, stop_element):
+        iter (iterable, start_elemeng, stop_element, step):
 
     Example:
-    assert = custom_range(string.ascii_lowercase, 'g') == 
+    assert = custom_range(string.ascii_lowercase, 'g') ==
                         ['a', 'b', 'c', 'd', 'e', 'f']
-    assert = custom_range(string.ascii_lowercase, 'g', 'p') == 
+    assert = custom_range(string.ascii_lowercase, 'g', 'p') ==
                         ['g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
-    assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) == 
+    assert = custom_range(string.ascii_lowercase, 'p', 'g', -2) ==
                         ['p', 'n', 'l', 'j', 'h']
     """
     if len(args) == 1:
-        start_element, stop_element, step = None, args[0], None 
+        start_element, stop_element, step = None, args[0], None
     if len(args) == 2:
         start_element, stop_element, step = args[0], args[1], None
     if len(args) == 3:

@@ -1573,7 +1573,7 @@ und Gestalt gewinne, wie das in den Revolutionsheeren nach
 1789 und in der preu\u00dfischen Armee nach 1806 der Fall ge-
 wesen  ist.  In  dieser  Hinsicht  sind  allerdings  auch  heute
 Machtentfaltungen  m\u00f6glich,  welche  aus  anderen  Prinzipien
-als                                aus  denen  der  Totalen  Mobilmachung  
+als                                aus  denen  der  Totalen  Mobilmachung
 Nahrung  ziehen.
 Diese  Prinzipien  sind  aber  nicht  den  Nationen  zugeordnet,
 sondern  sie  werden  an  jeder  Stelle,  wo  Freiheit  wach  wird,
@@ -3771,36 +3771,36 @@ auf.
 
 \u00dcBERSICHT
 
-1.  Die  Fragen,  die  an  uns  gerichtet  werden,  vereinfachen  und  
+1.  Die  Fragen,  die  an  uns  gerichtet  werden,  vereinfachen  und
 versch\u00e4rfen
 sich. 2. Sie dr\u00e4ngen einem Entweder-Oder zu, wie es die Wahlen andeuten.
 
-3.  Die  Freiheit,  Nein  zu  sagen,  wird  planm\u00e4\u00dfig  begrenzt.  4.  Sie  soll 
+3.  Die  Freiheit,  Nein  zu  sagen,  wird  planm\u00e4\u00dfig  begrenzt.  4.  Sie  soll
  die
-\u00dcberlegenheit   des   Fragestellers   veranschaulichen   5.   und   ist   zu   
+\u00dcberlegenheit   des   Fragestellers   veranschaulichen   5.   und   ist   zu
 einem
-Wagnis  geworden,  zu  dem  sich  vielleicht  Einer  unter  Hundert  
+Wagnis  geworden,  zu  dem  sich  vielleicht  Einer  unter  Hundert
 entschlie\u00dft.
 
-6.  Das  Wagnis  spielt  sich  an  taktisch  verfehlter  Stelle  ab.  7.  Das  
+6.  Das  Wagnis  spielt  sich  an  taktisch  verfehlter  Stelle  ab.  7.  Das
 soll  kein
 Einwand gegen seine ethische Bedeutung sein.
 
 8.  Der  Waldgang  stellt  eine  neue  Antwort  der  Freiheit  dar.  9.  Die
-Freien  sind  m\u00e4chtig  auch  in  winziger  Minderheit.  10.  Die  Zeit  ist  
+Freien  sind  m\u00e4chtig  auch  in  winziger  Minderheit.  10.  Die  Zeit  ist
 arm  an
 gro\u00dfen  M\u00e4nnern,  aber  sie  bringt  Gestalten  hervor.  11.  Durch  die  Bedro-
 hung formen sich kleine Eliten aus. 12. Neben die beiden Gestalten des Ar-
-beiters  und  des  Unbekannten  Soldaten  tritt  als  dritte  der  Waldg\u00e4nger.  
+beiters  und  des  Unbekannten  Soldaten  tritt  als  dritte  der  Waldg\u00e4nger.
 13.
 Die  Furcht  14.  kann  durch  den  Einzelnen  bezwungen  werden,  15.  wenn  er
-sich  in  seiner  Macht  erkennt.  16.  Der  Waldgang  als  das  freie  
+sich  in  seiner  Macht  erkennt.  16.  Der  Waldgang  als  das  freie
 Verhalten  in
 der  Katastrophe  17.  ist  unabh\u00e4ngig  von  den  politisch-technischen  Vorder-
 gr\u00fcnden  und  ihren  Gruppierungen.  18.  Er  widerspricht  nicht  der  Entwick-
-lung,  19.  sondern  tr\u00e4gt  Freiheit  in  sie  hinein  durch  die  Entscheidung 
+lung,  19.  sondern  tr\u00e4gt  Freiheit  in  sie  hinein  durch  die  Entscheidung
  des
-Einzelnen.  20.  In  ihm  begegnet  der  Mensch  sich  selbst  in  seiner  
+Einzelnen.  20.  In  ihm  begegnet  der  Mensch  sich  selbst  in  seiner
 unaufge-
 teilten  und  unzerst\u00f6rbaren  Substanz.  21.  Diese  Begegnung  bannt  die  To-
 desfurcht. 22. Hier k\u00f6nnen auch die Kirchen nur Assistenz geben, 23. denn
@@ -3810,10 +3810,10 @@ ihm zwar seine Lage bewu\u00dft machen, 25. ihn aber nicht hinausf\u00fchren.
 26.  Der  Waldg\u00e4nger  \u00fcberschreitet  den  Nullmeridian  aus  eigener  Kraft.
 
 27. Auf den Gebieten der Heilkunst, 28. des Rechts 29. und der Waffenf\u00fch-
-rung  f\u00e4llt  ihm  die  souver\u00e4ne  Entscheidung  zu.  30.  Er  handelt  auch  
+rung  f\u00e4llt  ihm  die  souver\u00e4ne  Entscheidung  zu.  30.  Er  handelt  auch
 sittlich
 nicht  nach  Doktrinen  31.  und  beh\u00e4lt  sich  die  Anerkennung  der  Gesetze
-vor.  Er  nimmt  nicht  am  Kultus  des  Verbrechens  teil.  32.  Er  
+vor.  Er  nimmt  nicht  am  Kultus  des  Verbrechens  teil.  32.  Er
 entscheidet
 \u00fcber Art und Behauptung seines Eigentums. 33. Er ist sich der unangreifba-
 ren Tiefe bewu\u00dft, 34. aus der auch das Wort immer wieder die Welt erf\u00fcllt.
@@ -3901,5 +3901,3 @@ ISBN 3-608-93071-X
 Schutzumschlag:
 Autograph Ernst J\u00fcnger
 (DLA. Marbach a. N.)
-
-

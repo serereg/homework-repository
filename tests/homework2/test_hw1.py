@@ -1,34 +1,43 @@
 import os
 
-from homework2.hw1 import get_longest_diverse_words, get_rarest_char, count_punctuation_chars, get_most_common_non_ascii_char
+from homework2.hw1 import (
+    get_longest_diverse_words,
+    get_rarest_char,
+    count_punctuation_chars,
+    get_most_common_non_ascii_char,
+)
 
 
-test_data = os.path.dirname(__file__) + '/test_data/data.txt'
-test_data_short = os.path.dirname(__file__) + '/test_data/data_short.txt'
+test_data = os.path.dirname(__file__) + "/test_data/data.txt"
+test_data_short = os.path.dirname(__file__) + "/test_data/data_short.txt"
 
 
 def test_get_longest_diverse_words():
-    """Testing function get_longest_divetse_words
-    """
-    assert ['unmißverständliche', 'Kollektivschuldiger', 'Bevölkerungsabschub',
-            'résistance-Bewegungen', 'politisch-strategischen', 'Werkstättenlandschaft',
-            'Werkstättenlandschaft', 'Selbstverständlich', 'Schicksalsfiguren',
-            'zoologisch-politischen'] == get_longest_diverse_words(test_data)
+    """Testing function get_longest_divetse_words"""
+    assert [
+        "unmißverständliche",
+        "Kollektivschuldiger",
+        "Bevölkerungsabschub",
+        "résistance-Bewegungen",
+        "politisch-strategischen",
+        "Werkstättenlandschaft",
+        "Werkstättenlandschaft",
+        "Selbstverständlich",
+        "Schicksalsfiguren",
+        "zoologisch-politischen",
+    ] == get_longest_diverse_words(test_data)
 
 
 def test_get_rarest_char():
-    """Testing getting rarest char from given text
-    """
-    assert '1' == get_rarest_char(test_data_short)
+    """Testing getting rarest char from given text"""
+    assert "1" == get_rarest_char(test_data_short)
 
 
 def test_count_punctuation_chars():
-    """Testing punctuation counter from given text
-    """
+    """Testing punctuation counter from given text"""
     assert 5 == count_punctuation_chars(test_data_short)
 
 
 def test_get_most_common_non_ascii_char():
-    """Testing getting the most common non ascit char from given text
-    """
-    assert '\u00bb' == get_most_common_non_ascii_char(test_data_short)
+    """Testing getting the most common non ascit char from given text"""
+    assert "\u00bb" == get_most_common_non_ascii_char(test_data_short)

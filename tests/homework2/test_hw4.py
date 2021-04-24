@@ -5,6 +5,7 @@ def test_smoke():
     """
     Testing usual behavior
     """
+
     def func(a, b):
         return (a ** b) ** 2
 

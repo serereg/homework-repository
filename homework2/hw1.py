@@ -1,26 +1,35 @@
 """
 Given a file containing text. Complete using only default collections:
-    1) Find 10 longest words consisting from largest amount of unique symbols
+    1) Find 10 longest words consisting from largest amount
+    of unique symbols
     2) Find rarest symbol for document
     3) Count every punctuation char
     4) Count every non ascii char
     5) Find most common non ascii char for document
 """
 import string
-from typing import List, Set
+from typing import Dict, List
 
 
 # TODO: make analise unicode, using ord etc
 
+
 def get_longest_diverse_words(file_path: str) -> List[str]:
-    """Find 10 longest words consisting from largest amount of unique symbols
+    """Find 10 longest words consisting from largest amount of
+    unique symbols
     """
     words_with_info = list()
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             line.lower()
-            line = (line.replace("# ", " ").replace(".", " ").replace(",", " ")
-                    .replace("% ", " ").replace("; ", " ").replace("- ", " "))
+            line = (
+                line.replace("# ", " ")
+                .replace(".", " ")
+                .replace(",", " ")
+                .replace("% ", " ")
+                .replace("; ", " ")
+                .replace("- ", " ")
+            )
             for word in line.split():
                 words_with_info.append((len(set(word)), word))
     words_with_info.sort(reverse=True)
@@ -30,10 +39,9 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
 
 
 def get_rarest_char(file_path: str) -> str:
-    """Find the rarest char
-    """
-    counts_of_chars = dict()
-    with open(file_path, encoding='unicode_escape') as fi:
+    """Find the rarest char"""
+    counts_of_chars: Dict[str, int] = dict()
+    with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for char in line:
                 if char in counts_of_chars:
@@ -48,10 +56,9 @@ def get_rarest_char(file_path: str) -> str:
 
 
 def count_punctuation_chars(file_path: str) -> int:
-    """Count every punctuation char
-    """
+    """Count every punctuation char"""
     counter_of_punctuation = 0
-    with open(file_path, encoding='unicode_escape') as fi:
+    with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for char in line:
                 if char in string.punctuation:
@@ -60,10 +67,9 @@ def count_punctuation_chars(file_path: str) -> int:
 
 
 def count_non_ascii_chars(file_path: str) -> int:
-    """Count every non ascii char
-    """
+    """Count every non ascii char"""
     counter_of_non_ascii = 0
-    with open(file_path, encoding='unicode_escape') as fi:
+    with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             a = len(line)
             b = len(line.encode("ascii", "ignore"))
@@ -72,26 +78,23 @@ def count_non_ascii_chars(file_path: str) -> int:
 
 
 def get_most_common_non_ascii_char(file_path: str) -> str:
-    """Find most common non ascii char for document
-    """
-    counters_of_symbols = {}
-    with open(file_path, encoding='unicode_escape') as fi:
+    """Find most common non ascii char for document"""
+    counters_of_symbols: Dict[str, int] = {}
+    with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for symbol in line:
-                counters_of_symbols[symbol] = counters_of_symbols.get(
-                    symbol, 1) + 1
-        non_ascii_chars = {}
-        # non_ascii_chars = {key: value for key, value in counters_of_symbols if key not in string.ascii_letters}
+                counters_of_symbols[symbol] = counters_of_symbols.get(symbol, 1) + 1
+        non_ascii_chars: Dict[str, int] = {}
+        # non_ascii_chars = {key: value for key, value in
+        # counters_of_symbols if key
+        # not in string.ascii_letters}
         for key in counters_of_symbols.keys():
             if key not in string.printable:
                 non_ascii_chars[key] = counters_of_symbols[key]
         print(non_ascii_chars)
-        most_common = max(non_ascii_chars, key=non_ascii_chars.get)
+        # most_common = max(non_ascii_chars, key=non_ascii_chars.get)
+        sorted_non_ascii_chars = sorted(
+            non_ascii_chars.items(), key=lambda kv: kv[1], reverse=True
+        )
+        most_common = sorted_non_ascii_chars[0][0]
     return most_common
-
-
-if __name__ == "__main__":
-    res = get_longest_diverse_words('data.txt')
-    print(res)
-    res = get_rarest_char('data.txt')
-    print(res)

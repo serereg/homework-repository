@@ -10,7 +10,6 @@ Given a file containing text. Complete using only default collections:
 import string
 from typing import Dict, List
 
-
 # TODO: make analise unicode, using ord etc
 
 
@@ -37,11 +36,14 @@ def get_rarest_char(file_path: str) -> str:
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for char in line:
-                counts_of_chars[char] = counts_of_chars.get(char, 1) + 1
+                counts_of_chars[char] = counts_of_chars.get(char, 0) + 1
 
     li = [(item, counts_of_chars[item]) for item in counts_of_chars.keys()]
     li.sort(key=lambda el: el[1])
     rarest_char = li[0][0]
+
+    # rarest_char = min(counts_of_chars, key=counts_of_chars.get)
+
     return rarest_char
 
 

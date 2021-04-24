@@ -24,8 +24,7 @@ def combinations(*args: List[Any]) -> List[List]:
     """
     Returns all combinations of given lists in a list
     """
-    li = [list(item) for item in itertools.product(*args)]
-    return li
+    return [list(item) for item in itertools.product(*args)]
 
 
 if __name__ == "__main__":

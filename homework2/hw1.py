@@ -64,9 +64,12 @@ def count_non_ascii_chars(file_path: str) -> int:
     counter_of_non_ascii = 0
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
-            a = len(line)
-            b = len(line.encode("ascii", "ignore"))
-            counter_of_non_ascii += a - b
+            # a = len(line)
+            # b = len(line.encode("ascii", "ignore"))
+            # counter_of_non_ascii += a - b
+            for char in line:
+                if ord(char) > 127:
+                    counter_of_non_ascii += 1
     return counter_of_non_ascii
 
 

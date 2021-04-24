@@ -18,18 +18,17 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
     """Find 10 longest words consisting from largest amount of
     unique symbols
     """
-    words_with_info = list()
+    words_with_info = {}
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             new_line = line.lower()
             for subs in ["# ", ".", ",", "% ", "; ", "- "]:
                 new_line = new_line.replace(subs, " ")
             for word in new_line.split():
-                words_with_info.append((len(set(word)), word))
-    words_with_info.sort(reverse=True)
+                words_with_info[len(set(word))] = word
+    sorted_words_by_info = sorted(list(words_with_info.items()), reverse=True)
 
-    result = [item[1] for item in words_with_info[:10]]
-    return result
+    return [item[1] for item in sorted_words_by_info[:10]]
 
 
 def get_rarest_char(file_path: str) -> str:

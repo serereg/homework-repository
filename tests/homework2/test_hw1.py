@@ -8,24 +8,24 @@ from homework2.hw1 import (
 )
 
 
-test_data = os.path.dirname(__file__) + "/test_data/data.txt"
+test_data_hw1 = os.path.dirname(__file__) + "/test_data/data_hw1.txt"
 test_data_short = os.path.dirname(__file__) + "/test_data/data_short.txt"
 
 
 def test_get_longest_diverse_words():
     """Testing function get_longest_divetse_words"""
     assert [
-        "unmißverständliche",
-        "werkstättenlandschaft",
-        "werkstättenlandschaft",
-        "résistance-bewegungen",
-        "politisch-strategischen",
-        "kollektivschuldiger",
-        "bevölkerungsabschub",
-        "zwingherrschaft",
-        "zoologisch-politischen",
-        "zahlenverhältnis-",
-    ] == get_longest_diverse_words(test_data)
+        "vorgebahnte",
+        "ausführen",
+        "bedenkli-",
+        "vielmehr",
+        "sondern",
+        "grenzen",
+        "wird",
+        "der",
+        "es",
+        "—",
+    ] == get_longest_diverse_words(test_data_hw1)
 
 
 def test_get_rarest_char():

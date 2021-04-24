@@ -25,10 +25,10 @@ def cache(func: Callable) -> Callable:
     """Return function with cashing results"""
     memory = {}
 
-    def func_with_memory(*x):
-        if x not in memory:
-            memory[x] = func(*x)
-        return memory[x]
+    def func_with_memory(*args):
+        if (args) not in memory:
+            memory[args] = func(*args)
+        return memory[args]
 
     return func_with_memory
 

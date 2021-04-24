@@ -37,10 +37,7 @@ def get_rarest_char(file_path: str) -> str:
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for char in line:
-                if char in counts_of_chars:
-                    counts_of_chars[char] += 1
-                else:
-                    counts_of_chars[char] = 1
+                counts_of_chars[char] = counts_of_chars.get(char, 1) + 1
 
     li = [(item, counts_of_chars[item]) for item in counts_of_chars.keys()]
     li.sort(key=lambda el: el[1])

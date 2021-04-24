@@ -51,10 +51,11 @@ def get_rarest_char(file_path: str) -> str:
 def count_punctuation_chars(file_path: str) -> int:
     """Count every punctuation char"""
     counter_of_punctuation = 0
+    punctuations = set(string.punctuation)
     with open(file_path, encoding="unicode_escape") as fi:
         for line in fi:
             for char in line:
-                if char in string.punctuation:
+                if char in punctuations:
                     counter_of_punctuation += 1
     return counter_of_punctuation
 

@@ -10,6 +10,7 @@ Given a file containing text. Complete using only default collections:
 import operator
 import string
 from typing import Dict, List
+import unicodedata
 
 # TODO: make analise unicode, using ord etc
 
@@ -66,12 +67,22 @@ def get_rarest_char(file_path: str) -> str:
 def count_punctuation_chars(file_path: str) -> int:
     """Count every punctuation char"""
     counter_of_punctuation = 0
-    punctuations = set(string.punctuation)
+    # punctuations = set(string.punctuation)
     with open(file_path, encoding="unicode_escape") as fi:
+        # 1 way
+        # for line in fi:
+        #     for char in line:
+        #         if char in punctuations:
+        #             counter_of_punctuation += 1
+
+        # 2 way
+        counters_of_symbols: Dict[str, int] = {}
         for line in fi:
-            for char in line:
-                if char in punctuations:
-                    counter_of_punctuation += 1
+            for symbol in line:
+                counters_of_symbols[symbol] = counters_of_symbols.get(symbol, 0) + 1
+        for symbol, number in counters_of_symbols.items():
+            if unicodedata.category(symbol) == "Po":
+                counter_of_punctuation += number
     return counter_of_punctuation
 
 

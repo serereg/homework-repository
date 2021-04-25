@@ -106,8 +106,13 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
         print(non_ascii_chars)
         # most_common = max(non_ascii_chars, key=non_ascii_chars.get)
         # mypy generates error if use max...
-        sorted_non_ascii_chars = sorted(
-            non_ascii_chars.items(), key=lambda kv: kv[1], reverse=True
-        )
-        most_common = sorted_non_ascii_chars[0][0]
-    return most_common
+        # sorted_non_ascii_chars = sorted(
+        #     non_ascii_chars.items(), key=lambda kv: kv[1],
+        # reverse=True
+        # )
+        # most_common = sorted_non_ascii_chars[0][0]
+        sorted_non_ascii_chars = [
+            k for k, v in sorted(non_ascii_chars.items(), key=operator.itemgetter(1))
+        ]
+        sorted_non_ascii_chars.reverse()
+    return sorted_non_ascii_chars[0]

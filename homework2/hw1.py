@@ -41,10 +41,16 @@ def get_rarest_char(file_path: str) -> str:
     li = [(item, counts_of_chars[item]) for item in counts_of_chars.keys()]
     li.sort(key=lambda el: el[1])
     rarest_char = li[0][0]
+    return rarest_char
 
     # rarest_char = min(counts_of_chars, key=counts_of_chars.get)
 
-    return rarest_char
+    # sorted_counts_of_chars = sorted(counts_of_chars,
+    # key=counts_of_chars.get)
+    # error: Argument "key" to "sorted" has incompatible type
+    # overloaded function; expected "Callable[[str], SupportsLessThan]"
+    # Found 1 error in 1 file (checked 3 source files)
+    # return sorted_counts_of_chars[0]
 
 
 def count_punctuation_chars(file_path: str) -> int:
@@ -89,6 +95,7 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
                 non_ascii_chars[key] = counters_of_symbols[key]
         print(non_ascii_chars)
         # most_common = max(non_ascii_chars, key=non_ascii_chars.get)
+        # mypy generates error if use max...
         sorted_non_ascii_chars = sorted(
             non_ascii_chars.items(), key=lambda kv: kv[1], reverse=True
         )

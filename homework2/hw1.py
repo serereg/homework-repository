@@ -7,6 +7,7 @@ Given a file containing text. Complete using only default collections:
     4) Count every non ascii char
     5) Find most common non ascii char for document
 """
+import operator
 import string
 from typing import Dict, List
 
@@ -52,9 +53,14 @@ def get_rarest_char(file_path: str) -> str:
     # Found 1 error in 1 file (checked 3 source files)
 
     # 3 way
-    sorted_counts_of_chars = sorted(counts_of_chars.items(), key=lambda kv: kv[1])
+    # sorted_counts_of_chars = sorted(counts_of_chars.items(),
+    # key=lambda kv: kv[1])
 
-    return sorted_counts_of_chars[0][0]
+    # 4 way
+    sorted_counts_of_chars = [
+        k for k, v in sorted(counts_of_chars.items(), key=operator.itemgetter(1))
+    ]
+    return sorted_counts_of_chars[0]
 
 
 def count_punctuation_chars(file_path: str) -> int:

@@ -38,19 +38,23 @@ def get_rarest_char(file_path: str) -> str:
             for char in line:
                 counts_of_chars[char] = counts_of_chars.get(char, 0) + 1
 
-    li = [(item, counts_of_chars[item]) for item in counts_of_chars.keys()]
-    li.sort(key=lambda el: el[1])
-    rarest_char = li[0][0]
-    return rarest_char
+    # 1 way
+    # li = [(item, counts_of_chars[item]) for item
+    # in counts_of_chars.keys()]
+    # li.sort(key=lambda el: el[1])
+    # rarest_char = li[0][0]
 
-    # rarest_char = min(counts_of_chars, key=counts_of_chars.get)
-
+    # 2 way
     # sorted_counts_of_chars = sorted(counts_of_chars,
-    # key=counts_of_chars.get)
+    # key=counts_of_chars.get)  # type: ignore
     # error: Argument "key" to "sorted" has incompatible type
     # overloaded function; expected "Callable[[str], SupportsLessThan]"
     # Found 1 error in 1 file (checked 3 source files)
-    # return sorted_counts_of_chars[0]
+
+    # 3 way
+    sorted_counts_of_chars = sorted(counts_of_chars.items(), key=lambda kv: kv[1])
+
+    return sorted_counts_of_chars[0][0]
 
 
 def count_punctuation_chars(file_path: str) -> int:

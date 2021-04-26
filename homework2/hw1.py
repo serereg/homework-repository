@@ -12,7 +12,30 @@ import string
 from typing import Dict, List
 import unicodedata
 
-# TODO: make analise unicode, using ord etc
+from collections import namedtuple
+from unicodedata import category
+
+
+Token = namedtuple("Token", ["type", "value"])
+
+
+def tokenize(file_input):
+    buffer = ""
+    symbol = file_input.read(1)
+    while symbol:
+        if category(symbol).startswith("L"):
+            buffer += symbol
+            symbol = file_input.read(1)
+            continue
+        if buffer:
+            yield Token("word", buffer)
+            buffer = ""
+        if category(symbol) == "Po":
+            yield Token("punctuation", symbol)
+        yield Token("symbol", symbol)
+
+        symbol = file_input.read(1)
+    yield Token("word", buffer)
 
 
 def get_longest_diverse_words(file_path: str) -> List[str]:
@@ -86,6 +109,16 @@ def count_punctuation_chars(file_path: str) -> int:
     return counter_of_punctuation
 
 
+def count_punctuation_chars_with_tokenize(file_path: str) -> int:
+    """Count every punctuation char"""
+    counter_of_punctuation = 0
+    with open(file_path, encoding="unicode_escape") as fi:
+        for token in tokenize(fi):
+            if token.type == "punctuation":
+                counter_of_punctuation += 1
+    return counter_of_punctuation
+
+
 def count_non_ascii_chars(file_path: str) -> int:
     """Count every non ascii char"""
     counter_of_non_ascii = 0
@@ -127,3 +160,9 @@ def get_most_common_non_ascii_char(file_path: str) -> str:
         ]
         sorted_non_ascii_chars.reverse()
     return sorted_non_ascii_chars[0]
+
+
+if __name__ == "__main__":
+    with open("data.txt") as fi:
+        for token in tokenize(fi):
+            print(token)

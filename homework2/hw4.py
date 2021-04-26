@@ -46,11 +46,3 @@ if __name__ == "__main__":
     val_2 = cache_func(*some, d=3, c=2)
 
     assert val_1 is val_2
-
-    # val_1 = cache_func(*some)
-    # val_for_changing_cache = 123456
-    # di = cache.memory
-    # di[some] = val_for_changing_cache
-    # val_for_changing_cache = cache_func(*some)
-
-    # assert val_1 is val_for_changing_cache

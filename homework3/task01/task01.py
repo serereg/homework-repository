@@ -27,30 +27,62 @@ Example::
     ? 2
     '2'
 """
-from typing import Callable, Dict, List, Tuple
+from collections import namedtuple
+from typing import Callable, Dict, Tuple
 
 
 def cache_queue(times: int = 2):
-    """Return function with cashing results"""
+    """Return function with cashing results.
+    Caches 'times' results of calls
+    """
 
     def cache(func: Callable) -> Callable:
-        memory: Dict[Tuple, List] = {}
+        memory: Dict[Tuple, Callable] = {}
+        FC = namedtuple("FC", ["fun_result", "calls_counter"])
 
         def func_with_memory(*args, **kwargs):
-            full_arguments = args, tuple(sorted(kwargs.items()))
-            if full_arguments in memory:
-                memory[full_arguments][1] -= 1
-                if memory[full_arguments][1] <= 0:
-                    del memory[full_arguments]
-                    print(f"cache with arguments {full_arguments} cleared")
-            if full_arguments not in memory:
-                memory[full_arguments] = [func(*args, **kwargs), times]
-                print(f"cache updated with {full_arguments}")
-            return memory[full_arguments][0]
+            arguments = args, tuple(sorted(kwargs.items()))
+            if arguments in memory:
+                fun_result, calls_counter = memory[arguments]
+                calls_counter -= 1
+                if calls_counter <= 0:
+                    del memory[arguments]
+                    print(f"cache with arguments {arguments} cleared")
+                else:
+                    memory[arguments] = FC(fun_result, calls_counter)
+            if arguments not in memory:
+                memory[arguments] = FC(func(*args, **kwargs), times)
+                print(f"cache updated with {arguments}")
+            return memory[arguments].fun_result
 
         return func_with_memory
 
     return cache
+
+
+# def cache_queue(times: int = 2):
+#     """Return function with cashing results"""
+#
+#     def cache(func: Callable) -> Callable:
+#         memory: Dict[Tuple, List] = {}
+#
+#         def func_with_memory(*args, **kwargs):
+#             full_arguments = args, tuple(sorted(kwargs.items()))
+#             if full_arguments in memory:
+#                 memory[full_arguments][1] -= 1
+#                 if memory[full_arguments][1] <= 0:
+#                     del memory[full_arguments]
+#                     print(f"cache with arguments {full_arguments}
+# cleared")
+#             if full_arguments not in memory:
+#                 memory[full_arguments] = [func(*args, **kwargs),
+# times]
+#                 print(f"cache updated with {full_arguments}")
+#             return memory[full_arguments][0]
+#
+#         return func_with_memory
+#
+#     return cache
 
 
 if __name__ == "__main__":

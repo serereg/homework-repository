@@ -9,12 +9,9 @@ Given a file containing text. Complete using only default collections:
 """
 import operator
 import string
-from typing import Dict, List
 import unicodedata
-
 from collections import namedtuple
-from unicodedata import category
-
+from typing import Dict, List
 
 Token = namedtuple("Token", ["type", "value"])
 
@@ -23,14 +20,14 @@ def tokenize(file_input):
     buffer = ""
     symbol = file_input.read(1)
     while symbol:
-        if category(symbol).startswith("L"):
+        if unicodedata.category(symbol).startswith("L"):
             buffer += symbol
             symbol = file_input.read(1)
             continue
         if buffer:
             yield Token("word", buffer)
             buffer = ""
-        if category(symbol) == "Po":
+        if unicodedata.category(symbol) == "Po":
             yield Token("punctuation", symbol)
         yield Token("symbol", symbol)
 

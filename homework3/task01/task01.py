@@ -60,31 +60,6 @@ def cache_queue(times: int = 2):
     return cache
 
 
-# def cache_queue(times: int = 2):
-#     """Return function with cashing results"""
-#
-#     def cache(func: Callable) -> Callable:
-#         memory: Dict[Tuple, List] = {}
-#
-#         def func_with_memory(*args, **kwargs):
-#             full_arguments = args, tuple(sorted(kwargs.items()))
-#             if full_arguments in memory:
-#                 memory[full_arguments][1] -= 1
-#                 if memory[full_arguments][1] <= 0:
-#                     del memory[full_arguments]
-#                     print(f"cache with arguments {full_arguments}
-# cleared")
-#             if full_arguments not in memory:
-#                 memory[full_arguments] = [func(*args, **kwargs),
-# times]
-#                 print(f"cache updated with {full_arguments}")
-#             return memory[full_arguments][0]
-#
-#         return func_with_memory
-#
-#     return cache
-
-
 if __name__ == "__main__":
 
     @cache_queue(times=2)

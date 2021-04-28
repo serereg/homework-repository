@@ -1,5 +1,7 @@
 # I decided to write a code that generates data filtering
-# object from a list of keyword parameters:
+# object from a list of keyword parameters
+# There are multiple bugs in this code. Find them all and write
+# tests for faulty cases.
 
 
 class Filter:
@@ -39,17 +41,16 @@ def make_filter(**keywords):
     return Filter(filter_funcs)
 
 
-sample_data = [
-    {
-        "name": "Bill",
-        "last_name": "Gilbert",
-        "occupation": "was here",
-        "type": "person",
-    },
-    {"is_dead": True, "kind": "parrot", "type": "bird", "name": "polly"},
-]
+if __name__ == "__main__":
+    sample_data = [
+        {
+            "name": "Bill",
+            "last_name": "Gilbert",
+            "occupation": "was here",
+            "type": "person",
+        },
+        {"is_dead": True, "kind": "parrot", "type": "bird", "name": "polly"},
+    ]
 
-result = make_filter(name="polly", type="bird").apply(sample_data)
-print(result)
-# There are multiple bugs in this code. Find them all and write
-# tests for faulty cases.
+    result = make_filter(name="polly", type="bird").apply(sample_data)
+    print(result)

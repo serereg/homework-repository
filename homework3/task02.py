@@ -22,6 +22,9 @@ def slow_calculate(value):
     return sum(struct.unpack("<" + "B" * len(data), data))
 
 
-if __name__ == "__main__":
-    with multiprocessing.Pool(500) as p:
-        print(sum(p.map(slow_calculate, [i for i in range(500)])))
+def sum_calcs(num_calls: int = 1, num_process: int = 1) -> int:
+    """Calculating sum of num_calls calls slow_calculation
+    function on num_process process
+    """
+    with multiprocessing.Pool(num_process) as p:
+        return sum(p.map(slow_calculate, [i for i in range(num_calls)]))

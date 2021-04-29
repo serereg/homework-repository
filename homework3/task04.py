@@ -24,12 +24,5 @@ def is_armstrong(number: int) -> bool:
     if number < 0:
         return False
     power = len(str(number))
-    testing_value = sum(
-        map(pow, [int(i) for i in str(number)], [power for i in range(power)])
-    )
+    testing_value = sum(map(pow, (int(i) for i in str(number)), [power] * power))
     return testing_value == number
-
-
-assert is_armstrong(153) is True, "Is Armstrong number"
-assert is_armstrong(10) is False, "Is not Armstrong number"
-assert is_armstrong(0) is True, "Is Armstrong number"

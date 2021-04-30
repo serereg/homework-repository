@@ -14,4 +14,4 @@ def testing_smoke():
     assert 10009 == func(*some, c=4, d=5)
     assert 10009 == func(*some, c=4, d=5)
     assert 10009 == func(*some, c=4, d=5)
-    # TODO: some enhancements should be done accordint to lecture04
+    # TODO: some enhancements should be done according to lecture04

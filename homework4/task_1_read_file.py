@@ -43,5 +43,5 @@ def read_magic_number(path: str) -> bool:
         with open(path) as fi:
             return 1.0 <= float(fi.readline()) < 3.0
             # TODO: use rounding
-    except (FileNotFoundError, IOError, ValueError):
+    except Exception:
         raise ValueError("Error while reading a number")

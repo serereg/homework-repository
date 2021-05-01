@@ -1,0 +1,13 @@
+ ## Instruction
+ - Install Python 3.9 (https://www.python.org/downloads/)
+ - Install pytest `pip install pytest`
+ - Clone the repository <path your repository>
+ - Checkout branch <your branch>
+ - Open terminal
+ - Change folder to clonned
+
+
+ # Testing
+ -
+ # Using module
+ -

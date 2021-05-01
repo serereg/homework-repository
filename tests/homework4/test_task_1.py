@@ -22,7 +22,7 @@ def test_read_number_from_interval():
 
 def test_read_from_nonexisting_file():
     path = f"{directory}/nonexisting_file.txt"
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Some exception"):
         read_magic_number(path)
 
 

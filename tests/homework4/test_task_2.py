@@ -2,15 +2,20 @@ from unittest.mock import Mock
 import requests
 
 
-# from homework4.task_2 import count_dots_on_i
-def count_dots_on_i(url: str) -> int:
-    text = requests.get(url).text
-    return text.count("i")
+from homework4.task_2_mock_input import count_dots_on_i
 
 
-def test_counts_dots_on_i(monkeypatch):
-    request_mock = Mock()
-    request_mock.get.return_value.text = "iii"
-    monkeypatch.setitem(globals(), "requests", request_mock)
+def test_i_in_string(monkeypatch):
+    get_mock = Mock()
+    get_mock.return_value.text = "iii"
+    monkeypatch.setattr(requests, "get", get_mock)
 
     assert count_dots_on_i("xxx.yy") == 3
+
+
+def test_i_with_empty_string(monkeypatch):
+    get_mock = Mock()
+    get_mock.return_value.text = ""
+    monkeypatch.setattr(requests, "get", get_mock)
+
+    assert count_dots_on_i("xxx.yy") == 0

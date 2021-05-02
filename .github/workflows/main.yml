@@ -15,6 +15,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Run script
         run: |
-          pip install pytest
-          ls -la
+          # pip install pytest
+          pip install -r requirements.txt
           pytest tests

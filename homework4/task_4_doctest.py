@@ -25,10 +25,6 @@ You will learn:
  - how to run doctests
  - how to write instructions
 
-
->>> fizzbuzz(5)
-["1", "2", "fizz", "4", "buzz"]
-
 * https://en.wikipedia.org/wiki/Fizz_buzz
 ** Энциклопедия профессора Фортрана page 14, 15, "Робот Фортран,
 чисть картошку!"
@@ -42,21 +38,27 @@ def fizzbuzz(n: int) -> List[str]:
 
     >>> fizzbuzz(1)
     ['1']
+
     >>> fizzbuzz(3)
     ['1', '2', 'fizz']
+
     >>> fizzbuzz(5)
     ['1', '2', 'fizz', '4', 'buzz']
+
     >>> fizzbuzz(15)
-    ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz',
-    'buzz', '11', 'fizz', '13', '14', 'fizz buzz']
+    ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz',\
+ 'buzz', '11', 'fizz', '13', '14', 'fizz buzz']
+
     >>> fizzbuzz(16)
-    ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz',
-    'buzz', '11', 'fizz', '13', '14', 'fizz buzz', '16']
+    ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz',\
+ 'buzz', '11', 'fizz', '13', '14', 'fizz buzz', '16']
 
     >>> fizzbuzz(0)
     []
+
     >>> fizzbuzz(-1)
     []
+
     >>> fizzbuzz(-10)
     []
     """

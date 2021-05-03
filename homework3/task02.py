@@ -27,7 +27,7 @@ def sum_calcs(start: int = 0, stop: int = 501, num_processes: int = 10) -> int:
     function on num_process process
     """
     with multiprocessing.Pool(num_processes) as p:
-        return sum(p.map(slow_calculate, range(start, stop + 2)))
+        return sum(p.map(slow_calculate, range(start, stop)))
 
 
 # TODO: how to process such operations?

@@ -27,8 +27,8 @@ Example::
     ? 2
     '2'
 """
-from collections import namedtuple
-from typing import Callable, Dict, Tuple
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, Tuple
 
 
 def cache_queue(times: int = 2):
@@ -37,23 +37,27 @@ def cache_queue(times: int = 2):
     """
 
     def cache(func: Callable) -> Callable:
-        memory: Dict[Tuple, Callable] = {}
-        FC = namedtuple("FC", ["fun_result", "calls_counter"])
+        memory: Dict[Tuple, Any] = {}
+
+        @dataclass
+        class Record:
+            result: Any
+            times: int
 
         def func_with_memory(*args, **kwargs):
-            arguments = args, tuple(sorted(kwargs.items()))
+            arguments = args, frozenset(kwargs.items())
+            result: Any
             if arguments in memory:
-                fun_result, calls_counter = memory[arguments]
-                calls_counter -= 1
-                if calls_counter <= 0:
+                result = memory[arguments].result
+                memory[arguments].times -= 1
+                if memory[arguments].times <= 0:
                     del memory[arguments]
                     print(f"cache with arguments {arguments} cleared")
-                else:
-                    memory[arguments] = FC(fun_result, calls_counter)
-            if arguments not in memory:
-                memory[arguments] = FC(func(*args, **kwargs), times)
-                print(f"cache updated with {arguments}")
-            return memory[arguments].fun_result
+            else:
+                result = func(*args, **kwargs)
+                memory[arguments] = Record(result, times)
+                print(f"cache with arguments {arguments} updated")
+            return result
 
         return func_with_memory
 
@@ -70,6 +74,13 @@ if __name__ == "__main__":
 
     val_1 = func(*some, c=2, d=3)
     print(f"{val_1=}")
+    val_1 = func(*some, c=4, d=5)
+    print(f"{val_1=}")
+    val_1 = func(*some, c=4, d=5)
+    print(f"{val_1=}")
+    val_1 = func(*some, c=4, d=5)
+    print(f"{val_1=}")
+
     val_1 = func(*some, c=4, d=5)
     print(f"{val_1=}")
     val_1 = func(*some, c=4, d=5)

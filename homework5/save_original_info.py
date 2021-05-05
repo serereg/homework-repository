@@ -24,6 +24,11 @@ import functools
 
 
 def add_original(obj):
+    """
+    Decorator saves info of the called function and pointer to
+    the original function
+    """
+
     def wrapper(func):
         def inner(*args, **kwargs):
             inner.__doc__ = obj.__doc__

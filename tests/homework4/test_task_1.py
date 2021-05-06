@@ -47,5 +47,5 @@ def test_read_an_empty_file(file_path):
 
 def test_read_from_nonexisting_file():
     path = f"{os.path.dirname(__file__)}/nonexisting_file.txt"
-    with pytest.raises(ValueError, match=r"in opening"):
+    with pytest.raises(ValueError, match=r"not found"):
         read_magic_number(path)

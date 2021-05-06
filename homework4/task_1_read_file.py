@@ -42,9 +42,12 @@ def read_magic_number(path: str) -> bool:
     try:
         with open(path) as fi:
             line = fi.readline()
-    except Exception:
-        raise ValueError(f"Exception in opening file {Exception}")
-    try:
         return 1.0 <= float(line) < 3.0
-    except Exception:
+    except FileNotFoundError:
+        raise ValueError("File not found")
+    except OSError:
+        raise ValueError(f"Error in opening {path}")
+    except ValueError:
         raise ValueError(f"Exception in converting {line}")
+    # finally:
+    #     return False

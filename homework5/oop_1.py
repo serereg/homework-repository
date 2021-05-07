@@ -68,7 +68,8 @@ class Teacher:
     def __init__(self, last_name: str, first_name: str):
         self.last_name, self.first_name = last_name, first_name
 
-    def create_homework(self, text: str, num_days):
+    @classmethod
+    def create_homework(cls, text: str, num_days):
         return Homework(text, num_days)
 
 

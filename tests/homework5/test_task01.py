@@ -1,6 +1,22 @@
 import datetime
+import pytest
 
 from homework5.oop_1 import Student, Teacher
+
+FAKE_TIME = datetime.datetime(2020, 12, 25, 17, 5, 55)
+
+
+@pytest.fixture
+def patch_datetime_now(monkeypatch):
+    class mydatetime:
+        @classmethod
+        def now(cls):
+            return FAKE_TIME
+
+    monkeypatch.setattr(datetime, "datetime", mydatetime)
+
+
+# TODO: to write different tests for different classes
 
 
 def test_creating_objects():
@@ -14,6 +30,14 @@ def test_working_with_homework():
     teacher = Teacher("Daniil", "Shadrin")
     expired_homework = teacher.create_homework("Learn functions", 0)
     # expired_homework.created  # Example: 2019-05-26 16:44:30.688762
+    assert expired_homework.deadline == datetime.timedelta(0)
+    assert expired_homework.text == "Learn functions"
+
+
+def test_working_with_time_in_homework(patch_datetime_now):
+    teacher = Teacher("Daniil", "Shadrin")
+    expired_homework = teacher.create_homework("Learn functions", 0)
+    assert expired_homework.created == FAKE_TIME
     assert expired_homework.deadline == datetime.timedelta(0)
     assert expired_homework.text == "Learn functions"
 

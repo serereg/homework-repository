@@ -74,4 +74,4 @@ if __name__ == "__main__":
     user.reset_instances_counter()  # type: ignore
 
     print(user.first)
-    admin = Admin()
+    # admin = Admin()

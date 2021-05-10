@@ -13,6 +13,7 @@ import multiprocessing
 import random
 import struct
 import time
+from typing import Dict
 
 
 def slow_calculate(value):
@@ -30,44 +31,29 @@ def sum_calcs(start: int = 0, stop: int = 501, num_processes: int = 10) -> int:
         return sum(p.map(slow_calculate, range(start, stop)))
 
 
-# TODO: how to process such operations?
-def timer(func):
-    """Measurement of function execution time"""
+def timeit(log_time: Dict[str, int]):
+    """
+    Logs execution time of the method in log_time dictionary
+    """
 
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        func(*args, **kwargs)
-        end = time.time()
-        return end - start
+    def wrapper(method):
+        def inner(*args, **kwargs):
+            ts = time.time()
+            result = method(*args, **kwargs)
+            te = time.time()
+            log_time[f"{method.__name__}, {args=}, {kwargs=}"] = int((te - ts) * 1000)
+            return result
+
+        return inner
 
     return wrapper
 
 
-def test_of_performance():
-    """
-    Prints correlation between number processes and time execution
-    For intel core i7, u3630qm, 4x2400 MHz:
-    [(1, 14.047987461090088), (6, 5.017956972122192),
-    (11, 3.0253055095672607), (16, 3.0294504165649414),
-    (21, 3.0380492210388184), (26, 3.04001522064209),
-    (31, 3.040684938430786), (36, 3.0468456745147705),
-    (41, 3.0469465255737305), (46, 3.059687852859497),
-    (51, 3.062062978744507), (56, 3.070227861404419),
-    (61, 3.0641942024230957), (66, 3.080547571182251),
-    (71, 3.087139844894409), (76, 3.099928617477417),
-    (81, 3.101140022277832), (86, 3.1148550510406494),
-    (91, 3.112739324569702), (96, 3.1228690147399902)]
-    """
-    ti = timer(sum_calcs)
-    times = map(
-        lambda num_processes: (
-            num_processes,
-            ti(start=1, stop=10, num_processes=num_processes),
-        ),
-        range(1, 100, 5),
-    )
-    return times
-
-
 if __name__ == "__main__":
-    print(list(test_of_performance()))
+    logtime_data: Dict[str, int] = {}
+    ti = timeit(log_time=logtime_data)(sum_calcs)
+    for num_processes in range(1, 100, 5):
+        ti(start=1, stop=10, num_processes=num_processes)
+
+    for i in logtime_data.items():
+        print(i)

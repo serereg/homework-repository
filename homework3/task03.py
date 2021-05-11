@@ -31,11 +31,9 @@ def make_filter(**keywords):
     """
     filter_funcs = []
     for key, value in keywords.items():
-        print(f"{key=}, {value=}")
 
         def factory(k, v):
             def keyword_filter_func(prop):
-                print(f"{k=}, {prop=}, {prop[k]=} {v=}")
                 return prop[k] == v
 
             return keyword_filter_func

@@ -17,6 +17,20 @@ def testing_with_dictionaries_with_filter_by_properties():
     )
 
 
+def testing_with_dictionaries_with_filter_with_non_existing_properties():
+    sample_data = [
+        {
+            "name": "Bill",
+            "last_name": "Gilbert",
+            "occupation": "was here",
+            "type": "person",
+        },
+        {"is_dead": True, "kind": "parrot", "type": "bird", "name": "polly"},
+    ]
+
+    assert (make_filter(name="Bill", type="bird").apply(sample_data)) == []
+
+
 def test_with_list_of_integers_with_positive_evens_filter():
     positive_even = Filter(
         [lambda a: a % 2 == 0, lambda a: a > 0, lambda a: isinstance(a, int)]

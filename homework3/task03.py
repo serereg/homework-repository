@@ -33,11 +33,15 @@ def make_filter(**keywords):
     for key, value in keywords.items():
         print(f"{key=}, {value=}")
 
-        def keyword_filter_func(prop):
-            print(f"{key=}, {prop=}, {prop[key]=}")
-            return prop[key] == value
+        def factory(k, v):
+            def keyword_filter_func(prop):
+                print(f"{k=}, {prop=}, {prop[k]=} {v=}")
+                return prop[k] == v
 
-        filter_funcs.append(keyword_filter_func)
+            return keyword_filter_func
+
+        filter_funcs.append(factory(key, value))
+    print(filter_funcs)
     return Filter(filter_funcs)
 
 
@@ -49,8 +53,8 @@ if __name__ == "__main__":
             "occupation": "was here",
             "type": "person",
         },
-        {"is_dead": True, "kind": "parrot", "type": "bird", "name": "polly"},
+        {"kind": "parrot", "type": "bird", "name": "polly"},
     ]
 
-    result = make_filter(name="polly", type="bird").apply(sample_data)
+    result = make_filter(type="person", name="Bill").apply(sample_data)
     print(result)

@@ -1,16 +1,15 @@
-import os
 import pytest
+from pathlib import Path
 
 from homework4.task_1_read_file import read_magic_number
 
 
 @pytest.fixture()
-def file_path(tmp_path):
+def file_path(tmp_path: Path):
     def file_factory(body: str, file_name: str):
         """Creates a file with the given body text"""
-        path = os.path.join(tmp_path, file_name)
-        with open(path, "w") as f:
-            f.write(body)
+        path = tmp_path.joinpath(file_name)
+        path.write_text(body)
         return path
 
     return file_factory
@@ -46,6 +45,6 @@ def test_read_an_empty_file(file_path):
 
 
 def test_read_from_nonexisting_file():
-    path = f"{os.path.dirname(__file__)}/nonexisting_file.txt"
+    path = f"{Path(__name__).parent}/nonexisting_file.txt"
     with pytest.raises(ValueError, match=r"not found"):
         read_magic_number(path)

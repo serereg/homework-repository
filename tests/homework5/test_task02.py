@@ -1,4 +1,5 @@
 import functools
+
 from homework5.save_original_info import print_result
 
 
@@ -8,7 +9,7 @@ def custom_sum(*args):
     return functools.reduce(lambda x, y: x + y, args)
 
 
-def test_with_error_at_the_begining(capsys):
+def test_printing_results_of_called_function(capsys):
     custom_sum([1, 2, 3], [4, 5])
     captured = capsys.readouterr()
     assert captured.out == "[1, 2, 3, 4, 5]\n"

@@ -1,19 +1,24 @@
 import datetime
 import pytest
 
-from homework5.oop_1 import Student, Teacher
+from homework5.oop_1 import Homework, Student, Teacher
+
 
 FAKE_TIME = datetime.datetime(2020, 12, 25, 17, 5, 55)
 
 
 @pytest.fixture
 def patch_datetime_now(monkeypatch):
-    class mydatetime:
+    """
+    Patches method datetime.datetime.now()
+    """
+
+    class MyDatetime:
         @classmethod
         def now(cls):
             return FAKE_TIME
 
-    monkeypatch.setattr(datetime, "datetime", mydatetime)
+    monkeypatch.setattr(datetime, "datetime", MyDatetime)
 
 
 # TODO: to write different tests for different classes
@@ -26,12 +31,12 @@ def test_creating_objects():
     assert student.first_name == "Petrov"
 
 
-def test_working_with_homework():
+def test_creating_homework_by_teacher():
     teacher = Teacher("Daniil", "Shadrin")
     expired_homework = teacher.create_homework("Learn functions", 0)
-    # expired_homework.created  # Example: 2019-05-26 16:44:30.688762
     assert expired_homework.deadline == datetime.timedelta(0)
     assert expired_homework.text == "Learn functions"
+    assert isinstance(expired_homework, Homework)
 
 
 def test_working_with_time_in_homework(patch_datetime_now):
@@ -39,10 +44,9 @@ def test_working_with_time_in_homework(patch_datetime_now):
     expired_homework = teacher.create_homework("Learn functions", 0)
     assert expired_homework.created == FAKE_TIME
     assert expired_homework.deadline == datetime.timedelta(0)
-    assert expired_homework.text == "Learn functions"
 
 
-def test_create_function_from_method_and_use_it():
+def test_creating_function_from_method_and_using_it():
     create_homework_too = Teacher.create_homework
     oop_homework = create_homework_too("create 2 simple classes", 5)
     assert oop_homework.deadline == datetime.timedelta(days=5)

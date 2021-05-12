@@ -45,31 +45,71 @@ import datetime
 
 
 class Homework:
-    def __init__(self, text: str, num_days: float):
-        self.text, self.num_days = text, num_days
+    """
+    A class to represent a homework
+    """
+
+    def __init__(self, text: str, num_days: float) -> None:
+        """
+        Initialise homework, and deadline period
+        text - text of the homework
+        deadline: datetime.timedelta - with number of days for
+        the doing the homework
+        created: datetime.datetime - datetime of creating homework
+        """
+        self.text = text
         self.created = datetime.datetime.now()
         self.deadline = datetime.timedelta(days=num_days)
 
     def is_active(self) -> bool:
+        """
+        A method checks if the homework is done
+        """
         return datetime.datetime.now() - self.created < self.deadline
 
 
 class Student:
-    def __init__(self, last_name: str, first_name: str):
-        self.last_name, self.first_name = last_name, first_name
+    """
+    A class to represent a student
+    """
+
+    def __init__(self, last_name: str, first_name: str) -> None:
+        """
+        Initialise a student with last_name and first_name
+        """
+        self.last_name = last_name
+        self.first_name = first_name
 
     def do_homework(self, homework: Homework):
+        """
+        Receives a homework and returns it, if it is active.
+        Else if task is outdated, then prints 'You are late'
+        and returns None
+        """
         if homework.is_active():
             return homework
         print("You are late")
 
 
 class Teacher:
-    def __init__(self, last_name: str, first_name: str):
-        self.last_name, self.first_name = last_name, first_name
+    """
+    A class to represent a teacher
+    """
+
+    def __init__(self, last_name: str, first_name: str) -> None:
+        """
+        Initialise a teacher with last_name and first_name
+        """
+        self.last_name = last_name
+        self.first_name = first_name
 
     @classmethod
-    def create_homework(cls, text: str, num_days):
+    def create_homework(cls, text: str, num_days: float) -> Homework:
+        """
+        A method creates homework
+        text - task of the homework
+        num_days - number of days before deadline
+        """
         return Homework(text, num_days)
 
 

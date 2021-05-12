@@ -23,19 +23,19 @@ print(custom_sum.__original_func)  # <function custom_sum at
 import functools
 
 
-def add_original(obj):
+def add_original(original_func):
     """
-    Decorator saves info of the called function and pointer to
+    Decorator saves info of the called function and a pointer to
     the original function
     """
 
     def wrapper(func):
         def inner(*args, **kwargs):
-            inner.__doc__ = obj.__doc__
-            inner.__name__ = obj.__name__
-            inner.__original_func = obj
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
+        inner.__doc__ = original_func.__doc__
+        inner.__name__ = original_func.__name__
+        inner.__original_func = original_func
         return inner
 
     return wrapper

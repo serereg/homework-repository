@@ -54,13 +54,17 @@ PEP8 соблюдать строго.
 К названием остальных переменных, классов и тд. подходить
 ответственно - давать логичные подходящие имена.
 """
+from __future__ import annotations
+
 import datetime
 from collections import defaultdict
+from typing import Optional
 
 
 class Homework:
-    def __init__(self, text: str, num_days: float):
-        self.text, self.num_days = text, num_days
+    def __init__(self, text: str, num_days: float) -> None:
+        self.text = text
+        self.num_days = num_days
         self.created = datetime.datetime.now()
         self.deadline = datetime.timedelta(days=num_days)
 
@@ -73,19 +77,22 @@ class DeadLineError(Exception):
 
 
 class Man:
-    def __init__(self, last_name: str, first_name: str):
-        self.last_name, self.first_name = last_name, first_name
+    def __init__(self, last_name: str, first_name: str) -> None:
+        self.last_name = last_name
+        self.first_name = first_name
 
 
 class Student(Man):
-    def do_homework(self, homework: Homework, solution: str):
+    def do_homework(
+        self, homework: Homework, solution: str
+    ) -> Optional[HomeworkResult]:
         if homework.is_active():
             return HomeworkResult(self, homework, solution)
         raise DeadLineError("You are late")
 
 
 class HomeworkResult:
-    def __init__(self, author: Student, homework: Homework, solution: str):
+    def __init__(self, author: Student, homework: Homework, solution: str) -> None:
         if not isinstance(homework, Homework):
             raise TypeError("You gave a not Homework object")
         self.author = author
@@ -99,10 +106,12 @@ class Teacher(Man):
     homework_done: defaultdict = defaultdict()
 
     @classmethod
-    def create_homework(cls, text: str, num_days):
+    def create_homework(cls, text: str, num_days: int) -> Homework:
         return Homework(text, num_days)
 
-    def check_homework(self, home_result: HomeworkResult):
+    def check_homework(self, home_result: Optional[HomeworkResult]) -> bool:
+        if home_result is None:
+            return False
         if len(home_result.solution) >= Teacher.CONST_CRITERIA_OF_HOMEWORK_DONE:
             # TODO: to analise possible duplicates
             Teacher.homework_done[home_result.homework] = home_result
@@ -110,7 +119,7 @@ class Teacher(Man):
         return False
 
     @classmethod
-    def reset_results(cls, homework: Homework = None):
+    def reset_results(cls, homework: Homework = None) -> None:
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]
         Teacher.homework_done = defaultdict(list)

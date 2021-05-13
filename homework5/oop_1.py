@@ -41,6 +41,8 @@ PEP8 соблюдать строго.
 К названием остальных переменных, классов и тд. подходить ответственно -
 давать логичные подходящие имена.
 """
+from typing import Optional
+
 import datetime
 
 
@@ -80,7 +82,7 @@ class Student:
         self.last_name = last_name
         self.first_name = first_name
 
-    def do_homework(self, homework: Homework):
+    def do_homework(self, homework: Homework) -> Optional[Homework]:
         """
         Receives a homework and returns it, if it is active.
         Else if task is outdated, then prints 'You are late'
@@ -89,6 +91,7 @@ class Student:
         if homework.is_active():
             return homework
         print("You are late")
+        return None
 
 
 class Teacher:

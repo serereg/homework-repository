@@ -19,6 +19,7 @@ print(custom_sum.__name__)  # 'custom_sum'
 print(custom_sum.__original_func)  # <function custom_sum at
 <some_id>>
 """
+from typing import Callable
 
 import functools
 
@@ -29,13 +30,14 @@ def add_original(original_func):
     the original function
     """
 
-    def wrapper(func):
+    def wrapper(func: Callable) -> Callable:
         def inner(*args, **kwargs):
             return func(*args, **kwargs)
 
         inner.__doc__ = original_func.__doc__
         inner.__name__ = original_func.__name__
-        inner.__original_func = original_func
+        # inner.__original_func = original_func
+        setattr(inner, "__original_func", original_func)
         return inner
 
     return wrapper

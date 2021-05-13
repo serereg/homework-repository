@@ -19,14 +19,12 @@ print(custom_sum.__name__)  # 'custom_sum'
 print(custom_sum.__original_func)  # <function custom_sum at
 <some_id>>
 """
-from typing import Callable
-
 import functools
+from typing import Callable
 
 
 def add_original(original_func):
-    """
-    Decorator saves info of the called function and a pointer to
+    """Decorator saves info of the called function and a pointer to
     the original function
     """
 

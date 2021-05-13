@@ -110,7 +110,7 @@ class Teacher(Man):
         return Homework(text, num_days)
 
     def check_homework(self, home_result: Optional[HomeworkResult]) -> bool:
-        if home_result is None:
+        if not isinstance(home_result, HomeworkResult):
             return False
         if len(home_result.solution) >= Teacher.CONST_CRITERIA_OF_HOMEWORK_DONE:
             # TODO: to analise possible duplicates

@@ -36,7 +36,6 @@ def add_original(original_func):
 
         inner.__doc__ = original_func.__doc__
         inner.__name__ = original_func.__name__
-        # inner.__original_func = original_func
         setattr(inner, "__original_func", original_func)
         return inner
 

@@ -17,4 +17,4 @@ jobs:
         run: |
           pip install pytest
           ls -la
-          pytest tests
+          pytest --cov tests

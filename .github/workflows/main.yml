@@ -16,5 +16,6 @@ jobs:
       - name: Run script
         run: |
           pip install pytest
+          pip install pytest-cov
           ls -la
           pytest --cov tests

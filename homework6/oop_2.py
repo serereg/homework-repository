@@ -62,37 +62,66 @@ from typing import Optional
 
 
 class Homework:
+    """A class to represent a homework"""
+
     def __init__(self, text: str, num_days: float) -> None:
+        """Initialise homework, and deadline period
+        text: text of the homework
+        deadline: datetime.timedelta - with number of days for
+        the doing the homework
+        created: datetime.datetime - datetime of creating homework
+        """
         self.text = text
         self.num_days = num_days
         self.created = datetime.datetime.now()
         self.deadline = datetime.timedelta(days=num_days)
 
     def is_active(self) -> bool:
+        """A method checks if the homework is done"""
         return datetime.datetime.now() - self.created < self.deadline
 
 
 class DeadLineError(Exception):
-    pass
+    """A class exception for outdated homeworks"""
+
+    def __init__(self, msg):
+        """Initialize exception message with msg"""
+        self.msg = msg
 
 
 class Man:
+    """A class to represent a man"""
+
     def __init__(self, last_name: str, first_name: str) -> None:
+        """Initialise a man with last_name and first_name"""
         self.last_name = last_name
         self.first_name = first_name
 
 
 class Student(Man):
+    """A class to represent a student"""
+
     def do_homework(
         self, homework: Homework, solution: str
     ) -> Optional[HomeworkResult]:
+        """Receives a homework and solution,
+        returns object of HomeworkResult if the homework is active.
+        Else if task is outdated, then raise an exception DeadLineError
+        with 'You are late'
+        and returns None
+        """
         if homework.is_active():
             return HomeworkResult(self, homework, solution)
         raise DeadLineError("You are late")
+        return None
 
 
 class HomeworkResult:
+    """A class saves info about homework, its author, its solution"""
+
     def __init__(self, author: Student, homework: Homework, solution: str) -> None:
+        """Initializes results of homework with author,
+        task of homework and solution"""
         if not isinstance(homework, Homework):
             raise TypeError("You gave a not Homework object")
         self.author = author
@@ -102,14 +131,24 @@ class HomeworkResult:
 
 
 class Teacher(Man):
+    """A class to represent a teacher"""
+
     CONST_CRITERIA_OF_HOMEWORK_DONE = 5
     homework_done: defaultdict = defaultdict()
 
     @classmethod
     def create_homework(cls, text: str, num_days: int) -> Homework:
+        """A method creates homework
+        text - task of the homework
+        num_days - number of days before deadline
+        """
         return Homework(text, num_days)
 
     def check_homework(self, home_result: Optional[HomeworkResult]) -> bool:
+        """A method creates homework
+        text - task of the homework
+        num_days - number of days before deadline
+        """
         if not isinstance(home_result, HomeworkResult):
             return False
         if len(home_result.solution) >= Teacher.CONST_CRITERIA_OF_HOMEWORK_DONE:
@@ -120,6 +159,8 @@ class Teacher(Man):
 
     @classmethod
     def reset_results(cls, homework: Homework = None) -> None:
+        """Removes given homework from journal homework_done,
+        if None is given, then clears homework_done"""
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]
         Teacher.homework_done = defaultdict(list)

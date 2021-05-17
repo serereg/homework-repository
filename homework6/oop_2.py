@@ -145,7 +145,8 @@ class Teacher(Man):
         return Homework(text, num_days)
 
     def check_homework(self, home_result: Optional[HomeworkResult]) -> bool:
-        """A method creates homework
+        """A method checks homework with criteria: len of the solution
+        should be bigger than CONST_CRITERIA_OF_HOMEWORK_DONE
         text - task of the homework
         num_days - number of days before deadline
         """

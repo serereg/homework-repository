@@ -1,4 +1,40 @@
-from homework6.oop_2 import HomeworkResult, Student, Teacher
+from homework6.oop_2 import Homework, HomeworkResult, Student, Teacher
+
+
+def test_creating_objects():
+    teacher = Teacher("Daniil", "Shadrin")
+    student = Student("Roman", "Petrov")
+    homework = teacher.create_homework("Learn OOP", 1)
+    homework_result = student.do_homework(homework, "I have done this hw")
+    assert isinstance(teacher, Teacher)
+    assert isinstance(student, Student)
+    assert isinstance(homework, Homework)
+    assert isinstance(homework_result, HomeworkResult)
+
+
+# def test_homework_exception():
+#     try:
+#         HomeworkResult(good_student, "fff", "Solution")# type: ignore
+#     except Exception:
+#         print("There was an exception here")
+
+
+def test_creating_resetting_homework_results_by_teacher():
+    teacher = Teacher("Daniil", "Shadrin")
+    student = Student("Roman", "Petrov")
+    homework_1 = teacher.create_homework("Learn OOP", 1)
+    homework_1_result = student.do_homework(homework_1, "I have done this hw")
+    assert teacher.check_homework(homework_1_result) is True
+    assert teacher.homework_done[homework_1] == homework_1_result
+
+    homework_2 = teacher.create_homework("homework 2", 1)
+    homework_2_result = student.do_homework(homework_2, "zero")
+    assert teacher.check_homework(homework_2_result) is False
+    assert teacher.homework_done.get(homework_2) is None
+
+    assert len(teacher.homework_done) == 1
+    Teacher.reset_results()
+    assert len(teacher.homework_done) == 0
 
 
 def test_all():

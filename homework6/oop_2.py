@@ -164,7 +164,9 @@ class Teacher(Man):
         if None is given, then clears homework_done"""
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]
+            return None
         Teacher.homework_done = defaultdict(list)
+        return None
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import pytest
+
 from homework6.counter import instances_counter
 
 
@@ -7,28 +9,33 @@ def test_adding_methods_to_class():
             self.first = "first"
 
     @instances_counter
-    class UserLong(User):
+    class UserModified(User):
         ...
 
     assert {"counter", "get_created_instances", "reset_instances_counter"} == set(
-        UserLong.__dict__
+        UserModified.__dict__
     ).difference(set(User.__dict__))
 
 
-# @instances_counter
-# class Admin:
-#     # counter = 1
-#
-#     def __init__(self):
-#         self.first = "first"
-#
-#
-# if __name__ == "__main__":
-#     User.get_created_instances()  # type: ignore
-#     user, _, _ = User(), User(), User()
-#     user.get_created_instances()  # type: ignore
-#     user.reset_instances_counter()  # type: ignore
-#
-#     print(user.first)
-#     # admin = Admin()
-#
+def test_create_and_reset_instance_counter():
+    class User:
+        def __init__(self):
+            self.first = "first"
+
+    @instances_counter
+    class UserModified(User):
+        ...
+
+    user, _, _ = UserModified(), UserModified(), UserModified()
+    assert 3 == user.get_created_instances()  # type: ignore
+    assert 3 == user.reset_instances_counter()  # type: ignore
+    assert 0 == user.get_created_instances()  # type: ignore
+
+
+def test_if_methods_exist():
+    with pytest.raises(TypeError, match=r"[Mm]ethods.*exist"):
+
+        @instances_counter
+        class User:
+            def get_created_instances(self):
+                ...

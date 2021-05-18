@@ -42,9 +42,10 @@ def instances_counter(cls):
 
     @classmethod
     def reset_instances_counter(n_cls):
+        saved_counter = n_cls.counter
         n_cls.counter = 0
-        print(n_cls.counter)
-        return n_cls.counter
+        print(saved_counter)
+        return saved_counter
 
     cls.__init__ = init_with_counter(cls.__init__)
     cls.get_created_instances = get_created_instances

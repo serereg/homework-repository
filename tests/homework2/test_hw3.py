@@ -1,6 +1,4 @@
-from typing import Sequence
-
-from homework2.hw3 import combinations
+from homeworks.homework2.hw3 import combinations
 
 
 def test_smoke():

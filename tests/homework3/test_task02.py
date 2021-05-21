@@ -1,7 +1,7 @@
 import hashlib
 import struct
 
-from homework3.task02 import sum_calcs
+from homeworks.homework3.task02 import sum_calcs
 
 
 def fast_clone_of_slow_calculate(value):

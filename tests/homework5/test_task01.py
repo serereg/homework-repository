@@ -1,7 +1,7 @@
 import datetime
 import pytest
 
-from homework5.oop_1 import Homework, Student, Teacher
+from homeworks.homework5.oop_1 import Homework, Student, Teacher
 
 FAKE_TIME = datetime.datetime(2020, 12, 25, 17, 5, 55)
 

@@ -1,6 +1,6 @@
 import functools
 
-from homework5.save_original_info import print_result
+from homeworks.homework5.save_original_info import print_result
 
 
 @print_result

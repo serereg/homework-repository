@@ -2,7 +2,7 @@ from unittest.mock import Mock
 import requests
 
 
-from homework4.task_2_mock_input import count_dots_on_i
+from homeworks.homework4.task_2_mock_input import count_dots_on_i
 
 
 def test_i_in_string(monkeypatch):

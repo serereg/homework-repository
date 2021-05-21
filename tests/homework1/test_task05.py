@@ -1,6 +1,6 @@
 import pytest
 
-from homework1.task05 import find_maximal_subarray_sum
+from homeworks.homework1.task05 import find_maximal_subarray_sum
 
 
 def test_smoke():

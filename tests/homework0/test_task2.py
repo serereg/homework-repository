@@ -1,4 +1,4 @@
-from homework0.task2 import another_function
+from homeworks.homework0.task2 import another_function
 
 
 def test_another_function():

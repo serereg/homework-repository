@@ -1,4 +1,4 @@
-from homework3.task04 import is_armstrong
+from homeworks.homework3.task04 import is_armstrong
 
 
 def test_on_armstrong():

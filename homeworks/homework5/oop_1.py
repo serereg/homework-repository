@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
-"""
-Необходимо создать 3 класса и взаимосвязь между ними (Student, Teacher,
-Homework)
+
+"""Необходимо создать 3 класса и взаимосвязь между ними.
+
+(Student, Teacher, Homework).
 
 Наследование в этой задаче использовать не нужно.
 Для работы с временем использовать модуль datetime
@@ -69,7 +70,7 @@ class Homework:
         self.deadline = datetime.timedelta(days=num_days)
 
     def is_active(self) -> bool:
-        """A method checks if the homework is done.
+        """Check if the homework is done.
 
         Returns:
             bool: True if homework's deadline is expired,
@@ -98,9 +99,9 @@ class Student:
 
     @staticmethod
     def do_homework(homework: Homework) -> Optional[Homework]:
-        """Checks if a homework is active or not.
+        """Check if a homework is active or not.
 
-        Receives a homework and returns it, if it is active,
+        Receive a homework and returns it, if it is active,
         else if the task is outdated, then prints 'You are late'
         and returns None.
 
@@ -138,7 +139,7 @@ class Teacher:
 
     @classmethod
     def create_homework(cls, text: str, num_days: float) -> Homework:
-        """A method creates a homework.
+        """Create a homework.
 
         Args:
             text: a task of a homework.

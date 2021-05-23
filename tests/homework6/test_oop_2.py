@@ -28,7 +28,7 @@ def test_creating_and_resetting_homework_results_by_teacher():
     homework_1 = teacher.create_homework("Learn OOP", 1)
     homework_1_result = student.do_homework(homework_1, "I have done this hw")
     assert teacher.check_homework(homework_1_result) is True
-    assert teacher.homework_done[homework_1] == homework_1_result
+    assert homework_1_result in teacher.homework_done[homework_1]
 
     homework_2 = teacher.create_homework("homework 2", 1)
     homework_2_result = student.do_homework(homework_2, "zero")
@@ -38,7 +38,7 @@ def test_creating_and_resetting_homework_results_by_teacher():
     homework_3 = teacher.create_homework("homework 3", 1)
     homework_3_result = student.do_homework(homework_3, "I have done this hw")
     assert teacher.check_homework(homework_3_result) is True
-    assert teacher.homework_done.get(homework_3) == homework_3_result
+    assert homework_3_result in teacher.homework_done.get(homework_3)
 
     assert len(teacher.homework_done) == 2
     Teacher.reset_results(homework_3)

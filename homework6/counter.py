@@ -14,24 +14,30 @@ get_created_instances - возвращает количество созданы
 
 def instances_counter(cls):
     """Some code"""
-    if any(
-        map(
-            lambda name: hasattr(cls, name),
-            [
-                "get_created_instances",
-                "reset_instances_counter",
-                "counter",
-            ],
-        )
+    #     if any(
+    #             map(
+    #                 lambda name: hasattr(cls, name),
+    #                 [
+    #                     "get_created_instances",
+    #                     "reset_instances_counter",
+    #                     "counter",
+    #                 ],
+    #             )
+    #     ):
+    #         raise TypeError("Methods are already exists")
+    if (
+        "get_created_instances" in cls.__dict__
+        or "reset_instances_counter" in cls.__dict__
+        or "counter" in cls.__dict__
     ):
         raise TypeError("Methods are already exists")
 
     cls.counter = 0
 
-    def init_with_counter(func):
+    def init_with_counter(orig_init):
         def wrapper(*args, **kwargs):
             cls.counter += 1
-            return func(*args, **kwargs)
+            return orig_init(*args, **kwargs)
 
         return wrapper
 

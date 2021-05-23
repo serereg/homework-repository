@@ -72,7 +72,6 @@ class Homework:
         created: datetime.datetime - datetime of creating homework
         """
         self.text = text
-        self.num_days = num_days
         self.created = datetime.datetime.now()
         self.deadline = datetime.timedelta(days=num_days)
 
@@ -134,7 +133,7 @@ class Teacher(Man):
     """A class to represent a teacher"""
 
     CONST_CRITERIA_OF_HOMEWORK_DONE = 5
-    homework_done: defaultdict = defaultdict()
+    homework_done: defaultdict = defaultdict(set)
 
     @classmethod
     def create_homework(cls, text: str, num_days: int) -> Homework:
@@ -144,7 +143,8 @@ class Teacher(Man):
         """
         return Homework(text, num_days)
 
-    def check_homework(self, home_result: Optional[HomeworkResult]) -> bool:
+    @classmethod
+    def check_homework(cls, home_result: Optional[HomeworkResult]) -> bool:
         """A method checks homework with criteria: len of the solution
         should be bigger than CONST_CRITERIA_OF_HOMEWORK_DONE
         text - task of the homework
@@ -152,9 +152,9 @@ class Teacher(Man):
         """
         if not isinstance(home_result, HomeworkResult):
             return False
-        if len(home_result.solution) >= Teacher.CONST_CRITERIA_OF_HOMEWORK_DONE:
+        if len(home_result.solution) >= cls.CONST_CRITERIA_OF_HOMEWORK_DONE:
             # TODO: to analise possible duplicates
-            Teacher.homework_done[home_result.homework] = home_result
+            cls.homework_done[home_result.homework].add(home_result)
             return True
         return False
 
@@ -165,7 +165,7 @@ class Teacher(Man):
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]
             return None
-        Teacher.homework_done = defaultdict(list)
+        cls.homework_done = defaultdict(set)
         return None
 
 

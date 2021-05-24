@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 
 """
+Task.
+
 Написать декоратор instances_counter, который применяется к
 любому классу и добавляет ему 2 метода:
 get_created_instances - возвращает количество созданых
@@ -13,7 +15,7 @@ get_created_instances - возвращает количество созданы
 
 
 def instances_counter(cls):
-    """Decorates class by adding methods.
+    """Decorate class by adding methods.
 
     Add methods get_created_instances,
     reset_instances_counter and _count attribute to the class.
@@ -24,7 +26,6 @@ def instances_counter(cls):
     Raises:
         TypeError: If the methods are already exist.
     """
-
     # TODO: can add {prefix} to the names of
     #  adding methods and attributes,
     #  but the signature of the decorator will be changed,

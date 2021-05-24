@@ -1,5 +1,8 @@
 #! /usr/bin/env python3
+
 """
+Task.
+
 В этом задании будем улучшать нашу систему классов из задания прошлой
 лекции (Student, Teacher, Homework)
 Советую обратить внимание на defaultdict из модуля collection для
@@ -170,8 +173,7 @@ class HomeworkResult:
     """
 
     def __init__(self, author: Student, homework: Homework, solution: str) -> None:
-        """Initialize results of homework with author,
-        task of homework and solution.
+        """Add info to a homework.
 
         Args:
             author: author of a homework.
@@ -237,7 +239,9 @@ class Teacher(Person):
 
     @classmethod
     def reset_results(cls, homework: Homework = None) -> None:
-        """Remove given homework from journal homework_done,
+        """Remove given homework from journal homework_done.
+
+        Remove given homework from journal homework_done,
         if None is given, then clear homework_done.
 
         Args:

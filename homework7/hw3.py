@@ -49,11 +49,11 @@ def tic_tac_toe_checker(board: List[List]) -> str:
     ]
 
     def check_winner(letter: str):
-        def check_line(letter_: str, line: list):
-            return all(sym == letter_ for sym in line)
+        def check_line(line: list):
+            return all(sym == letter for sym in line)
 
         return any(
-            check_line(letter, [board[pos[0]][pos[1]] for pos in combination])
+            check_line([board[pos[0]][pos[1]] for pos in combination])
             for combination in wins_combinations
         )
 

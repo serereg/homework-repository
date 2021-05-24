@@ -166,7 +166,7 @@ class HomeworkResult:
         homework (Homework): a homework.
         solution (str): a solution of the homework.
         created (datetime.datetime): date and time of
-        creating solution of homework.
+            creating solution of homework.
     """
 
     def __init__(self, author: Student, homework: Homework, solution: str) -> None:
@@ -216,22 +216,22 @@ class Teacher(Person):
         return Homework(text, num_days)
 
     @classmethod
-    def check_homework(cls, home_result: Optional[HomeworkResult]) -> bool:
+    def check_homework(cls, hw_result: Optional[HomeworkResult]) -> bool:
         """Check a homework with a criteria.
 
         Length of string with the solution should be bigger than
         CONST_CRITERIA_OF_HOMEWORK_DONE.
 
         Args:
-            home_result: homework with its author and a solution.
+            hw_result: homework with its author and a solution.
 
         Returns:
             bool: True if homework is done, False otherwise.
         """
-        if not isinstance(home_result, HomeworkResult):
+        if not isinstance(hw_result, HomeworkResult):
             return False
-        if len(home_result.solution) >= cls.CONST_CRITERIA_OF_HOMEWORK_DONE:
-            cls.homework_done[home_result.homework].add(home_result)
+        if len(hw_result.solution) >= cls.CONST_CRITERIA_OF_HOMEWORK_DONE:
+            cls.homework_done[hw_result.homework].add(hw_result)
             return True
         return False
 
@@ -242,7 +242,7 @@ class Teacher(Person):
 
         Args:
             homework: homework, that should be removed, or
-            None if all journal should be cleared.
+                None if all journal should be cleared.
         """
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]

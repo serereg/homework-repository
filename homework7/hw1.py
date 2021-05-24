@@ -49,6 +49,7 @@ def find_occurrences(tree: dict, element: Any) -> int:
             for value in values:
                 if isinstance(value, dict):
                     search(value)
+            # TODO: analise several occurrences in values
             if element in values:
                 print(key, values)
                 cnt += 1

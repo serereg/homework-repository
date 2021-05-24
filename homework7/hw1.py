@@ -41,20 +41,22 @@ def find_occurrences(tree: dict, element: Any) -> int:
     """
     cnt: int = 0
 
-    def search(subtree: dict):
+    def search_in(subtree: dict):
         nonlocal cnt
         for key, values in subtree.items():
-            if isinstance(values, dict):
-                search(values)
-            for value in values:
-                if isinstance(value, dict):
-                    search(value)
-            # TODO: analise several occurrences in values
-            if element in values:
-                print(key, values)
+            if element == values:
                 cnt += 1
+                continue
+            if isinstance(values, dict):
+                search_in(values)
+                continue
+            for value in values:
+                if element == value:
+                    cnt += 1
+                elif isinstance(value, dict):
+                    search_in(value)
 
-    search(tree)
+    search_in(tree)
     return cnt
 
 

@@ -12,7 +12,7 @@ def test_adding_methods_to_class():
     class UserModified(User):
         ...
 
-    added_methods = {"counter", "get_created_instances", "reset_instances_counter"}
+    added_methods = {"_counter", "get_created_instances", "reset_instances_counter"}
     methods_of_original_class = set(User.__dict__)
     methods_of_decorated_class = set(UserModified.__dict__)
     assert added_methods == methods_of_decorated_class.difference(

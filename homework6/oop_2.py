@@ -62,52 +62,95 @@ from typing import Optional
 
 
 class Homework:
-    """A class to represent a homework"""
+    """A class to represent a homework.
+
+    Attributes:
+        text (str): text of the homework.
+        created (datetime.datetime): a datetime of creating
+            the homework.
+        deadline (datetime.timedelta): number of days for
+            the doing the homework.
+    """
 
     def __init__(self, text: str, num_days: float) -> None:
-        """Initialise homework, and deadline period
-        text: text of the homework
-        deadline: datetime.timedelta - with number of days for
-        the doing the homework
-        created: datetime.datetime - datetime of creating homework
+        """Initialise a homework, and a deadline period.
+
+        Args:
+            text: text of the homework.
+            num_days: number of days for the doing the homework.
         """
         self.text = text
         self.created = datetime.datetime.now()
         self.deadline = datetime.timedelta(days=num_days)
 
     def is_active(self) -> bool:
-        """A method checks if the homework is done"""
+        """Check if the homework is done.
+
+        Returns:
+            bool: True if homework's deadline is expired,
+                False otherwise.
+        """
         return datetime.datetime.now() - self.created < self.deadline
 
 
 class DeadLineError(Exception):
-    """A class exception for outdated homeworks"""
+    """A class exception for outdated homeworks.
 
-    def __init__(self, msg):
-        """Initialize exception message with msg"""
+    Args:
+        msg (str): Human readable string describing the exception.
+
+    Attributes:
+        msg (str): Human readable string describing the exception.
+    """
+
+    def __init__(self, msg: str):
+        """Initialize exception message with msg."""
         self.msg = msg
 
 
-class Man:
-    """A class to represent a man"""
+class Person:
+    """A class to represent a person.
+
+    Attributes:
+        last_name (str): a last name of a person.
+        first_name (str): a first name of a person.
+    """
 
     def __init__(self, last_name: str, first_name: str) -> None:
-        """Initialise a man with last_name and first_name"""
+        """Initialise a person with last_name and first_name.
+
+        Args:
+            last_name: a last name of a person.
+            first_name: a first name of a person.
+        """
         self.last_name = last_name
         self.first_name = first_name
 
 
-class Student(Man):
-    """A class to represent a student"""
+class Student(Person):
+    """A class to represent a student.
+
+    The class inherits properties from the Person.
+    """
 
     def do_homework(
         self, homework: Homework, solution: str
     ) -> Optional[HomeworkResult]:
-        """Receives a homework and solution,
-        returns object of HomeworkResult if the homework is active.
-        Else if task is outdated, then raise an exception DeadLineError
-        with 'You are late'
-        and returns None
+        """Check if a homework is active or not.
+
+        Args:
+            homework: a homework that should be done
+                by the student.
+            solution: a text with solution of homework.
+
+        Returns:
+            Receive a homework and a solution and returns object of
+            HomeworkResult, if homework is active,
+            else if the task is outdated, then raises exception
+            DeadLineError 'You are late' and returns None.
+
+        Raises:
+            DeadLineError: if homework is outdated.
         """
         if homework.is_active():
             return HomeworkResult(self, homework, solution)
@@ -116,11 +159,28 @@ class Student(Man):
 
 
 class HomeworkResult:
-    """A class saves info about homework, its author, its solution"""
+    """A class saves info about a homework, its author, its solution.
+
+    Attributes:
+        author (Student): an author of a homework.
+        homework (Homework): a homework.
+        solution (str): a solution of the homework.
+        created (datetime.datetime): date and time of
+        creating solution of homework.
+    """
 
     def __init__(self, author: Student, homework: Homework, solution: str) -> None:
-        """Initializes results of homework with author,
-        task of homework and solution"""
+        """Initialize results of homework with author,
+        task of homework and solution.
+
+        Args:
+            author: author of a homework.
+            homework: a homework with a task to solve.
+            solution: a solution of the homework.
+
+        Raises:
+              TypeError: if the given homework is not Homework.
+        """
         if not isinstance(homework, Homework):
             raise TypeError("You gave a not Homework object")
         self.author = author
@@ -129,39 +189,61 @@ class HomeworkResult:
         self.created = datetime.datetime.now()
 
 
-class Teacher(Man):
-    """A class to represent a teacher"""
+class Teacher(Person):
+    """A class to represent a teacher.
+
+    The class inherits properties from the Person.
+
+    Attributes:
+        homework_done (defaultsect): journal, saves results
+            of homeworks, groups results by a key homework.
+    """
 
     CONST_CRITERIA_OF_HOMEWORK_DONE = 5
     homework_done: defaultdict = defaultdict(set)
 
     @classmethod
     def create_homework(cls, text: str, num_days: int) -> Homework:
-        """A method creates homework
-        text - task of the homework
-        num_days - number of days before deadline
+        """Create a homework.
+
+        Args:
+            text: task of the homework.
+            num_days: number of days before deadline.
+
+        Returns:
+            Homework: generated a homework.
         """
         return Homework(text, num_days)
 
     @classmethod
     def check_homework(cls, home_result: Optional[HomeworkResult]) -> bool:
-        """A method checks homework with criteria: len of the solution
-        should be bigger than CONST_CRITERIA_OF_HOMEWORK_DONE
-        text - task of the homework
-        num_days - number of days before deadline
+        """Check a homework with a criteria.
+
+        Length of string with the solution should be bigger than
+        CONST_CRITERIA_OF_HOMEWORK_DONE.
+
+        Args:
+            home_result: homework with its author and a solution.
+
+        Returns:
+            bool: True if homework is done, False otherwise.
         """
         if not isinstance(home_result, HomeworkResult):
             return False
         if len(home_result.solution) >= cls.CONST_CRITERIA_OF_HOMEWORK_DONE:
-            # TODO: to analise possible duplicates
             cls.homework_done[home_result.homework].add(home_result)
             return True
         return False
 
     @classmethod
     def reset_results(cls, homework: Homework = None) -> None:
-        """Removes given homework from journal homework_done,
-        if None is given, then clears homework_done"""
+        """Remove given homework from journal homework_done,
+        if None is given, then clear homework_done.
+
+        Args:
+            homework: homework, that should be removed, or
+            None if all journal should be cleared.
+        """
         if isinstance(homework, Homework):
             del Teacher.homework_done[homework]
             return None

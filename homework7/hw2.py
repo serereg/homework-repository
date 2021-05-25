@@ -79,7 +79,7 @@ def backspace_compare(first: str, second: str) -> bool:
             return False
 
     try:
-        if chars_in_second_string.__next__() is not None:
+        if next(chars_in_second_string) is not None:
             return False
     except StopIteration:
         return True

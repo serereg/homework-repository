@@ -31,22 +31,37 @@ def tic_tac_toe_checker(board: List[List]) -> str:
         If there is a draw, function should return "draw!"
         If board is unfinished, function should return "unfinished!"
     """
-    # fmt: off
-    ((a, b, c),
-     (d, e, f),
-     (g, h, i)) = (
-        ((0, 0), (0, 1), (0, 2)),
-        ((1, 0), (1, 1), (1, 2)),
-        ((2, 0), (2, 1), (2, 2)),
-    )
 
-    wins_combinations = [
-        [a, b, c], [d, e, f], [g, h, i],
-        [a, d, g], [b, e, h], [c, f, i],
-        [a, e, i],
-        [c, e, g],
-    ]
-    # fmt: on
+    def wins_combinations(n: int = 1):
+        """Generate wins combinations from a board with size n:
+
+        Example of board and wins combinations:
+        ((a, b, c),
+         (d, e, f),
+         (g, h, i)) = (
+            ((0, 0), (0, 1), (0, 2)),
+            ((1, 0), (1, 1), (1, 2)),
+            ((2, 0), (2, 1), (2, 2)),
+        )
+
+        wins_combinations = [
+            [a, b, c], [d, e, f], [g, h, i],
+            [a, d, g], [b, e, h], [c, f, i],
+            [a, e, i],
+            [c, e, g],
+        ]
+        """
+        for i in range(n):
+            line_horizontal = []
+            line_vertical = []
+            for j in range(n):
+                line_horizontal.append((i, j))
+                line_vertical.append((j, i))
+            yield line_horizontal
+            yield line_vertical
+
+        yield [(i, i) for i in range(n)]
+        yield [(i, i) for i in range(n - 1, -1, -1)]
 
     def check_winner(letter: str):
         def check_line(line: list):
@@ -54,7 +69,7 @@ def tic_tac_toe_checker(board: List[List]) -> str:
 
         return any(
             check_line([board[pos[0]][pos[1]] for pos in combination])
-            for combination in wins_combinations
+            for combination in wins_combinations(3)
         )
 
     x_pretend = check_winner("x")

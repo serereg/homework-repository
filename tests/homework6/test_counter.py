@@ -8,11 +8,15 @@ def test_adding_methods_to_class():
         def __init__(self):
             self.first = "first"
 
-    @instances_counter
+    @instances_counter("pref_")
     class UserModified(User):
         ...
 
-    added_methods = {"_counter", "get_created_instances", "reset_instances_counter"}
+    added_methods = {
+        "_pref_counter",
+        "pref_get_created_instances",
+        "pref_reset_instances_counter",
+    }
     methods_of_original_class = set(User.__dict__)
     methods_of_decorated_class = set(UserModified.__dict__)
     assert added_methods == methods_of_decorated_class.difference(
@@ -25,7 +29,7 @@ def test_create_and_reset_instance_counter():
         def __init__(self):
             self.first = "first"
 
-    @instances_counter
+    @instances_counter()
     class UserModified(User):
         ...
 
@@ -39,9 +43,9 @@ def test_create_and_reset_instance_counter():
 
 
 def test_if_methods_exist():
-    with pytest.raises(TypeError, match=r"[Mm]ethods.*exist"):
+    with pytest.raises(TypeError, match=r"[Mm]ethod.*exist"):
 
-        @instances_counter
+        @instances_counter()
         class User:
             def get_created_instances(self):
                 ...

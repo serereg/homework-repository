@@ -14,70 +14,71 @@ get_created_instances - возвращает количество созданы
 """
 
 
-def instances_counter(cls):
-    """Decorate class by adding methods.
+def instances_counter(prefix: str = ""):
+    """Decorate class by adding methods for counting instances.
 
-    Add methods get_created_instances,
-    reset_instances_counter and _count attribute to the class.
+    Add methods 'get_created_instances',
+    'reset_instances_counter' and '_count' attribute to the class.
+
+    Args:
+        prefix: you may add prefix to names of methods, in case
+            decorated class already has one or them, i.e.
+            pref_get_created_instances,
+            pref_reset_instances_counter,
+            _pref_count.
 
     Returns:
         A decorated class.
 
     Raises:
-        TypeError: If the methods are already exist.
+        TypeError: If any of the methods already exists.
     """
-    # TODO: can add {prefix} to the names of
-    #  adding methods and attributes,
-    #  but the signature of the decorator will be changed,
-    #  cause we need parametrised decorator (prefix)
-    #  not @instances_counter, but @instances_counter(prefix='_')
 
-    name_get_method = "get_created_instances"
-    name_reset_method = "reset_instances_counter"
-    name_counter_attr = "_counter"
+    def instances_counter_inner(cls):
+        name_get_method = f"{prefix}get_created_instances"
+        name_reset_method = f"{prefix}reset_instances_counter"
+        name_counter_attr = f"_{prefix}counter"
 
-    if any(
-        k in cls.__dict__
-        for k in (name_get_method, name_reset_method, name_counter_attr)
-    ):
-        raise TypeError("Methods are already exist")
+        for name in (name_get_method, name_reset_method, name_counter_attr):
+            if name in cls.__dict__:
+                raise TypeError(f"The method {name} already exists")
 
-    setattr(cls, name_counter_attr, 0)
+        setattr(cls, name_counter_attr, 0)
 
-    def init_with_counter(orig_init):
-        def wrapper(*args, **kwargs):
-            counter = getattr(cls, name_counter_attr)
-            setattr(cls, name_counter_attr, counter + 1)
-            return orig_init(*args, **kwargs)
+        def init_with_counter(orig_init):
+            def wrapper(*args, **kwargs):
+                counter = getattr(cls, name_counter_attr)
+                setattr(cls, name_counter_attr, counter + 1)
+                return orig_init(*args, **kwargs)
 
-        return wrapper
+            return wrapper
 
-    @classmethod
-    def get_created_instances(n_cls) -> int:
-        return getattr(n_cls, name_counter_attr)
+        @classmethod
+        def get_created_instances(n_cls) -> int:
+            return getattr(n_cls, name_counter_attr)
 
-    @classmethod
-    def reset_instances_counter(n_cls):
-        saved_counter = getattr(n_cls, name_counter_attr)
-        setattr(n_cls, name_counter_attr, 0)
-        return saved_counter
+        @classmethod
+        def reset_instances_counter(n_cls):
+            saved_counter = getattr(n_cls, name_counter_attr)
+            setattr(n_cls, name_counter_attr, 0)
+            return saved_counter
 
-    cls.__init__ = init_with_counter(cls.__init__)
-    setattr(cls, name_get_method, get_created_instances)
-    setattr(cls, name_reset_method, reset_instances_counter)
-    return cls
+        cls.__init__ = init_with_counter(cls.__init__)
+        setattr(cls, name_get_method, get_created_instances)
+        setattr(cls, name_reset_method, reset_instances_counter)
+        return cls
+
+    return instances_counter_inner
 
 
-@instances_counter
+@instances_counter()
 class User:
     def __init__(self):
         self.first = "first"
 
 
-@instances_counter
+@instances_counter()
 class Admin:
-    # counter = 1
-
     def __init__(self):
         self.first = "first"
 

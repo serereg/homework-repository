@@ -75,7 +75,7 @@ def backspace_compare(first: str, second: str) -> bool:
     """
     chars_in_second_string = get_char_in_reserved_string(second)
     for char_in_first_string in get_char_in_reserved_string(first):
-        if char_in_first_string != chars_in_second_string.__next__():
+        if char_in_first_string != next(chars_in_second_string):
             return False
 
     try:

@@ -69,7 +69,7 @@ def tic_tac_toe_checker(board: List[List]) -> str:
 
         return any(
             check_line([board[pos[0]][pos[1]] for pos in combination])
-            for combination in wins_combinations(3)
+            for combination in wins_combinations(len(board))
         )
 
     x_pretend = check_winner("x")

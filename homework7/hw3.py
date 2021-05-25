@@ -31,22 +31,22 @@ def tic_tac_toe_checker(board: List[List]) -> str:
         If there is a draw, function should return "draw!"
         If board is unfinished, function should return "unfinished!"
     """
-    ((a, b, c), (d, e, f), (g, h, i)) = (
+    # fmt: off
+    ((a, b, c),
+     (d, e, f),
+     (g, h, i)) = (
         ((0, 0), (0, 1), (0, 2)),
         ((1, 0), (1, 1), (1, 2)),
         ((2, 0), (2, 1), (2, 2)),
     )
 
     wins_combinations = [
-        [a, b, c],
-        [d, e, f],
-        [g, h, i],
-        [a, d, g],
-        [b, e, h],
-        [c, f, i],
+        [a, b, c], [d, e, f], [g, h, i],
+        [a, d, g], [b, e, h], [c, f, i],
         [a, e, i],
         [c, e, g],
     ]
+    # fmt: on
 
     def check_winner(letter: str):
         def check_line(line: list):

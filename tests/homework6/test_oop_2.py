@@ -1,6 +1,12 @@
 import pytest
 
-from homework6.oop_2 import DeadLineError, Homework, HomeworkResult, Student, Teacher
+from homeworks.homework6.oop_2 import (
+    DeadLineError,
+    Homework,
+    HomeworkResult,
+    Student,
+    Teacher,
+)
 
 
 def test_creating_objects():

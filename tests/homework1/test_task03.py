@@ -1,7 +1,6 @@
 import os
-from typing import Sequence
 
-from homework1.task03 import find_maximum_and_minimum
+from homeworks.homework1.task03 import find_maximum_and_minimum
 
 
 def test_file_with_one_value():

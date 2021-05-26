@@ -1,6 +1,6 @@
 import pytest
 
-from homework6.counter import instances_counter
+from homeworks.homework6.counter import instances_counter
 
 
 def test_adding_methods_to_class():

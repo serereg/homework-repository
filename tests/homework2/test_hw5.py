@@ -1,6 +1,6 @@
 import string
 
-from homework2.hw5 import custom_range
+from homeworks.homework2.hw5 import custom_range
 
 
 def test_end_position_of_sequence():

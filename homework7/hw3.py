@@ -22,6 +22,42 @@ Example:
 from typing import List
 
 
+def wins_combinations(n: int = 1):
+    """Generate wins combinations from a board with size n:
+
+    Example of board and wins combinations:
+    ((a, b, c),
+     (d, e, f),
+     (g, h, i)) = (
+        ((0, 0), (0, 1), (0, 2)),
+        ((1, 0), (1, 1), (1, 2)),
+        ((2, 0), (2, 1), (2, 2)),
+    )
+
+    wins_combinations = [
+        [a, b, c], [d, e, f], [g, h, i],
+        [a, d, g], [b, e, h], [c, f, i],
+        [a, e, i],
+        [c, e, g],
+    ]
+    """
+    if n <= 1:
+        yield [(0, 0)]
+        return
+
+    for i in range(n):
+        line_horizontal = []
+        line_vertical = []
+        for j in range(n):
+            line_horizontal.append((i, j))
+            line_vertical.append((j, i))
+        yield line_horizontal
+        yield line_vertical
+
+    yield [(i, i) for i in range(n)]
+    yield [(i, n - 1 - i) for i in range(n)]
+
+
 def tic_tac_toe_checker(board: List[List]) -> str:
     """Check a Tic-Tac-Toe 3x3 board for the winner.
 
@@ -31,37 +67,6 @@ def tic_tac_toe_checker(board: List[List]) -> str:
         If there is a draw, function should return "draw!"
         If board is unfinished, function should return "unfinished!"
     """
-
-    def wins_combinations(n: int = 1):
-        """Generate wins combinations from a board with size n:
-
-        Example of board and wins combinations:
-        ((a, b, c),
-         (d, e, f),
-         (g, h, i)) = (
-            ((0, 0), (0, 1), (0, 2)),
-            ((1, 0), (1, 1), (1, 2)),
-            ((2, 0), (2, 1), (2, 2)),
-        )
-
-        wins_combinations = [
-            [a, b, c], [d, e, f], [g, h, i],
-            [a, d, g], [b, e, h], [c, f, i],
-            [a, e, i],
-            [c, e, g],
-        ]
-        """
-        for i in range(n):
-            line_horizontal = []
-            line_vertical = []
-            for j in range(n):
-                line_horizontal.append((i, j))
-                line_vertical.append((j, i))
-            yield line_horizontal
-            yield line_vertical
-
-        yield [(i, i) for i in range(n)]
-        yield [(i, i) for i in range(n - 1, -1, -1)]
 
     def check_winner(letter: str):
         def check_line(line: list):

@@ -29,11 +29,14 @@ class TableData(object):
 
     def __len__(self):
         cursor = self.conn.cursor()
+        # TODO: change calls execute(...) to use with parameters
         cursor.execute(f"SELECT COUNT(*) FROM {self.table}")
         return cursor.fetchone()[0]
 
     def __contains__(self, item):
-        ...
+        cursor = self.conn.cursor()
+        cursor.execute(f"SELECT * from {self.table} where name=:item", {"item": item})
+        return cursor.fetchone() is not None
 
     def __iter__(self):
         ...
@@ -45,3 +48,4 @@ class TableData(object):
 if __name__ == "__main__":
     new_object = TableData("example.sqlite", "presidents")
     print(len(new_object))
+    print("Yeltsin" in new_object)

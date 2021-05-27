@@ -26,6 +26,7 @@ class TableData(object):
     def __init__(self, db_path: str, table: str):
         self.conn = sqlite3.connect(db_path)
         self.table = table
+        self.iter_flag = False
 
     def __len__(self):
         cursor = self.conn.cursor()
@@ -39,7 +40,16 @@ class TableData(object):
         return cursor.fetchone() is not None
 
     def __iter__(self):
-        ...
+        return self
+
+    def __next__(self):
+        if self.iter_flag is False:
+            cursor = self.conn.cursor()
+            cursor.execute(f"SELECT * from {self.table}")
+            self.iter_flag = True
+
+        # columns = list(map(lambda x: x[0], cursor.description))
+        return cursor.fetchone()
 
     def __del__(self):
         self.conn.close()

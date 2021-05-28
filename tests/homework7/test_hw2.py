@@ -15,3 +15,5 @@ def test_empty_strings():
 def test_non_equal_strings():
     assert backspace_compare("1234", "12") is False
     assert backspace_compare("12", "1234") is False
+    assert backspace_compare("a", "ba") is False
+    assert backspace_compare("ba", "a") is False

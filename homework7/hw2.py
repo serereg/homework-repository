@@ -74,9 +74,12 @@ def backspace_compare(first: str, second: str) -> bool:
         First becomes "c" while second becomes "b".
     """
     chars_in_second_string = get_char_in_reserved_string(second)
-    for char_in_first_string in get_char_in_reserved_string(first):
-        if char_in_first_string != next(chars_in_second_string):
-            return False
+    try:
+        for char_in_first_string in get_char_in_reserved_string(first):
+            if char_in_first_string != next(chars_in_second_string):
+                return False
+    except StopIteration:
+        return False
     if next(chars_in_second_string, True) is True:
         return True
     return False

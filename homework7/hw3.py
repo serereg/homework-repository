@@ -23,7 +23,7 @@ from typing import List
 
 
 def wins_combinations(n: int = 1):
-    """Generate wins combinations from a board with size n:
+    """Generate wins combinations from a board with size NxN.
 
     Example of board and wins combinations:
     ((a, b, c),
@@ -54,12 +54,19 @@ def wins_combinations(n: int = 1):
         yield line_horizontal
         yield line_vertical
 
-    yield [(i, i) for i in range(n)]
-    yield [(i, n - 1 - i) for i in range(n)]
+    yield [(i, i) for i in range(n)]  # diagonal left-right
+    yield [(i, n - 1 - i) for i in range(n)]  # diagonal right-left
 
 
 def tic_tac_toe_checker(board: List[List]) -> str:
-    """Check a Tic-Tac-Toe 3x3 board for the winner.
+    """Check a Tic-Tac-Toe NxN board for the winner.
+
+    Args:
+        board: a board size NxN. The smallest size is N = 1.
+        For 3x3:
+            [[-, -, o],
+             [-, x, o],
+             [x, o, x]]
 
     Returns:
         If there is "x" winner, function should return "x wins!"

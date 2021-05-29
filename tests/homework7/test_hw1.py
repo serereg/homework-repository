@@ -125,9 +125,9 @@ def test_with_float():
 # TODO: ask mentor about this test
 # def test_fails_with_float():
 #     tree = {
-#         1: False,
+#         1: bool(False),
 #     }
-#     cnt = find_occurrences(tree, 0.0)
+#     cnt = find_occurrences(tree, float(0.0))
 #     assert cnt == 0
 
 

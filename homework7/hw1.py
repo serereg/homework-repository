@@ -28,6 +28,8 @@ example_tree = {
 def find_occurrences(tree, element) -> int:
     """Take element and finds the number of occurrences in a tree.
 
+    https://www.youtube.com/watch?v=Uwuv05aZ6ug
+
     Args:
         tree: can only contains basic structures like:
             str, list, tuple, dict, set, int, bool.
@@ -35,9 +37,6 @@ def find_occurrences(tree, element) -> int:
 
     Returns:
         int: number of occurrences of element in the given tree.
-
-    Links:
-        https://www.youtube.com/watch?v=Uwuv05aZ6ug
     """
     if tree == element:
         return 1

@@ -88,15 +88,16 @@ def test_with_one_node():
 
 def test_tree_with_different_types_and_nesting():
     tree = {
-        False: False,
+        bool(False): False,
         True: 0,
         1: False,
-        0: 0.0,
-        0.0: 0,
+        int(0): 2.0,
+        float(0.0): 0,
         frozenset({1, 2, 3}): {1, 2, 3},
         frozenset({4, 5, 6}): {frozenset({1, 2, 3}): {1, 2, 3}, False: {7, 8, 9}},
         (0, 0): [(0, 0), (0, 1), (0, 1)],
     }
+
     cnt = find_occurrences(tree, False)
     assert cnt == 2
     cnt = find_occurrences(tree, {1, 2, 3})
@@ -113,6 +114,24 @@ def test_tree_with_different_types_and_nesting():
     assert cnt == 2
 
 
-# 3. Дерево где есть невалидные данные
-# 5. Разной вложенности
-# и так далее
+def test_with_float():
+    tree = {"first": 2.0, "second": 2, "third": 0.5}
+    cnt = find_occurrences(tree, 2.0)
+    assert cnt == 2
+    cnt = find_occurrences(tree, 0.5)
+    assert cnt == 1
+
+
+# TODO: ask mentor about this test
+# def test_fails_with_float():
+#     tree = {
+#         1: False,
+#     }
+#     cnt = find_occurrences(tree, 0.0)
+#     assert cnt == 0
+
+
+def test_tree_with_invalid_data():
+    tree = {"first": 1, "second": 2, "fourth": 4}
+    cnt = find_occurrences(tree, 3)
+    assert cnt == 0

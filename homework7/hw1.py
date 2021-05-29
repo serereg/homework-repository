@@ -6,9 +6,6 @@ of this element in the tree.
 Tree can only contains basic structures like:
     str, list, tuple, dict, set, int, bool
 """
-from typing import Any
-
-
 # Example tree:
 example_tree = {
     "first": ["RED", "BLUE"],
@@ -28,37 +25,24 @@ example_tree = {
 }
 
 
-def find_occurrences(tree: dict, element: Any) -> int:
+def find_occurrences(node, target):
     """Take element and finds the number of occurrences in a tree.
 
     Args:
-        tree: can only contains basic structures like:
+        node: can only contains basic structures like:
             str, list, tuple, dict, set, int, bool.
-        element: element for search and counting.
+        target: element for search and counting.
 
     Returns:
         int: number of occurrences of element in the given tree.
+
+    Links:
+        https://www.youtube.com/watch?v=Uwuv05aZ6ug
     """
-    cnt: int = 0
-
-    def search_in(subtree: dict):
-        nonlocal cnt
-        for key, value_or_values in subtree.items():
-            if element == value_or_values:
-                cnt += 1
-                continue
-            if isinstance(value_or_values, dict):
-                search_in(value_or_values)
-                continue
-            for value in value_or_values:
-                if element == value:
-                    cnt += 1
-                elif isinstance(value, dict):
-                    search_in(value)
-
-    search_in(tree)
-    return cnt
-
-
-if __name__ == "__main__":
-    print(find_occurrences(example_tree, "RED"))  # 6
+    if node == target:
+        return 1
+    if isinstance(node, list):
+        return sum(find_occurrences(subnode, target) for subnode in node)
+    if isinstance(node, dict):
+        return sum(find_occurrences(subnode, target) for subnode in node.values())
+    return 0

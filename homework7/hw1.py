@@ -25,13 +25,13 @@ example_tree = {
 }
 
 
-def find_occurrences(node, target):
+def find_occurrences(tree, element) -> int:
     """Take element and finds the number of occurrences in a tree.
 
     Args:
-        node: can only contains basic structures like:
+        tree: can only contains basic structures like:
             str, list, tuple, dict, set, int, bool.
-        target: element for search and counting.
+        element: element for search and counting.
 
     Returns:
         int: number of occurrences of element in the given tree.
@@ -39,10 +39,10 @@ def find_occurrences(node, target):
     Links:
         https://www.youtube.com/watch?v=Uwuv05aZ6ug
     """
-    if node == target:
+    if tree == element:
         return 1
-    if isinstance(node, list):
-        return sum(find_occurrences(subnode, target) for subnode in node)
-    if isinstance(node, dict):
-        return sum(find_occurrences(subnode, target) for subnode in node.values())
+    if isinstance(tree, list):
+        return sum(find_occurrences(subtree, element) for subtree in tree)
+    if isinstance(tree, dict):
+        return sum(find_occurrences(subtree, element) for subtree in tree.values())
     return 0

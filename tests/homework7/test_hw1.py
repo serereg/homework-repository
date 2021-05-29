@@ -21,8 +21,6 @@ def test_usual_tree():
     cnt = find_occurrences(example_tree, "RED")
     assert cnt == 6
 
-
-def test_usual_tree2():
     example_tree = {
         "first": ["RED", "BLUE"],
         "second": {
@@ -42,8 +40,6 @@ def test_usual_tree2():
     cnt = find_occurrences(example_tree, "RED")
     assert cnt == 8
 
-
-def test_usual_tree3():
     example_tree = {
         "first": ["RED", "BLUE"],
         "second": {

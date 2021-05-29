@@ -18,6 +18,7 @@ Examples:
     Explanation: s becomes "c" while t becomes "b".
 
 """
+from itertools import zip_longest
 from typing import Generator
 
 
@@ -73,13 +74,10 @@ def backspace_compare(first: str, second: str) -> bool:
         output is False.
         First becomes "c" while second becomes "b".
     """
-    chars_in_second_string = get_char_in_reserved_string(second)
-    try:
-        for char_in_first_string in get_char_in_reserved_string(first):
-            if char_in_first_string != next(chars_in_second_string):
-                return False
-    except StopIteration:
-        return False
-    if next(chars_in_second_string, True) is True:
-        return True
-    return False
+    first_and_second = zip_longest(
+        get_char_in_reserved_string(first), get_char_in_reserved_string(second)
+    )
+    for f, s in first_and_second:
+        if f != s:
+            return False
+    return True

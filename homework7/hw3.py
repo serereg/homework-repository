@@ -48,6 +48,7 @@ def wins_combinations(n: int = 1):
     for i in range(n):
         line_horizontal = []
         line_vertical = []
+        # TODO: change to tuple comprehension
         for j in range(n):
             line_horizontal.append((i, j))
             line_vertical.append((j, i))

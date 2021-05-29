@@ -70,14 +70,22 @@ def test_x_or_o_wins():
         board_w_wins_vertical,
     ) = generate_boards("x", "o", "-")
 
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_horizontal[0])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_horizontal[1])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_horizontal[2])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_vertical[0])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_vertical[1])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_vertical[2])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_diagonal[0])
-    assert "x wins!" == tic_tac_toe_checker(board_w_wins_diagonal[1])
+    result = tic_tac_toe_checker(board_w_wins_horizontal[0])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_horizontal[1])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_horizontal[2])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[0])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[1])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[2])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_diagonal[0])
+    assert "x wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_diagonal[1])
+    assert "x wins!" == result
 
     (
         board_w_wins_diagonal,

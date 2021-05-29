@@ -40,13 +40,13 @@ def get_char_in_reserved_string(string: str) -> Generator[str, None, None]:
 
     """
     string_reversed = reversed(string)
-    counter_hash = 0
+    counter_deletes = 0
     for s in string_reversed:
         if s == "#":
-            counter_hash += 1
+            counter_deletes += 1
             continue
-        if counter_hash > 0:
-            counter_hash -= 1
+        if counter_deletes > 0:
+            counter_deletes -= 1
             continue
         yield s
 

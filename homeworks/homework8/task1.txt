@@ -1,4 +1,4 @@
-name=kek
+name=5
 last_name=top
-power=9001
-song=shadilay
+song_name=shadilay
+power=sasdfsafe

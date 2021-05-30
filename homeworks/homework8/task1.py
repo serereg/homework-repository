@@ -1,3 +1,6 @@
+from typing import Any, Dict
+
+
 class KeyValueStorage:
     """A class for wrapping a key=value storage file.
 
@@ -9,6 +12,8 @@ class KeyValueStorage:
 
     Attributes:
         path (str): a path to a storage file.
+        internal_dictionary (dict): a dictionary with attributes, read
+            from the path.
 
     Example:
         input_file.txt
@@ -26,20 +31,44 @@ class KeyValueStorage:
     # TODO: use metaclass?
     def __init__(self, path: str):
         self.path = path
-        internal_dictionary = dict()
-        with open(path) as fi:
-            for line in fi:
-                key, value = line.strip().split("=")
-                internal_dictionary[key] = value
+        self.internal_dictionary: Dict[str, Any] = dict()
+        self._read_attributes()
 
-        for key, value in internal_dictionary.items():
+        for key, value in self.internal_dictionary.items():
             setattr(self, key, value)
+
+    def _read_attributes(self):
+        """Read attributes from path and add them to self."""
+        with open(self.path) as fi:
+            for line in fi:
+                key: str
+                value: str
+                key, value = line.strip().split("=")
+                if key.isnumeric():
+                    raise ValueError(
+                        f"name '{key}' can't be an" f"attribute for the class"
+                    )
+                if value.isnumeric():
+                    value = int(value)
+                self.internal_dictionary[key] = value
+
+    def _write_attributes(self):
+        """Write attributes to path."""
+        with open(self.path, "w") as fi:
+            for key, value in self.internal_dictionary.items():
+                fi.write(f"{key}={value}\n")
 
     def __getitem__(self, item):
         return getattr(self, item)
 
+    def __setitem__(self, key, value):
+        if key not in self.internal_dictionary:
+            return
+        self.internal_dictionary[key] = value
+        self._write_attributes()
 
-if __name__ == "__main__":
-    new_object = KeyValueStorage("task1.txt")
-    print(new_object.__dict__)
-    print(new_object["name"])
+    def __setattr__(self, key, value):
+        self.__dict__[key] = value
+        if "internal_dictionary" not in self.__dict__:
+            return
+        self[key] = value

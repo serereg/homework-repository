@@ -1,4 +1,0 @@
-last_name=top
-power=9002
-song=shadilay
-cnt=2

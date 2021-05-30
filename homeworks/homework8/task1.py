@@ -35,14 +35,13 @@ class KeyValueStorage:
         self._read_attributes()
 
         for key, value in self.internal_dictionary.items():
+            # TODO: to analyse exception
             setattr(self, key, value)
 
     def _read_attributes(self):
         """Read attributes from path and add them to self."""
         with open(self.path) as fi:
             for line in fi:
-                key: str
-                value: str
                 key, value = line.strip().split("=")
                 if key.isnumeric():
                     raise ValueError(

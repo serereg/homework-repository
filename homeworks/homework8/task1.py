@@ -12,7 +12,7 @@ class KeyValueStorage:
 
     Attributes:
         path (str): a path to a storage file.
-        internal_dictionary (dict): a dictionary with attributes, read
+        attr_dictionary (dict): a dictionary with attributes, read
             from the path.
 
     Example:
@@ -31,10 +31,10 @@ class KeyValueStorage:
     # TODO: use metaclass?
     def __init__(self, path: str):
         self.path = path
-        self.internal_dictionary: Dict[str, Any] = dict()
+        self.attr_dictionary: Dict[str, Any] = dict()
         self._read_attributes()
 
-        for key, value in self.internal_dictionary.items():
+        for key, value in self.attr_dictionary.items():
             # TODO: to analyse exception
             setattr(self, key, value)
 
@@ -49,25 +49,25 @@ class KeyValueStorage:
                     )
                 if value.isnumeric():
                     value = int(value)
-                self.internal_dictionary[key] = value
+                self.attr_dictionary[key] = value
 
     def _write_attributes(self):
         """Write attributes to path."""
         with open(self.path, "w") as fi:
-            for key, value in self.internal_dictionary.items():
+            for key, value in self.attr_dictionary.items():
                 fi.write(f"{key}={value}\n")
 
     def __getitem__(self, item):
         return getattr(self, item)
 
     def __setitem__(self, key, value):
-        if key not in self.internal_dictionary:
+        if key not in self.attr_dictionary:
             return
-        self.internal_dictionary[key] = value
+        self.attr_dictionary[key] = value
         self._write_attributes()
 
     def __setattr__(self, key, value):
         self.__dict__[key] = value
-        if "internal_dictionary" not in self.__dict__:
+        if "attr_dictionary" not in self.__dict__:
             return
         self[key] = value

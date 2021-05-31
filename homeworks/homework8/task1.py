@@ -43,9 +43,9 @@ class KeyValueStorage:
         with open(self.path) as fi:
             for line in fi:
                 key, value = line.strip().split("=")
-                if key.isnumeric():
+                if not key.isidentifier():
                     raise ValueError(
-                        f"name '{key}' can't be an" f"attribute for the class"
+                        f"name '{key}' can't be an attribute for the " f"class "
                     )
                 if value.isnumeric():
                     value = int(value)

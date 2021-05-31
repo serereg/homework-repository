@@ -24,35 +24,49 @@ class TableData(object):
     """
 
     def __init__(self, db_path: str, table: str):
-        self.conn = sqlite3.connect(db_path)
-        self.table = table
-        self.iter_flag = False
+        self._conn = sqlite3.connect(db_path)
+        self._table = table
+        self._iter_flag = False
+        self._cursor: sqlite3.Cursor
+        self._response: None
 
     def __len__(self):
-        cursor = self.conn.cursor()
+        cursor = self._conn.cursor()
         # TODO: change calls execute(...) to use with parameters
-        cursor.execute(f"SELECT COUNT(*) FROM {self.table}")
+        cursor.execute(f"SELECT COUNT(*) FROM {self._table}")
         return cursor.fetchone()[0]
 
     def __contains__(self, item):
-        cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * from {self.table} where name=:item", {"item": item})
+        cursor = self._conn.cursor()
+        cursor.execute(f"SELECT * from {self._table} where name=:item", {"item": item})
         return cursor.fetchone() is not None
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        # if self.iter_flag is False:
-        cursor = self.conn.cursor()
-        cursor.execute(f"SELECT * from {self.table}")
-        self.iter_flag = True
+        if self._iter_flag is False:
+            self._cursor = self._conn.cursor()
+            self._cursor.execute(f"SELECT * from {self._table}")
+            self._iter_flag = True
 
-        # columns = list(map(lambda x: x[0], cursor.description))
-        return cursor.fetchall()
+        # TODO: optimize
+        columns = list(map(lambda x: x[0], self._cursor.description))
+        self._response = self._cursor.fetchone()
+
+        if self._response is not None:
+            dict_response = dict(zip(columns, self._response))
+            return dict_response
+        self._iter_flag = False
+        raise StopIteration
+
+    def __getitem__(self, item):
+        cursor = self._conn.cursor()
+        cursor.execute(f"SELECT * from {self._table} where name=:item", {"item": item})
+        return cursor.fetchone()
 
     def __del__(self):
-        self.conn.close()
+        self._conn.close()
 
 
 if __name__ == "__main__":

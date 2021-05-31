@@ -1,5 +1,7 @@
 import sqlite3
 
+from typing import Optional
+
 
 class TableData:
     """A wrapper class for database table.
@@ -26,9 +28,7 @@ class TableData:
     def __init__(self, db_path: str, table: str):
         self._conn = sqlite3.connect(db_path)
         self._table = table
-        self._iter_flag = False
-        self._cursor: sqlite3.Cursor
-        self._response: None
+        self._cursor: Optional[sqlite3.Cursor] = None
 
     def __len__(self):
         cursor = self._conn.cursor()
@@ -45,19 +45,17 @@ class TableData:
         return self
 
     def __next__(self):
-        if self._iter_flag is False:
+        if self._cursor is None:
             self._cursor = self._conn.cursor()
             self._cursor.execute(f"SELECT * from {self._table}")
-            self._iter_flag = True
 
-        # TODO: optimize
         columns = list(map(lambda x: x[0], self._cursor.description))
-        self._response = self._cursor.fetchone()
+        response = self._cursor.fetchone()
 
-        if self._response is not None:
-            dict_response = dict(zip(columns, self._response))
+        if response:
+            dict_response = dict(zip(columns, response))
             return dict_response
-        self._iter_flag = False
+        self._cursor = None
         raise StopIteration
 
     def __getitem__(self, item):
@@ -67,9 +65,3 @@ class TableData:
 
     def __del__(self):
         self._conn.close()
-
-
-if __name__ == "__main__":
-    new_object = TableData("example.sqlite", "presidents")
-    print(len(new_object))
-    # print("Yeltsin" in new_object)

@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class TableData(object):
+class TableData:
     """A wrapper class for database table.
 
     Object initializes with database name and table acts as collection

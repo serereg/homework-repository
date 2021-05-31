@@ -1,5 +1,3 @@
-from typing import List, Tuple
-
 from homework7.hw3 import wins_combinations, tic_tac_toe_checker
 
 
@@ -23,9 +21,9 @@ def test_wins_combinations():
     ] == list(combinations)
 
 
-def generate_boards(
-    win: str, los: str, unf: str
-) -> Tuple[List[List[List[str]]], List[List[List[str]]], List[List[List[str]]]]:
+def test_x_wins():
+    win, los, unf = "x", "o", "-"
+
     # fmt: off
     board_w_wins_horizontal = [[[unf, unf, los],
                                 [unf, los, los],
@@ -49,6 +47,7 @@ def generate_boards(
                              [[unf, unf, win],
                               [win, los, win],
                               [los, win, win]]]
+
     board_w_wins_diagonal = [[[win, unf, los],
                               [unf, win, los],
                               [unf, los, win]],
@@ -57,19 +56,6 @@ def generate_boards(
                               [unf, win, los],
                               [win, unf, unf]]]
     # fmt: on
-    return (board_w_wins_diagonal, board_w_wins_horizontal, board_w_wins_vertical)
-
-
-def test_x_or_o_wins():
-    # TODO: is it right way to generate combinations automatically?
-    #  also use mark.parametrize
-
-    (
-        board_w_wins_diagonal,
-        board_w_wins_horizontal,
-        board_w_wins_vertical,
-    ) = generate_boards("x", "o", "-")
-
     result = tic_tac_toe_checker(board_w_wins_horizontal[0])
     assert "x wins!" == result
     result = tic_tac_toe_checker(board_w_wins_horizontal[1])
@@ -87,21 +73,61 @@ def test_x_or_o_wins():
     result = tic_tac_toe_checker(board_w_wins_diagonal[1])
     assert "x wins!" == result
 
-    (
-        board_w_wins_diagonal,
-        board_w_wins_horizontal,
-        board_w_wins_vertical,
-    ) = generate_boards("o", "x", "-")
 
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_horizontal[0])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_horizontal[1])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_horizontal[2])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_vertical[0])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_vertical[1])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_vertical[2])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_diagonal[0])
-    assert "o wins!" == tic_tac_toe_checker(board_w_wins_diagonal[1])
+def test_o_wins():
+    win, los, unf = "o", "x", "-"
 
+    # fmt: off
+    board_w_wins_horizontal = [[[unf, unf, los],
+                                [unf, los, los],
+                                [win, win, win]],
+
+                               [[unf, unf, los],
+                                [win, win, win],
+                                [win, win, los]],
+
+                               [[win, win, win],
+                                [win, unf, los],
+                                [win, win, los]]]
+    board_w_wins_vertical = [[[win, los, los],
+                              [win, unf, los],
+                              [win, los, win]],
+
+                             [[unf, win, los],
+                              [win, win, los],
+                              [los, win, win]],
+
+                             [[unf, unf, win],
+                              [win, los, win],
+                              [los, win, win]]]
+
+    board_w_wins_diagonal = [[[win, unf, los],
+                              [unf, win, los],
+                              [unf, los, win]],
+
+                             [[los, unf, win],
+                              [unf, win, los],
+                              [win, unf, unf]]]
+    # fmt: on
+    result = tic_tac_toe_checker(board_w_wins_horizontal[0])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_horizontal[1])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_horizontal[2])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[0])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[1])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_vertical[2])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_diagonal[0])
+    assert "o wins!" == result
+    result = tic_tac_toe_checker(board_w_wins_diagonal[1])
+    assert "o wins!" == result
+
+
+def test_smallest_board():
     smallest_board = [["x"]]
     assert "x wins!" == tic_tac_toe_checker(smallest_board)
 

@@ -1,4 +1,4 @@
-from homework7.hw1 import find_occurrences
+from homeworks.homework7.hw1 import find_occurrences
 
 
 def test_usual_tree():

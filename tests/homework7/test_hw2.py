@@ -1,4 +1,4 @@
-from homework7.hw2 import backspace_compare
+from homeworks.homework7.hw2 import backspace_compare
 
 
 def test_equal_strings():

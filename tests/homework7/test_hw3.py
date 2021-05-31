@@ -1,4 +1,4 @@
-from homework7.hw3 import wins_combinations, tic_tac_toe_checker
+from homeworks.homework7.hw3 import wins_combinations, tic_tac_toe_checker
 
 
 def test_wins_combinations():

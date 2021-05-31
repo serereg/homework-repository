@@ -43,13 +43,13 @@ class TableData(object):
         return self
 
     def __next__(self):
-        if self.iter_flag is False:
-            cursor = self.conn.cursor()
-            cursor.execute(f"SELECT * from {self.table}")
-            self.iter_flag = True
+        # if self.iter_flag is False:
+        cursor = self.conn.cursor()
+        cursor.execute(f"SELECT * from {self.table}")
+        self.iter_flag = True
 
         # columns = list(map(lambda x: x[0], cursor.description))
-        return cursor.fetchone()
+        return cursor.fetchall()
 
     def __del__(self):
         self.conn.close()
@@ -58,4 +58,4 @@ class TableData(object):
 if __name__ == "__main__":
     new_object = TableData("example.sqlite", "presidents")
     print(len(new_object))
-    print("Yeltsin" in new_object)
+    # print("Yeltsin" in new_object)

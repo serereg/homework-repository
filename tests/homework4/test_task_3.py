@@ -1,4 +1,4 @@
-from homework4.task_3_get_print_output import my_precious_logger
+from homeworks.homework4.task_3_get_print_output import my_precious_logger
 
 
 def test_with_error_at_the_begining(capsys):

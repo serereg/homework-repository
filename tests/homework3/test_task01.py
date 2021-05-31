@@ -1,6 +1,6 @@
 from unittest.mock import Mock, call
 
-from homework3.task01 import cache_queue
+from homeworks.homework3.task01 import cache_queue
 
 
 def test_smoke():

@@ -1,4 +1,4 @@
-from homework3.task03 import Filter, make_filter
+from homeworks.homework3.task03 import Filter, make_filter
 
 
 def testing_with_dictionaries_with_filter_by_properties():

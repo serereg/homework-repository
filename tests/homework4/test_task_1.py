@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 
-from homework4.task_1_read_file import read_magic_number
+from homeworks.homework4.task_1_read_file import read_magic_number
 
 
 @pytest.fixture()

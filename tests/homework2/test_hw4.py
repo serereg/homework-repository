@@ -1,4 +1,4 @@
-from homework2.hw4 import cache
+from homeworks.homework2.hw4 import cache
 
 
 def test_smoke():

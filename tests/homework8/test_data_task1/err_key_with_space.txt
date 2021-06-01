@@ -1,0 +1,4 @@
+last name=top
+power=9001
+song=shadilay
+cnt=1

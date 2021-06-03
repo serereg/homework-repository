@@ -1,6 +1,3 @@
-from typing import Any, Dict
-
-
 class ErrInDictFile(Exception):
     # TODO: add user code: int
     ...
@@ -34,32 +31,34 @@ class KeyValueStorage(object):
     """
 
     # TODO: use metaclass?
-    def __init__(self, path: str):
+    def __init__(self, path: str, prefix="prefix"):
+        self._protected_attrs = dir(self)
         self._path = path
-        self._attr_dictionary: Dict[str, Any] = dict()
-        self._attr_dictionary = self._read_attributes()
+        self._prefix = prefix
+        self._attr_dictionary = self._read_attributes(self._path)
 
         for key, value in self._attr_dictionary.items():
             # TODO: to analyse exception
             setattr(self, key, value)
 
-    def _read_attributes(self):
+    @staticmethod
+    def _read_attributes(path):
         """Read attributes from path and add them to self."""
         try:
-            with open(self._path) as fi:
+            with open(path) as fi:
                 # we assume the file is small
                 lines = fi.readlines()
         except OSError as err:
             # https://stackoverflow.com/questions/9157210/how-do-i-raise
             # -the-same-exception-with-a-custom-message-in-python
-            raise ErrInDictFile(f"Could not open/read file: {self._path}") from err
+            raise ErrInDictFile(f"Could not open/read file: {path}") from err
 
         attributes_from_file = {}
         for line in lines:
             try:
                 key, value = line.strip().split("=", 1)
             except ValueError as err:
-                raise ErrInDictFile(f"File {self._path}" f"has wrong format") from err
+                raise ErrInDictFile(f"File {path}" f"has wrong format") from err
 
             if not key.isidentifier():
                 raise ValueError(
@@ -89,7 +88,12 @@ class KeyValueStorage(object):
         self._attr_dictionary[key] = value
 
     def __setattr__(self, key, value):
+        if hasattr(self, "_protected_attrs"):
+            if key in self._protected_attrs:
+                key = self._prefix + key
+                self[key] = value
+
         self.__dict__[key] = value
-        if "_attr_dictionary" not in self.__dict__:
+        if not hasattr(self, "_attr_dictionary"):
             return
         self[key] = value

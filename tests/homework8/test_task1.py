@@ -72,6 +72,15 @@ def test_wrong_format_without_equals():
     assert "wrong format" in str(err.value)
 
 
+def test_existing_key():
+    dict_file = (
+        f"{os.path.dirname(__file__)}/test_data_task1/err_existing_keys_in_dict.txt"
+    )
+    storage = KeyValueStorage(dict_file)
+    print(dir(storage))
+    print(storage.__dict__)
+    assert "prefix__dir__" in dir(storage)
+
+
 # TODO: write tests for "one two" key
 #  key ""
-#  line with multiple " =  = "

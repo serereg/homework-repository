@@ -45,6 +45,7 @@ def test_write_attributes():
     assert storage_step1["cnt"] == 1
     storage_step1.power = 9002
     storage_step1["cnt"] = 2
+    storage_step1.save()
     del storage_step1
 
     storage_step2 = KeyValueStorage(dict_file)
@@ -52,6 +53,7 @@ def test_write_attributes():
     assert storage_step2["cnt"] == 2
     storage_step2.power = 9001
     storage_step2["cnt"] = 1
+    storage_step2.save()
 
 
 def test_non_existing_file():

@@ -30,14 +30,9 @@ class KeyValueStorage:
         >> storage.power  # will be integer 9001
     """
 
-    def __init__(self, path: str, prefix="prefix"):
+    def __init__(self, path: str):
         self._path = path
-        self._prefix = prefix
-        self._protected_attrs = dir(self)
         self._file_attrs = self._read_attributes(self._path)
-
-        for key, value in self._file_attrs.items():
-            setattr(self, key, value)
 
     @staticmethod
     def _read_attributes(path):
@@ -73,26 +68,36 @@ class KeyValueStorage:
     def save(self):
         """Write attributes to path."""
         # TODO: add exception
-        with open(self._path, "w") as fi:
-            for key, value in self._file_attrs.items():
-                fi.write(f"{key}={value}\n")
+        try:
+            with open(self._path, "w") as fi:
+                for key, value in self._file_attrs.items():
+                    fi.write(f"{key}={value}\n")
+        except OSError as err:
+            # https://stackoverflow.com/questions/9157210/how-do-i-raise
+            # -the-same-exception-with-a-custom-message-in-python
+            raise ErrInDictFile(f"Could not open/write a file: {self._path}") from err
 
     def __getitem__(self, item):
-        if item not in self._file_attrs:
-            raise KeyError(f"given a non existing key {item}")
-        return getattr(self, item)
+        if item in self._file_attrs:
+            return self._file_attrs[item]
+        raise KeyError(f"No key {item} in a file {self._path}")
+
+    def __getattr__(self, item):
+        if item in dir(self):
+            return super(KeyValueStorage, self).__getattr__()
+
+        if item in self._file_attrs:
+            return self._file_attrs[item]
 
     def __setitem__(self, key, value):
-        if key not in self._file_attrs:
-            # raise KeyError(f"given a non existing key {item}")
+        if key in self._file_attrs:
+            self._file_attrs[key] = value
             return
-        self._file_attrs[key] = value
+        raise KeyError(f"No key {key} in a file {self._path}")
 
     def __setattr__(self, key, value):
-        if hasattr(self, "_protected_attrs") and key in self._protected_attrs:
-            key = f"{self._prefix}{key}"
-
+        if "_file_attrs" in dir(self):
+            if key in self._file_attrs:
+                self._file_attrs[key] = value
+                return
         super().__setattr__(key, value)
-        if not hasattr(self, "_file_attrs"):
-            return
-        self[key] = value

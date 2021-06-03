@@ -9,6 +9,7 @@ def test_smoke():
     storage = KeyValueStorage(dict_file)
     assert hasattr(storage, "name") is True
     assert storage["name"] == "kek"
+    assert storage.name == "kek"
 
 
 def test_access_to_attributes():
@@ -24,7 +25,6 @@ def test_access_to_attributes():
 def test_access_to_non_exesting_attributes():
     dict_file = f"{os.path.dirname(__file__)}/test_data_task1/access_to_attribute.txt"
     storage = KeyValueStorage(dict_file)
-    assert storage["name"] == "kek"
     with pytest.raises(KeyError) as err:
         storage["wrong"] == 1
     assert "key" in str(err.value)
@@ -75,7 +75,7 @@ def test_existing_key():
         f"{os.path.dirname(__file__)}/test_data_task1/err_existing_keys_in_dict.txt"
     )
     storage = KeyValueStorage(dict_file)
-    assert "prefix__dir__" in dir(storage)
+    assert storage["__dir__"] is not None
 
 
 # TODO: write tests for "one two" key

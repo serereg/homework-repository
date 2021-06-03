@@ -3,7 +3,7 @@ class ErrInDictFile(Exception):
     ...
 
 
-class KeyValueStorage(object):
+class KeyValueStorage:
     """A class for wrapping a key=value storage file.
 
     Each line of the file is represented as key and value separated
@@ -14,7 +14,7 @@ class KeyValueStorage(object):
 
     Attributes:
         path (str): a path to a storage file.
-        _attr_dictionary (dict): a dictionary with attributes, read
+        _file_attrs (dict): a dictionary with attributes, read
             from the path.
 
     Example:
@@ -30,15 +30,13 @@ class KeyValueStorage(object):
         >> storage.power  # will be integer 9001
     """
 
-    # TODO: use metaclass?
     def __init__(self, path: str, prefix="prefix"):
-        self._protected_attrs = dir(self)
         self._path = path
         self._prefix = prefix
-        self._attr_dictionary = self._read_attributes(self._path)
+        self._protected_attrs = dir(self)
+        self._file_attrs = self._read_attributes(self._path)
 
-        for key, value in self._attr_dictionary.items():
-            # TODO: to analyse exception
+        for key, value in self._file_attrs.items():
             setattr(self, key, value)
 
     @staticmethod
@@ -67,33 +65,34 @@ class KeyValueStorage(object):
                 )
             if value.isnumeric():
                 value = int(value)
+
             attributes_from_file[key] = value
 
         return attributes_from_file
 
     def save(self):
         """Write attributes to path."""
+        # TODO: add exception
         with open(self._path, "w") as fi:
-            for key, value in self._attr_dictionary.items():
+            for key, value in self._file_attrs.items():
                 fi.write(f"{key}={value}\n")
 
     def __getitem__(self, item):
-        if item not in self._attr_dictionary:
+        if item not in self._file_attrs:
             raise KeyError(f"given a non existing key {item}")
         return getattr(self, item)
 
     def __setitem__(self, key, value):
-        if key not in self._attr_dictionary:
+        if key not in self._file_attrs:
+            # raise KeyError(f"given a non existing key {item}")
             return
-        self._attr_dictionary[key] = value
+        self._file_attrs[key] = value
 
     def __setattr__(self, key, value):
-        if hasattr(self, "_protected_attrs"):
-            if key in self._protected_attrs:
-                key = self._prefix + key
-                self[key] = value
+        if hasattr(self, "_protected_attrs") and key in self._protected_attrs:
+            key = f"{self._prefix}{key}"
 
-        self.__dict__[key] = value
-        if not hasattr(self, "_attr_dictionary"):
+        super().__setattr__(key, value)
+        if not hasattr(self, "_file_attrs"):
             return
         self[key] = value

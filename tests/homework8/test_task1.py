@@ -7,7 +7,7 @@ from homeworks.homework8.task1 import KeyValueStorage, ErrInDictFile
 def test_smoke():
     dict_file = f"{os.path.dirname(__file__)}/test_data_task1/access_to_attribute.txt"
     storage = KeyValueStorage(dict_file)
-    assert "name" in storage.__dict__
+    assert hasattr(storage, "name") is True
     assert storage["name"] == "kek"
 
 
@@ -33,8 +33,7 @@ def test_access_to_non_exesting_attributes():
 def test_err_key():
     dict_file = f"{os.path.dirname(__file__)}/test_data_task1/err_key.txt"
     with pytest.raises(ValueError):
-        storage = KeyValueStorage(dict_file)
-        print(storage.__dict__)
+        KeyValueStorage(dict_file)
 
 
 def test_write_attributes():
@@ -67,8 +66,7 @@ def test_wrong_format_without_equals():
         f"{os.path.dirname(__file__)}/test_data_task1/err_format_without_equals.txt"
     )
     with pytest.raises(ErrInDictFile) as err:
-        storage = KeyValueStorage(dict_file)
-        print(storage.__dict__)
+        KeyValueStorage(dict_file)
     assert "wrong format" in str(err.value)
 
 
@@ -77,8 +75,6 @@ def test_existing_key():
         f"{os.path.dirname(__file__)}/test_data_task1/err_existing_keys_in_dict.txt"
     )
     storage = KeyValueStorage(dict_file)
-    print(dir(storage))
-    print(storage.__dict__)
     assert "prefix__dir__" in dir(storage)
 
 

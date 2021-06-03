@@ -1,6 +1,11 @@
 from typing import Any, Dict
 
 
+class ErrInDictFile(Exception):
+    # TODO: add user code: int
+    ...
+
+
 class KeyValueStorage:
     """A class for wrapping a key=value storage file.
 
@@ -12,7 +17,7 @@ class KeyValueStorage:
 
     Attributes:
         path (str): a path to a storage file.
-        attr_dictionary (dict): a dictionary with attributes, read
+        _attr_dictionary (dict): a dictionary with attributes, read
             from the path.
 
     Example:
@@ -31,39 +36,54 @@ class KeyValueStorage:
     # TODO: use metaclass?
     def __init__(self, path: str):
         self.path = path
-        self.attr_dictionary: Dict[str, Any] = dict()
+        self._attr_dictionary: Dict[str, Any] = dict()
         self._read_attributes()
 
-        for key, value in self.attr_dictionary.items():
+        for key, value in self._attr_dictionary.items():
             # TODO: to analyse exception
             setattr(self, key, value)
 
     def _read_attributes(self):
         """Read attributes from path and add them to self."""
-        with open(self.path) as fi:
-            for line in fi:
-                key, value = line.strip().split("=")
-                if not key.isidentifier():
-                    raise ValueError(
-                        f"name '{key}' can't be an attribute for the " f"class "
-                    )
-                if value.isnumeric():
-                    value = int(value)
-                self.attr_dictionary[key] = value
+        try:
+            with open(self.path) as fi:
+                # we assume the file is small
+                lines = fi.readlines()
+        except OSError as err:
+            # https://stackoverflow.com/questions/9157210/how-do-i-raise
+            # -the-same-exception-with-a-custom-message-in-python
+            raise ErrInDictFile(f"Could not open/read file: {self.path}") from err
+
+        for line in lines:
+            try:
+                key, value = line.strip().split("=", 1)
+            except ValueError as err:
+                raise ErrInDictFile(f"File {self.path}" f"has wrong format") from err
+
+            if not key.isidentifier():
+                raise ValueError(
+                    f"name '{key}' can't be an attribute "  # fmt: off
+                    f"for the class "  # fmt: on
+                )
+            if value.isnumeric():
+                value = int(value)
+            self._attr_dictionary[key] = value
 
     def _write_attributes(self):
         """Write attributes to path."""
         with open(self.path, "w") as fi:
-            for key, value in self.attr_dictionary.items():
+            for key, value in self._attr_dictionary.items():
                 fi.write(f"{key}={value}\n")
 
     def __getitem__(self, item):
+        if item not in self._attr_dictionary:
+            raise KeyError(f"given a non existing key {item}")
         return getattr(self, item)
 
     def __setitem__(self, key, value):
-        if key not in self.attr_dictionary:
+        if key not in self._attr_dictionary:
             return
-        self.attr_dictionary[key] = value
+        self._attr_dictionary[key] = value
         self._write_attributes()
 
     def __setattr__(self, key, value):

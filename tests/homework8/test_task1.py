@@ -75,7 +75,14 @@ def test_existing_key():
         f"{os.path.dirname(__file__)}/test_data_task1/err_existing_keys_in_dict.txt"
     )
     storage = KeyValueStorage(dict_file)
-    assert storage["__dir__"] is not None
+    assert storage["__dir__"] == 1
+    assert isinstance(storage.__dir__(), list)
+
+
+def test_empty_file():
+    dict_file = f"{os.path.dirname(__file__)}/test_data_task1/empty_file.txt"
+    storage = KeyValueStorage(dict_file)
+    assert storage._file_attrs == {}
 
 
 # TODO: write tests for "one two" key

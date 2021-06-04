@@ -38,6 +38,8 @@ class TableData:
         # _table (str): name af decorating table.
         self._db_path = db_path
         self._table = table
+        self._cursor_for_iterations: Optional[sqlite3.Cursor] = None
+
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -45,32 +47,31 @@ class TableData:
         if table not in [existing_table[0] for existing_table in response]:
             conn.close()
             raise ValueError(f"Not existing table {table}")
-        self._cursor: Optional[sqlite3.Cursor] = None
         conn.close()
 
     def __len__(self):
-        self._conn = sqlite3.connect(self._db_path)
-        cursor = self._conn.cursor()
+        conn = sqlite3.connect(self._db_path)
+        cursor = conn.cursor()
         cursor.execute(f"select count(*) from {self._table}")
         response = cursor.fetchone()[0]
-        self._conn.close()
+        conn.close()
         return response
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        self._conn = sqlite3.connect(self._db_path)
-        if self._cursor is None:
+        if self._cursor_for_iterations is None:
+            self._conn = sqlite3.connect(self._db_path)
             self._conn.row_factory = sqlite3.Row
-            self._cursor = self._conn.cursor()
-            self._cursor.execute(f"select * from {self._table}")
+            self._cursor_for_iterations = self._conn.cursor()
+            self._cursor_for_iterations.execute(f"select * from {self._table}")
 
-        response = self._cursor.fetchone()
+        response = self._cursor_for_iterations.fetchone()
 
         if response:
             return response
-        self._cursor = None
+        self._cursor_for_iterations = None
         self._conn.close()
         raise StopIteration
 
@@ -82,11 +83,8 @@ class TableData:
         if response is None:
             conn.close()
             raise KeyError(f"Key {item} doesn't exist in a table {self._table}")
-
+        conn.close()
         return response
 
     def __contains__(self, item):
         return self[item] is not None
-
-    def __del__(self):
-        self._conn.close()

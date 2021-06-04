@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class ErrInDictFile(Exception):
     # TODO: add user code: int
     ...
@@ -11,11 +14,12 @@ class KeyValueStorage:
     can be treated both as a number and a string, it is treated as
     number. Its keys and values accessible as collection items and
     as attributes.
+    In case of attribute clash existing built-in attributes take
+    precedence, but access to attributes can be done via
+    ["name attribute"].
 
     Attributes:
         path (str): a path to a storage file.
-        _file_attrs (dict): a dictionary with attributes, read
-            from the path.
 
     Example:
         input_file.txt
@@ -35,8 +39,12 @@ class KeyValueStorage:
         self._file_attrs = self._read_attributes(self._path)
 
     @staticmethod
-    def _read_attributes(path):
-        """Read attributes from path and add them to self."""
+    def _read_attributes(path) -> dict:
+        """Read attributes from path and add them to self.
+
+        Args:
+            path (str): path to a file with attrs.
+        """
         try:
             with open(path) as fi:
                 # we assume the file is small
@@ -48,6 +56,8 @@ class KeyValueStorage:
 
         attributes_from_file = {}
         for line in lines:
+            key: str
+            value: Any
             try:
                 key, value = line.strip().split("=", 1)
             except ValueError as err:
@@ -59,14 +69,14 @@ class KeyValueStorage:
                     f"for the class "  # fmt: on
                 )
             if value.isnumeric():
-                value = int(value)
-
-            attributes_from_file[key] = value
+                attributes_from_file[key] = int(value)
+            else:
+                attributes_from_file[key] = value
 
         return attributes_from_file
 
     def save(self):
-        """Write attributes to path."""
+        """Write attributes to the path."""
         # TODO: add exception
         try:
             with open(self._path, "w") as fi:

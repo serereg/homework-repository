@@ -24,7 +24,7 @@ def test_len(presidents, books):
     assert len(books) == 3
 
 
-def test_getattr(presidents, books):
+def test_getitem(presidents, books):
     assert presidents["Yeltsin"] == ("Yeltsin", 999, "Russia")
     assert books["1984"] == ("1984", "Orwell")
 

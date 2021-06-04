@@ -36,45 +36,57 @@ class TableData:
         # _cursor (sqlite3.Cursor): internal cursor for the connection,
         #     for iterating over rows in the response.
         # _table (str): name af decorating table.
-
-        self._conn = sqlite3.connect(db_path)
+        self._db_path = db_path
         self._table = table
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        response = cursor.fetchall()
+        if table not in [existing_table[0] for existing_table in response]:
+            conn.close()
+            raise ValueError(f"Not existing table {table}")
         self._cursor: Optional[sqlite3.Cursor] = None
+        conn.close()
 
     def __len__(self):
+        self._conn = sqlite3.connect(self._db_path)
         cursor = self._conn.cursor()
-        # TODO: can't add self._table as parameter to a query
         cursor.execute(f"select count(*) from {self._table}")
-        return cursor.fetchone()[0]
-
-    def __contains__(self, item):
-        cursor = self._conn.cursor()
-        # TODO: can't add self._table as parameter to a query
-        cursor.execute(f"select * from {self._table} where name=:item", {"item": item})
-        return cursor.fetchone() is not None
+        response = cursor.fetchone()[0]
+        self._conn.close()
+        return response
 
     def __iter__(self):
         return self
 
     def __next__(self):
+        self._conn = sqlite3.connect(self._db_path)
         if self._cursor is None:
+            self._conn.row_factory = sqlite3.Row
             self._cursor = self._conn.cursor()
-            # TODO: can't add self._table as parameter to a query
             self._cursor.execute(f"select * from {self._table}")
 
-        columns_names = list(map(lambda x: x[0], self._cursor.description))
         response = self._cursor.fetchone()
 
         if response:
-            return dict(zip(columns_names, response))
+            return response
         self._cursor = None
+        self._conn.close()
         raise StopIteration
 
     def __getitem__(self, item):
-        cursor = self._conn.cursor()
-        # TODO: can't add self._table as parameter to a query
+        conn = sqlite3.connect(self._db_path)
+        cursor = conn.cursor()
         cursor.execute(f"select * from {self._table} where name=:item", {"item": item})
-        return cursor.fetchone()
+        response = cursor.fetchone()
+        if response is None:
+            conn.close()
+            raise KeyError(f"Key {item} doesn't exist in a table {self._table}")
+
+        return response
+
+    def __contains__(self, item):
+        return self[item] is not None
 
     def __del__(self):
         self._conn.close()

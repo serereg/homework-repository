@@ -109,7 +109,3 @@ def test_write_attributes(file_path):
     storage_step2.power = 9001
     storage_step2["cnt"] = 1
     storage_step2.save()
-
-
-# TODO: write tests for "one two" key
-#  key ""

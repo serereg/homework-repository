@@ -1,7 +1,5 @@
 import sqlite3
 
-from typing import Optional
-
 
 class TableData:
     """A wrapper class for database table.
@@ -32,13 +30,8 @@ class TableData:
             db_path: a path to the decorating database.
             table: a table to work with.
         """
-        # _conn (sqlite3.Connection): a connection to the database.
-        # _cursor (sqlite3.Cursor): internal cursor for the connection,
-        #     for iterating over rows in the response.
-        # _table (str): name af decorating table.
         self._db_path = db_path
         self._table = table
-        self._cursor_for_iterations: Optional[sqlite3.Cursor] = None
 
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
@@ -58,19 +51,15 @@ class TableData:
         return response
 
     def __iter__(self):
-        if self._cursor_for_iterations is None:
-            self._conn = sqlite3.connect(self._db_path)
-            self._conn.row_factory = sqlite3.Row
-            self._cursor_for_iterations = self._conn.cursor()
-            self._cursor_for_iterations.execute(f"select * from {self._table}")
-
-        response = self._cursor_for_iterations.fetchone()
-
+        conn = sqlite3.connect(self._db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(f"select * from {self._table}")
+        response = cursor.fetchone()
         while response:
             yield dict(response)
-            response = self._cursor_for_iterations.fetchone()
-        self._cursor_for_iterations = None
-        self._conn.close()
+            response = cursor.fetchone()
+        conn.close()
 
     def __getitem__(self, item):
         conn = sqlite3.connect(self._db_path)

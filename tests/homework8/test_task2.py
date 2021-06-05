@@ -1,4 +1,5 @@
 import pytest
+import sqlite3
 import os
 
 from homeworks.homework8.task2 import TableData
@@ -56,3 +57,23 @@ def test_iterators_in_several_calls_for_loops(presidents):
     for president in presidents:
         presidents_names.add(president["name"])
     assert presidents_names == {"Yeltsin", "Trump", "Big Man Tyrone"}
+
+
+def test_sql_table_in_ram():
+    con = sqlite3.connect(":memory:asdf")
+    cur = con.cursor()
+    cur.execute(
+        """create table if not exists presidents
+        (name varchar not null,
+        age int not null,
+        country varchar not null)"""
+    )
+
+    # This is the qmark style:
+    cur.execute("insert into presidents values (?, ?, ?)", ("Yeltsin", 999, "Russia"))
+    cur.execute("commit")
+
+    presidents = TableData(":memory:asdf", "presidents")
+    assert presidents["Yeltsin"] == ("Yeltsin", 999, "Russia")
+
+    con.close()

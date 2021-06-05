@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any
 
 
@@ -35,18 +36,18 @@ class KeyValueStorage:
     """
 
     def __init__(self, path: str):
-        self._path = path
+        self._path = Path(path)
         self._file_attrs = self._read_attributes(self._path)
 
     @staticmethod
-    def _read_attributes(path) -> dict:
+    def _read_attributes(path: Path) -> dict:
         """Read attributes from path and add them to self.
 
         Args:
             path (str): path to a file with attrs.
         """
         try:
-            with open(path) as fi:
+            with path.open() as fi:
                 # we assume the file is small
                 lines = fi.readlines()
         except OSError as err:
@@ -79,7 +80,7 @@ class KeyValueStorage:
         """Write attributes to the path."""
         # TODO: add exception
         try:
-            with open(self._path, "w") as fi:
+            with self._path.open("w") as fi:
                 for key, value in self._file_attrs.items():
                     fi.write(f"{key}={value}\n")
         except OSError as err:

@@ -58,9 +58,6 @@ class TableData:
         return response
 
     def __iter__(self):
-        return self
-
-    def __next__(self):
         if self._cursor_for_iterations is None:
             self._conn = sqlite3.connect(self._db_path)
             self._conn.row_factory = sqlite3.Row
@@ -69,11 +66,11 @@ class TableData:
 
         response = self._cursor_for_iterations.fetchone()
 
-        if response:
-            return response
+        while response:
+            yield dict(response)
+            response = self._cursor_for_iterations.fetchone()
         self._cursor_for_iterations = None
         self._conn.close()
-        raise StopIteration
 
     def __getitem__(self, item):
         conn = sqlite3.connect(self._db_path)

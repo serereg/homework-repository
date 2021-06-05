@@ -1,4 +1,17 @@
+from contextlib import contextmanager
 import sqlite3
+
+
+@contextmanager
+def open_db(db_path, row_factory=None):
+    try:
+        conn = sqlite3.connect(db_path)
+        if row_factory:
+            conn.row_factory = row_factory
+        cursor = conn.cursor()
+        yield cursor
+    finally:
+        conn.close()
 
 
 class TableData:
@@ -33,43 +46,34 @@ class TableData:
         self._db_path = db_path
         self._table = table
 
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        response = cursor.fetchall()
+        with open_db(self._db_path) as cursor:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            response = cursor.fetchall()
         if table not in [existing_table[0] for existing_table in response]:
-            conn.close()
             raise ValueError(f"Not existing table {table}")
-        conn.close()
 
     def __len__(self):
-        conn = sqlite3.connect(self._db_path)
-        cursor = conn.cursor()
-        cursor.execute(f"select count(*) from {self._table}")
-        response = cursor.fetchone()[0]
-        conn.close()
+        with open_db(self._db_path) as cursor:
+            cursor.execute(f"select count(*) from {self._table}")
+            response = cursor.fetchone()[0]
         return response
 
     def __iter__(self):
-        conn = sqlite3.connect(self._db_path)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        cursor.execute(f"select * from {self._table}")
-        response = cursor.fetchone()
-        while response:
-            yield dict(response)
+        with open_db(self._db_path, sqlite3.Row) as cursor:
+            cursor.execute(f"select * from {self._table}")
             response = cursor.fetchone()
-        conn.close()
+            while response:
+                yield dict(response)
+                response = cursor.fetchone()
 
     def __getitem__(self, item):
-        conn = sqlite3.connect(self._db_path)
-        cursor = conn.cursor()
-        cursor.execute(f"select * from {self._table} where name=:item", {"item": item})
-        response = cursor.fetchone()
+        with open_db(self._db_path) as cursor:
+            cursor.execute(
+                f"select * from {self._table} where name=:item", {"item": item}
+            )
+            response = cursor.fetchone()
         if response is None:
-            conn.close()
             raise KeyError(f"Key {item} doesn't exist in a table {self._table}")
-        conn.close()
         return response
 
     def __contains__(self, item):

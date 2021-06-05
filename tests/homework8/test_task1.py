@@ -41,7 +41,8 @@ def test_existing_key(file_path):
 
     storage = KeyValueStorage(dict_file)
     assert storage["__dir__"] == 1
-    assert isinstance(storage.__dir__(), list)
+    assert isinstance(storage.__dir__(), list) is True
+    assert isinstance(storage.__dir__, int) is False
 
 
 def test_access_to_non_exesting_attributes(file_path):
@@ -53,6 +54,9 @@ def test_access_to_non_exesting_attributes(file_path):
     with pytest.raises(KeyError) as err:
         storage["wrong"] == 1
     assert "key" in str(err.value)
+    with pytest.raises(AttributeError) as err:
+        assert storage.wrong == 1
+    assert "No attribute" in str(err.value)
 
 
 def test_err_key(file_path):

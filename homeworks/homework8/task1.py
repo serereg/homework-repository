@@ -94,11 +94,9 @@ class KeyValueStorage:
         raise KeyError(f"No key {item} in a file {self._path}")
 
     def __getattr__(self, item):
-        if item in dir(self):
-            return super(KeyValueStorage, self).__getattr__()
-
         if item in self._file_attrs:
             return self._file_attrs[item]
+        raise AttributeError(f"No attribute in a file {self._path}")
 
     def __setitem__(self, key, value):
         if key in self._file_attrs:

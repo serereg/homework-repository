@@ -30,17 +30,16 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
     values = [float("+inf") for i in file_list]
     gens = [read_value_from_file(file) for file in file_list]
     while True:
-        try:
-            for file_num, file in enumerate(file_list):
+        for file_num, file in enumerate(file_list):
+            try:
                 if values[file_num] == float("+inf"):
                     values[file_num] = next(gens[file_num])
-
-            min_value = min(values)
-            print(values, min_value)
-            values[values.index(min_value)] = float("+inf")
-            print(values)
-            if all([i == float("+inf") for i in values]):
-                return
-            yield min_value
-        except StopIteration:
+            except StopIteration:
+                values[file_num] = float("+inf")
+        min_value = min(values)
+        print(values, min_value)
+        values[values.index(min_value)] = float("+inf")
+        print(values)
+        yield min_value
+        if all([i == float("+inf") for i in values]):
             return

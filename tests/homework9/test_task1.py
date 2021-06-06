@@ -32,4 +32,4 @@ def test_access_to_attributes(file_path):
 
     li = list(merge_sorted_files([file1, file2]))
     # TODO: last value is not in a list
-    assert [0, 1, 2, 3, 4, 5, 6, 7, 10] == li
+    assert [0, 1, 2, 3, 4, 5, 6, 7, 10, 22] == li

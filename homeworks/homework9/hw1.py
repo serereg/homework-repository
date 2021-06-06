@@ -17,16 +17,30 @@ file2.txt:
 """
 from pathlib import Path
 
-# from typing import List, Union, Iterator
+from typing import List, Union, Iterator
 
 
-def read_value_from_file(path: Path):
+def read_value_from_file(path: Union[Path, str]):
     with open(path) as fi:
         for line in fi:
             yield int(line)
-        # raise StopIteration
 
 
-# def merge_sorted_files(file_list:
-# List[Union[Path, str], ...]) -> Iterator:
-#     pass
+def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
+    values = [float("+inf") for i in file_list]
+    gens = [read_value_from_file(file) for file in file_list]
+    while True:
+        try:
+            for file_num, file in enumerate(file_list):
+                if values[file_num] == float("+inf"):
+                    values[file_num] = next(gens[file_num])
+
+            min_value = min(values)
+            print(values, min_value)
+            values[values.index(min_value)] = float("+inf")
+            print(values)
+            if all([i == float("+inf") for i in values]):
+                return
+            yield min_value
+        except StopIteration:
+            return

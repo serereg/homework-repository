@@ -7,10 +7,11 @@ Do it both ways: as a class and as a generator.
 
 """
 from contextlib import contextmanager
+from typing import Any, Iterator
 
 
 @contextmanager
-def suppressor(err):
+def suppressor(err: Any) -> Iterator[None]:
     """Suppress passed exception.
 
     A context manager, that suppresses passed exception.
@@ -35,12 +36,18 @@ class Suppressor(object):
         ... [][2]
     """
 
-    def __init__(self, err):
-        self.err = err
+    def __init__(self, err: Any):
+        """Initialise suppressed exception.
+
+        Args:
+            err: type of suppressed exception, like ValueError etc.
+        """
+        self._err = err
 
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        if self.err is exc_type:
+    def __exit__(self, exc_type: Any, exc_value: Any, exc_traceback: Any) -> bool:
+        if self._err is exc_type:
             return True
+        return False

@@ -63,10 +63,8 @@ class TableData:
     def __iter__(self):
         with open_db(self._db_path, sqlite3.Row) as cursor:
             cursor.execute(f"select * from {self._table}")
-            response = cursor.fetchone()
-            while response:
+            while response := cursor.fetchone():
                 yield dict(response)
-                response = cursor.fetchone()
 
     def __getitem__(self, item):
         with open_db(self._db_path) as cursor:

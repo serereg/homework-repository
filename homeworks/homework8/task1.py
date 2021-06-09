@@ -46,33 +46,31 @@ class KeyValueStorage:
         Args:
             path (str): path to a file with attrs.
         """
-        try:
-            with path.open() as fi:
-                # we assume the file is small
-                lines = fi.readlines()
-        except OSError as err:
-            # https://stackoverflow.com/questions/9157210/how-do-i-raise
-            # -the-same-exception-with-a-custom-message-in-python
-            raise ErrInDictFile(f"Could not open/read file: {path}") from err
+        if not path.is_file():
+            raise ErrInDictFile(f"Could not open/read file: {path}")
 
         attributes_from_file = {}
-        for line in lines:
-            key: str
-            value: Any
-            try:
-                key, value = line.strip().split("=", 1)
-            except ValueError as err:
-                raise ErrInDictFile(f"File {path}" f"has wrong format") from err
+        with path.open() as fi:
+            for line in fi:
+                key: str
+                value: Any
+                try:
+                    key, value = line.strip().split("=", 1)
+                except ValueError as err:
+                    raise ErrInDictFile(
+                        f"""File {path} has
+ wrong format"""
+                    ) from err
 
-            if not key.isidentifier():
-                raise ValueError(
-                    f"name '{key}' can't be an attribute "  # fmt: off
-                    f"for the class "  # fmt: on
-                )
-            if value.isnumeric():
-                attributes_from_file[key] = int(value)
-            else:
-                attributes_from_file[key] = value
+                if not key.isidentifier():
+                    raise ValueError(
+                        f"""name '{key}' can't be an
+ attribute for the class """
+                    )
+                if value.isnumeric():
+                    attributes_from_file[key] = int(value)
+                else:
+                    attributes_from_file[key] = value
 
         return attributes_from_file
 
@@ -86,7 +84,10 @@ class KeyValueStorage:
         except OSError as err:
             # https://stackoverflow.com/questions/9157210/how-do-i-raise
             # -the-same-exception-with-a-custom-message-in-python
-            raise ErrInDictFile(f"Could not open/write a file: {self._path}") from err
+            raise ErrInDictFile(
+                f"""Could not open/write
+                 a file: {self._path}"""
+            ) from err
 
     def __getitem__(self, item):
         if item in self._file_attrs:

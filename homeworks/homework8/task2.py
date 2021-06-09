@@ -79,4 +79,7 @@ class TableData:
         return response
 
     def __contains__(self, item):
-        return self[item] is not None
+        try:
+            return self[item] is not None
+        except KeyError:
+            return None

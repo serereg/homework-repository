@@ -35,6 +35,11 @@ def test_contains(presidents, books):
     assert "Farenheit 451" in books
 
 
+def test_contains_with_non_existing_element(presidents, books):
+    assert "Y_e_l_t_s_i_n" not in presidents
+    assert "F_a_r_e_n_h_e_i_t 451" not in books
+
+
 def test_iterators_in_for_loop(presidents, books):
     presidents_names = set()
     for president in presidents:

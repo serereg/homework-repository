@@ -49,23 +49,33 @@ class KeyValueStorage:
             raise ErrInDictFile(f"Could not open/read file: {path}")
 
         attributes_from_file = {}
-        with path.open() as fi:
-            for line in fi:
-                try:
-                    key, value = line.strip().split("=", 1)
-                except ValueError as err:
-                    raise ErrInDictFile(
-                        f"""File {path} has
- wrong format"""
-                    ) from err
-
-                if not key.isidentifier():
-                    raise ValueError(
-                        f"""name '{key}' can't be an
- attribute for the class """
-                    )
-                attributes_from_file[key] = int(value) if value.isnumeric() else value
+        try:
+            with path.open() as fi:
+                for line in fi:
+                    key, value = KeyValueStorage.parse_line(line, path)
+                    attributes_from_file[key] = value
+        except OSError as err:
+            raise ErrInDictFile(
+                f"""Error while reading file:
+ {path}"""
+            ) from err
         return attributes_from_file
+
+    @staticmethod
+    def parse_line(line, path):
+        try:
+            key, value = line.strip().split("=", 1)
+        except ValueError as err:
+            raise ErrInDictFile(
+                f"""File {path} has
+ wrong format"""
+            ) from err
+        if not key.isidentifier():
+            raise ValueError(
+                f"""name '{key}' can't be an
+ attribute for the class """
+            )
+        return (key, int(value)) if value.isnumeric() else (key, value)
 
     def save(self):
         """Write attributes to the path."""

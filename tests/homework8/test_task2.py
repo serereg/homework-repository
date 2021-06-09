@@ -68,7 +68,6 @@ con = sqlite3.connect("file:cachedb?mode=memory&cache=shared")
 
 
 def test_sql_table_in_ram():
-    # con = sqlite3.connect("asdf::memory:")
     cur = con.cursor()
     cur.execute(
         """create table if not exists presidents

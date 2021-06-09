@@ -1,6 +1,6 @@
-from contextlib import contextmanager
 import sqlite3
-from urllib.parse import urlparse, parse_qs
+from contextlib import contextmanager
+from urllib.parse import parse_qs, urlparse
 
 
 @contextmanager

@@ -1,13 +1,13 @@
 import pytest
 import sqlite3
-import os
+from pathlib import Path
 
 from homeworks.homework8.task2 import TableData
 
 
 @pytest.fixture
 def db_path():
-    return os.path.dirname(__file__) + "/test_data_task2/example.sqlite"
+    return str(Path(__file__).parent / "test_data_task2/example.sqlite")
 
 
 @pytest.fixture

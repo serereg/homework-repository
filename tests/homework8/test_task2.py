@@ -64,8 +64,11 @@ def test_iterators_in_several_calls_for_loops(presidents):
     assert presidents_names == {"Yeltsin", "Trump", "Big Man Tyrone"}
 
 
+con = sqlite3.connect("file:cachedb?mode=memory&cache=shared")
+
+
 def test_sql_table_in_ram():
-    con = sqlite3.connect(":memory:asdf")
+    # con = sqlite3.connect("asdf::memory:")
     cur = con.cursor()
     cur.execute(
         """create table if not exists presidents
@@ -78,7 +81,7 @@ def test_sql_table_in_ram():
     cur.execute("insert into presidents values (?, ?, ?)", ("Yeltsin", 999, "Russia"))
     cur.execute("commit")
 
-    presidents = TableData(":memory:asdf", "presidents")
+    presidents = TableData("file:cachedb?mode=memory&cache=shared", "presidents")
     assert presidents["Yeltsin"] == ("Yeltsin", 999, "Russia")
 
     con.close()

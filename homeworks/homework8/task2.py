@@ -1,12 +1,13 @@
 from contextlib import contextmanager
 import sqlite3
+from urllib.parse import urlparse, parse_qs
 
 
 @contextmanager
 def open_db(db_path: str, row_factory=None):
     conn = None
     try:
-        conn = sqlite3.connect(f"file:{db_path}?mode=rw", uri=True)
+        conn = sqlite3.connect(f"{db_path}")
         if row_factory:
             conn.row_factory = row_factory
         cursor = conn.cursor()
@@ -45,7 +46,9 @@ class TableData:
             db_path: a path to the decorating database.
             table: a table to work with.
         """
-        self._db_path = db_path
+        mode = parse_qs(urlparse(db_path)[4]).get("mode", [])
+
+        self._db_path = db_path if "memory" in mode else (f"file:{db_path}?mode=rw")
         self._table = table
 
         with open_db(self._db_path) as cursor:

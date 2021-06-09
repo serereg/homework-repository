@@ -65,10 +65,9 @@ def test_iterators_in_several_calls_for_loops(presidents):
     assert presidents_names == {"Yeltsin", "Trump", "Big Man Tyrone"}
 
 
-con = sqlite3.connect("file:cachedb?mode=memory&cache=shared")
-
-
 def test_sql_table_in_ram():
+    con = sqlite3.connect("file:cachedb?mode=memory&cache=shared")
+
     cur = con.cursor()
     cur.execute(
         """create table if not exists presidents

@@ -1,6 +1,7 @@
-import pytest
 import sqlite3
 from pathlib import Path
+
+import pytest
 
 from homeworks.homework8.task2 import TableData
 
@@ -28,14 +29,14 @@ def test_len(presidents, books):
 def test_getitem(presidents, books):
     assert presidents["Yeltsin"] == ("Yeltsin", 999, "Russia")
     assert books["1984"] == ("1984", "Orwell")
+    with pytest.raises(KeyError):
+        assert presidents["Y_e_l_t_s_i_n"]
+        assert books["1_9_8_4"]
 
 
 def test_contains(presidents, books):
     assert "Yeltsin" in presidents
     assert "Farenheit 451" in books
-
-
-def test_contains_with_non_existing_element(presidents, books):
     assert "Y_e_l_t_s_i_n" not in presidents
     assert "F_a_r_e_n_h_e_i_t 451" not in books
 
@@ -84,3 +85,8 @@ def test_sql_table_in_ram():
     assert presidents["Yeltsin"] == ("Yeltsin", 999, "Russia")
 
     con.close()
+
+
+def test_open_non_existing_database():
+    with pytest.raises(sqlite3.OperationalError):
+        return TableData("non_existing.sqlite", "presidents")

@@ -3,15 +3,17 @@ import sqlite3
 
 
 @contextmanager
-def open_db(db_path, row_factory=None):
+def open_db(db_path: str, row_factory=None):
+    conn = None
     try:
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(f"file:{db_path}?mode=rw", uri=True)
         if row_factory:
             conn.row_factory = row_factory
         cursor = conn.cursor()
         yield cursor
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 
 class TableData:

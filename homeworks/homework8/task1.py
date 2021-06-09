@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Any
 
 
 class ErrInDictFile(Exception):
@@ -52,8 +51,6 @@ class KeyValueStorage:
         attributes_from_file = {}
         with path.open() as fi:
             for line in fi:
-                key: str
-                value: Any
                 try:
                     key, value = line.strip().split("=", 1)
                 except ValueError as err:

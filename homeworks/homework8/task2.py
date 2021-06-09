@@ -49,16 +49,17 @@ class TableData:
         self._table = table
 
         with open_db(self._db_path) as cursor:
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-            response = cursor.fetchall()
-        if table not in [existing_table[0] for existing_table in response]:
-            raise ValueError(f"Not existing table {table}")
+            cursor.execute(
+                """SELECT name FROM sqlite_master
+            WHERE type='table';"""
+            )
+            if table not in [existing_table[0] for existing_table in cursor.fetchall()]:
+                raise ValueError(f"Not existing table {table}")
 
     def __len__(self):
         with open_db(self._db_path) as cursor:
             cursor.execute(f"select count(*) from {self._table}")
-            response = cursor.fetchone()[0]
-        return response
+            return cursor.fetchone()[0]
 
     def __iter__(self):
         with open_db(self._db_path, sqlite3.Row) as cursor:
@@ -71,10 +72,9 @@ class TableData:
             cursor.execute(
                 f"select * from {self._table} where name=:item", {"item": item}
             )
-            response = cursor.fetchone()
-        if response is None:
-            raise KeyError(f"Key {item} doesn't exist in a table {self._table}")
-        return response
+            if (response := cursor.fetchone()) is None:
+                raise KeyError(f"Key {item} doesn't exist in a table {self._table}")
+            return response
 
     def __contains__(self, item):
         try:

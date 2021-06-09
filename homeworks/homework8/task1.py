@@ -86,7 +86,7 @@ class KeyValueStorage:
             # -the-same-exception-with-a-custom-message-in-python
             raise ErrInDictFile(
                 f"""Could not open/write
-                 a file: {self._path}"""
+ a file: {self._path}"""
             ) from err
 
     def __getitem__(self, item):

@@ -67,11 +67,7 @@ class KeyValueStorage:
                         f"""name '{key}' can't be an
  attribute for the class """
                     )
-                if value.isnumeric():
-                    attributes_from_file[key] = int(value)
-                else:
-                    attributes_from_file[key] = value
-
+                attributes_from_file[key] = int(value) if value.isnumeric() else value
         return attributes_from_file
 
     def save(self):

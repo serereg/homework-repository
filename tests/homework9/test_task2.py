@@ -3,7 +3,7 @@ import pytest
 from homeworks.homework9.hw2 import suppressor, Suppressor
 
 
-class TestGen:
+class TestGenSuppressor:
     def test_suppress_wrong_exception(self):
         with pytest.raises(IndexError):
             with suppressor(ValueError):
@@ -19,7 +19,7 @@ class TestGen:
             pass
 
 
-class TestSuppressor:
+class TestClassSuppressor:
     def test_suppress_wrong_exception(self):
         with pytest.raises(IndexError):
             with Suppressor(ValueError):

@@ -12,17 +12,16 @@ For dir with two files from hw1.py:
 
 """
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Callable
 
 
 def tokenizer_lines(path: Path):
     with path.open() as fi:
-        for line in fi:
-            yield line
+        yield from fi
 
 
 def universal_file_counter(
-    dir_path: Path, file_extension: str, tokenizer: Optional[Callable] = None
+    dir_path: Path, file_extension: str, tokenizer: Callable = tokenizer_lines
 ) -> int:
     """Count lines in all files with extension if there are no
     tokenizer, or use tokenizer.
@@ -46,7 +45,5 @@ def universal_file_counter(
     files = dir_path.glob(f"*.{file_extension}")
     count_of_occurance = 0
     for file in files:
-        for i, token in enumerate(tokenizer_lines(file), 1):
-            print(i, token)
-        count_of_occurance += i
+        count_of_occurance += sum(1 for _ in tokenizer(file))
     return count_of_occurance

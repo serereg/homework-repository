@@ -20,13 +20,24 @@ from pathlib import Path
 from typing import List, Union, Iterator
 
 
-def read_value_from_file(path: Union[Path, str]):
+def read_value_from_file(path: Union[Path, str]) -> Iterator:
+    """Generate int numbers from file line-by-line.
+
+    Args:
+        path: file with integer numbers, written line-by-line.
+    """
     with open(path) as fi:
         for line in fi:
             yield int(line)
 
 
 def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
+    """Merge integer from sorted files.
+
+    Args:
+        file_list: list with files with sorted integers,
+            written line-by-line.
+    """
     values = [float("+inf") for i in file_list]
     gens = [read_value_from_file(file) for file in file_list]
     while True:

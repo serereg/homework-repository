@@ -25,9 +25,18 @@ def read_value_from_file(path: Union[Path, str]) -> Iterator:
 
     Args:
         path: file with integer numbers, written line-by-line.
+
+    Example of file content:
+    10
+    34
+    -2
+    1
+    4
     """
     with open(path) as fi:
         for line in fi:
+            if line.isspace():
+                continue
             yield int(line)
 
 
@@ -47,8 +56,8 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
                     values[file_num] = next(gens[file_num])
             except StopIteration:
                 values[file_num] = float("+inf")
+        if all([i == float("+inf") for i in values]):
+            return
         min_value = min(values)
         values[values.index(min_value)] = float("+inf")
         yield min_value
-        if all([i == float("+inf") for i in values]):
-            return

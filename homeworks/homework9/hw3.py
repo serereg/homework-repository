@@ -42,8 +42,6 @@ def universal_file_counter(
     """
     if not dir_path.is_dir():
         raise IOError(f"{dir_path} is not a directory")
-    files = dir_path.glob(f"*.{file_extension}")
-    count_of_occurance = 0
-    for file in files:
-        count_of_occurance += sum(1 for _ in tokenizer(file))
-    return count_of_occurance
+    return sum(
+        sum(1 for _ in tokenizer(file)) for file in dir_path.glob(f"*.{file_extension}")
+    )

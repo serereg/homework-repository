@@ -30,4 +30,4 @@ def test_empty_path():
 
 def test_path_is_not_a_dir():
     with pytest.raises(IOError):
-        universal_file_counter(Path("not a path"), "txt")
+        universal_file_counter(Path("not_a_path"), "txt")

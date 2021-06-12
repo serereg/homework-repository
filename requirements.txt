@@ -8,3 +8,6 @@ isort
 pre-commit
 pylama
 mypy
+beautifulsoup4
+aiohttp
+asynio

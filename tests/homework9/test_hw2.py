@@ -18,6 +18,13 @@ class TestGenSuppressor:
         with suppressor(ValueError):
             pass
 
+    def test_suppress_several_exceptions(self):
+        with suppressor(IndexError, ValueError):
+            raise IndexError
+        with suppressor(IndexError, ValueError):
+            raise ValueError
+        assert True
+
 
 class TestClassSuppressor:
     def test_suppress_wrong_exception(self):

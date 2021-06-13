@@ -34,18 +34,18 @@ class Suppressor(object):
         ... [][2]
     """
 
-    def __init__(self, err: Any):
+    def __init__(self, *args):
         """Initialise suppressed exception.
 
         Args:
             err: type of suppressed exception, like ValueError etc.
         """
-        self._err = err
+        self._err = args
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type: Any, exc_value: Any, exc_traceback: Any) -> bool:
-        if self._err is exc_type:
+        if exc_type in self._err:
             return True
         return False

@@ -47,17 +47,26 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
         file_list: list with files with sorted integers,
             written line-by-line.
     """
-    values = [float("+inf") for i in file_list]
-    gens = [read_value_from_file(file) for file in file_list]
+    values = []
+    get_value_from_file = [read_value_from_file(file) for file in file_list]
+    for file_num, file in enumerate(file_list):
+        try:
+            values.append(next(get_value_from_file[file_num]))
+        except StopIteration:
+            values.append(float("+inf"))
+
     while True:
-        for file_num, file in enumerate(file_list):
-            try:
-                if values[file_num] == float("+inf"):
-                    values[file_num] = next(gens[file_num])
-            except StopIteration:
-                values[file_num] = float("+inf")
-        if all([i == float("+inf") for i in values]):
+        min_position = 0
+        min_value = values[0]
+        for i in range(1, len(values)):
+            if values[i] < min_value:
+                min_value = values[i]
+                min_position = i
+        if min_value == float("+inf"):
             return
-        min_value = min(values)
-        values[values.index(min_value)] = float("+inf")
         yield min_value
+
+        try:
+            values[min_position] = next(get_value_from_file[min_position])
+        except StopIteration:
+            values[min_position] = float("+inf")

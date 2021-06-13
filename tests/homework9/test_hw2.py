@@ -40,3 +40,10 @@ class TestClassSuppressor:
     def test_suppress_no_exception(self):
         with Suppressor(ValueError):
             pass
+
+    def test_suppress_several_exceptions(self):
+        with Suppressor(IndexError, ValueError):
+            raise IndexError
+        with Suppressor(IndexError, ValueError):
+            raise ValueError
+        assert True

@@ -15,9 +15,9 @@ file2.txt:
 >>> list(merge_sorted_files(["file1.txt", "file2.txt"]))
 [1, 2, 3, 4, 5, 6]
 """
+import heapq
 from pathlib import Path
-
-from typing import List, Union, Iterator
+from typing import Iterator, List, Tuple, Union
 
 
 def read_value_from_file(path: Union[Path, str]) -> Iterator:
@@ -47,27 +47,25 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
         file_list: list with files with sorted integers,
             written line-by-line.
     """
-    values = []
-    get_value_from_file = [read_value_from_file(file) for file in file_list]
+    values: List[Tuple[Union[float, int], int]] = []
+    get_from_file = [read_value_from_file(file) for file in file_list]
     for file_num, file in enumerate(file_list):
         try:
-            values.append(next(get_value_from_file[file_num]))
+            heapq.heappush(values, (next(get_from_file[file_num]), file_num))
         except StopIteration:
-            values.append(float("+inf"))
+            heapq.heappush(values, (float("+inf"), file_num))
 
     while True:
-        min_position = 0
-        min_value = values[0]
-        for i in range(1, len(values)):
-            if values[i] < min_value:
-                min_value = values[i]
-                min_position = i
+        min_value, file_min_value = heapq.heappop(values)
+
         if min_value == float("+inf"):
             return
 
         try:
-            values[min_position] = next(get_value_from_file[min_position])
+            heapq.heappush(
+                values, (next(get_from_file[file_min_value]), file_min_value)
+            )
         except StopIteration:
-            values[min_position] = float("+inf")
+            heapq.heappush(values, (float("+inf"), file_min_value))
 
         yield min_value

@@ -24,8 +24,6 @@ def suppressor(err: Any) -> Iterator[None]:
         yield
     except err:
         pass
-    finally:
-        pass
 
 
 class Suppressor(object):

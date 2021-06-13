@@ -64,9 +64,10 @@ def merge_sorted_files(file_list: List[Union[Path, str]]) -> Iterator:
                 min_position = i
         if min_value == float("+inf"):
             return
-        yield min_value
 
         try:
             values[min_position] = next(get_value_from_file[min_position])
         except StopIteration:
             values[min_position] = float("+inf")
+
+        yield min_value

@@ -11,7 +11,7 @@ from typing import Any, Iterator
 
 
 @contextmanager
-def suppressor(err: Any) -> Iterator[None]:
+def suppressor(*args) -> Iterator[None]:
     """Suppress passed exception.
 
     A context manager, that suppresses passed exception.
@@ -22,7 +22,7 @@ def suppressor(err: Any) -> Iterator[None]:
     """
     try:
         yield
-    except err:
+    except args:
         pass
 
 

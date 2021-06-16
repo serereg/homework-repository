@@ -38,8 +38,9 @@ urls = [
     f"""https://markets.businessinsider.com/index/components/s&p_500?p={p}"""
     for p in range(1, 11)
 ]
-# loop = asyncio.get_event_loop()
-# loop.run_until_complete(fetch_urls(urls, pages_src))
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(fetch_urls(urls, pages_src))
 
 
 class Company:
@@ -52,6 +53,12 @@ class Company:
         self._blob = ""
         self.code = ""
         self.pne_ratio = 0
+        self.growth = 0
+        self.week52high = 0
+        self.week52low = 0
+
+    def __str__(self):
+        return f"{self.pne_ratio, self.week52low, self.week52high}"
 
     @classmethod
     def from_blob(cls, data):
@@ -74,6 +81,8 @@ class Company:
         }
 
         company.pne_ratio = right_table["P/E Ratio"]
+        company.week52low = right_table["52 Week Low"]
+        company.week52high = right_table["52 Week High"]
         return company
 
     @property
@@ -86,11 +95,19 @@ def parse_list_of_companies(pages_src):
     for page in pages_src:
         soup = BeautifulSoup(page, "lxml")
 
-        li = soup.find_all("td", {"class": "table__td table__td--big"})
-        for i in li:
-            name = i.find("a").text
-            link = MAIN_URL + i.find("a").get("href")
-            companies[name] = link
+        # TODO: check columns names
+
+        table_rows = (
+            soup.find("div", {"class": "table-responsive"})
+            .find("tbody", {"class": "table__tbody"})
+            .find_all("tr")
+        )
+
+        for row in table_rows:
+            name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
+            link = MAIN_URL + row.find("a").get("href")
+            growth = row.find_all("td")[7].text.split()[1]
+            companies[name] = (link, growth)
     return companies
 
 
@@ -98,9 +115,7 @@ companies = parse_list_of_companies(pages_src)
 print(companies)
 print(len(companies))
 
-
 data = ""
-
 
 url = "https://markets.businessinsider.com/stocks/amat-stock"
 
@@ -116,4 +131,4 @@ loop.run_until_complete(fetch_company(url))
 company = Company.from_blob(data)
 # print(company.price)
 # print(company.code)
-print(company.pne_ratio)
+print(company)

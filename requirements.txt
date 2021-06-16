@@ -10,4 +10,5 @@ pylama
 mypy
 beautifulsoup4
 aiohttp
-asynio
+asyncio
+lxml

@@ -1,24 +1,23 @@
 import aiohttp
 
-# import asyncio
+import asyncio
 import string
 
 from bs4 import BeautifulSoup
 
 
 class CompanyRepository:
-    def __init__(self, url):
-        self._common_lists_of_companies_pages = None
+    def __init__(self, url="https://markets.businessinsider.com"):
+        self._common_lists_of_companies_pages = []
         self._cache = []
         self._url = url
 
-        main_url = "https://markets.businessinsider.com"
         self.urls = [
-            f"""{main_url}/index/components/s&p_500?p={p}""" for p in range(1, 11)
+            f"""{self._url}/index/components/s&p_500?p={p}""" for p in range(1, 11)
         ]
 
     @staticmethod
-    async def _parse_company_list(self, page_with_table):
+    async def _parse_company_list(page_with_table):
         soup = BeautifulSoup(page_with_table, "lxml")
 
         # TODO: check columns names
@@ -34,13 +33,13 @@ class CompanyRepository:
             link = "https://markets.businessinsider.com" + row.find("a").get("href")
             growth = row.find_all("td")[7].text.split()[1]
 
-            company_page = await self._fetch(link)
+            company_page = await CompanyRepository._fetch(link)
 
             yield {
                 "Name": name,
                 "url": link,
                 "Growth": growth,
-                **self._parse_company_page(company_page),
+                **CompanyRepository._parse_company_page(company_page),
             }
 
     @staticmethod
@@ -95,20 +94,19 @@ class CompanyRepository:
 
         for list_page in self._common_lists_of_companies_pages:
             # TODO: use yield from
-            for company_blob in self._parse_company_list(list_page):
+            async for company_blob in self._parse_company_list(list_page):
                 yield company_blob
                 # company = await Company.from_blob(company_blob)
                 # yield company
                 # self._cache.append(company)
 
 
-# async def foo():
-#     repo = CompanyRepository("")
-#     async for company in repo.get_all_companies():
-#         print(company)
-#
-#
-# if __name__ == "__main__":
-#     loop = asyncio.get_event_loop()
-#     loop.run_until_complete(foo)
-#
+async def foo():
+    repo = CompanyRepository()
+    async for company in repo.get_all_companies():
+        print(company)
+    await asyncio.sleep(10)
+
+
+asyncio.run(foo())
+print("finish")

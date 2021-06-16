@@ -3,6 +3,8 @@ import asyncio
 import math
 import string
 
+from typing import List
+
 from bs4 import BeautifulSoup
 
 
@@ -37,18 +39,31 @@ class CompanyRepository:
             .find_all("tr")
         )
 
+        tasks = []
+        pages: List[str] = []
+
+        async def get_comp_page(url: str, pages: list):
+            pages.append(await CompanyRepository._fetch_company(url))
+
         for row in table_rows:
-            name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
+            # name = row.find("td",
+            # {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
-            growth = row.find_all("td")[7].text.split()[1]
+            # growth = row.find_all("td")[7].text.split()[1]
 
-            company_page = await CompanyRepository._fetch_company(link)
+            # TODO: make tasks
+            tasks.append(get_comp_page(link, pages))
+            # company_page =
+            # await CompanyRepository._fetch_company(link)
 
+        await asyncio.gather(*tasks)
+
+        for page in pages:
             yield {
-                "Name": name,
-                "URL": link,
-                "Growth": growth,
-                **CompanyRepository._parse_company_page(company_page),
+                # "Name": name,
+                # "URL": link,
+                # "Growth": growth,
+                **CompanyRepository._parse_company_page(page),
             }
 
     @staticmethod

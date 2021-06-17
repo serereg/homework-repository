@@ -3,7 +3,7 @@ import asyncio
 import math
 import string
 
-from typing import List
+from concurrent.futures import ProcessPoolExecutor
 
 from bs4 import BeautifulSoup
 
@@ -40,10 +40,10 @@ class CompanyRepository:
         )
 
         tasks = []
-        pages: List[str] = []
+        # pages: List[str] = []
 
-        async def get_comp_page(url: str, pages: list):
-            pages.append(await CompanyRepository._fetch_company(url))
+        async def get_comp_page(url: str):
+            return await CompanyRepository._fetch_company(url)
 
         for row in table_rows:
             # name = row.find("td",
@@ -52,18 +52,21 @@ class CompanyRepository:
             # growth = row.find_all("td")[7].text.split()[1]
 
             # TODO: make tasks
-            tasks.append(get_comp_page(link, pages))
+            tasks.append(get_comp_page(link))
             # company_page =
             # await CompanyRepository._fetch_company(link)
 
-        await asyncio.gather(*tasks)
+        pages = await asyncio.gather(*tasks)
 
-        for page in pages:
+        with ProcessPoolExecutor(max_workers=len(pages)) as pool:
+            blobs = pool.map(CompanyRepository._parse_company_page, pages)
+
+        for blob in blobs:
             yield {
                 # "Name": name,
                 # "URL": link,
                 # "Growth": growth,
-                **CompanyRepository._parse_company_page(page),
+                **blob,
             }
 
     @staticmethod

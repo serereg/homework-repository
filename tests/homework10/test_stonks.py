@@ -5,7 +5,7 @@ import asyncio
 # from unittest.mock import Mock
 from pathlib import Path
 
-from homeworks.homework10.company_repository import CompanyRepository
+from homeworks.homework10.company_stocks.company_repository import CompanyRepository
 
 
 async def smoke_company_repository():
@@ -29,6 +29,7 @@ def test_company_repository(monkeypatch):
     monkeypatch.setattr(CompanyRepository, "_fetch_company_list", fetch_company_list)
     asyncio.run(smoke_company_repository())
     print("finish")
+    # assert False
     assert True
 
 

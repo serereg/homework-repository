@@ -7,6 +7,8 @@ from concurrent.futures import ProcessPoolExecutor
 
 from bs4 import BeautifulSoup
 
+from .company import Company
+
 
 class CompanyRepository:
     def __init__(self, url="https://markets.businessinsider.com"):
@@ -135,19 +137,7 @@ class CompanyRepository:
         for list_page in self._common_lists_of_companies_pages:
             # TODO: use yield from
             async for company_blob in self._parse_company_list(list_page):
-                yield company_blob
-                # company = await Company.from_blob(company_blob)
-                # yield company
-                # self._cache.append(company)
-
-
-async def foo():
-    repo = CompanyRepository()
-    async for company in repo.get_all_companies():
-        print(company)
-    await asyncio.sleep(10)
-
-
-if __name__ == "__main__":
-    asyncio.run(foo())
-    print("finish")
+                # yield company_blob
+                company = Company.from_blob(company_blob)
+                yield company
+                self._cache.append(company)

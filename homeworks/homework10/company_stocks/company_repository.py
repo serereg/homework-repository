@@ -42,33 +42,54 @@ class CompanyRepository:
         )
 
         tasks = []
-        # pages: List[str] = []
+        companies_blobs = {}
 
-        async def get_comp_page(url: str):
-            return await CompanyRepository._fetch_company(url)
+        async def get_comp_page(name_: str, url: str):
+            print(name_)
+            return {name_: await CompanyRepository._fetch_company(url)}
 
         for row in table_rows:
-            # name = row.find("td",
-            # {"class": "table__td table__td--big"}).find("a").text
+            name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
-            # growth = row.find_all("td")[7].text.split()[1]
+            growth = row.find_all("td")[7].text.split()[1]
 
             # TODO: make tasks
-            tasks.append(get_comp_page(link))
-            # company_page =
-            # await CompanyRepository._fetch_company(link)
+            companies_blobs[name] = {
+                "Name": name,  # duplicate
+                "URL": link,
+                "Growth": growth,
+                "Task get page": get_comp_page(name, link),
+            }
 
-        pages = await asyncio.gather(*tasks)
+        tasks = [
+            companies_blobs[name]["Task get page"] for name in companies_blobs.keys()
+        ]
 
-        with ProcessPoolExecutor(max_workers=len(pages)) as pool:
-            blobs = pool.map(CompanyRepository._parse_company_page, pages)
+        company_pages = await asyncio.gather(*tasks)
+        dict_pages = {}
+        for cp in company_pages:
+            dict_pages.update(cp)
+
+        for k in company_pages:
+            print(k.keys())
+
+        with ProcessPoolExecutor(max_workers=len(dict_pages)) as pool:
+            blobs = pool.map(
+                lambda name_: (
+                    name_,
+                    CompanyRepository._parse_company_page(dict_pages[name_]),
+                ),
+                dict_pages,
+            )
 
         for blob in blobs:
+            name = blob[0]
+            parsed_page = blob[1]
             yield {
-                # "Name": name,
-                # "URL": link,
-                # "Growth": growth,
-                **blob,
+                "Name": name,
+                "URL": companies_blobs[name]["URL"],
+                "Growth": companies_blobs[name["Growth"]],
+                **parsed_page,
             }
 
     @staticmethod

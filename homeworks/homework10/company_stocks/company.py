@@ -35,7 +35,7 @@ class Company:
         self.week52high = week52high
 
     def __str__(self):
-        return f"{self.pne_ratio, self.week52low, self.week52high}"
+        return f"{self.__dict__}"
 
     @classmethod
     def from_blob(cls, data: dict):

@@ -4,7 +4,7 @@ import math
 import string
 
 from concurrent.futures import ProcessPoolExecutor
-
+from typing import Tuple
 from bs4 import BeautifulSoup
 
 from .company import Company
@@ -42,55 +42,48 @@ class CompanyRepository:
         )
 
         tasks = []
-        companies_blobs = {}
-
-        async def get_comp_page(name_: str, url: str):
-            print(name_)
-            return {name_: await CompanyRepository._fetch_company(url)}
+        additional_info = {}
 
         for row in table_rows:
             name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
             growth = row.find_all("td")[7].text.split()[1]
 
-            # TODO: make tasks
-            companies_blobs[name] = {
-                "Name": name,  # duplicate
+            additional_info[name] = {
                 "URL": link,
                 "Growth": growth,
-                "Task get page": get_comp_page(name, link),
             }
+
+        async def get_comp_page(name_: str, url_: str) -> Tuple[str, str]:
+            return name_, await CompanyRepository._fetch_company(url_)
 
         tasks = [
-            companies_blobs[name]["Task get page"] for name in companies_blobs.keys()
+            get_comp_page(name_, additional_info[name_]["URL"])
+            for name_ in additional_info
         ]
 
-        company_pages = await asyncio.gather(*tasks)
-        dict_pages = {}
-        for cp in company_pages:
-            dict_pages.update(cp)
+        names_and_pages = await asyncio.gather(*tasks)
 
-        for k in company_pages:
-            print(k.keys())
-
-        with ProcessPoolExecutor(max_workers=len(dict_pages)) as pool:
+        with ProcessPoolExecutor(max_workers=len(names_and_pages)) as pool:
+            # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
-                lambda name_: (
-                    name_,
-                    CompanyRepository._parse_company_page(dict_pages[name_]),
-                ),
-                dict_pages,
+                CompanyRepository._get_company_info,
+                names_and_pages,
             )
 
-        for blob in blobs:
-            name = blob[0]
-            parsed_page = blob[1]
+        for name, parsed_page in blobs:
             yield {
                 "Name": name,
-                "URL": companies_blobs[name]["URL"],
-                "Growth": companies_blobs[name["Growth"]],
+                "URL": additional_info[name]["URL"],
+                "Growth": additional_info[name]["Growth"],
                 **parsed_page,
             }
+
+    @staticmethod
+    def _get_company_info(names_and_pages):
+        return names_and_pages[0], CompanyRepository._parse_company_page(
+            names_and_pages[1]
+        )
 
     @staticmethod
     def _parse_company_page(page):

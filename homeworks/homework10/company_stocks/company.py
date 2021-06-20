@@ -7,13 +7,14 @@ class Company:
     """Class with business data of a company.
 
     Arguments:
-        name: company name.
-        code: code in a stock
-        price: price in USD
-        pne_ratio: price-earnings ratio
-        growth: growth per year
-        week52low: 52 Week Low
-        week52high: 52 Week High
+        name: a company name.
+        url: URL to statistic data of a company
+        code: code in a stock.
+        price: price in USD.
+        pne_ratio: price-earnings ratio.
+        growth: growth per year.
+        week52low: 52 Week Low.
+        week52high: 52 Week High.
     """
 
     _dollar_rate = None
@@ -59,14 +60,18 @@ class Company:
         return self._url
 
     @property
-    def profit(self):
+    def potential_profit(self):
         """float: difference between price at 52 week high and low"""
         return self.week52high - self.week52low
 
     @property
     def price_in_rubles(self):
+        """Return price in rubles.
+
+        Current rate should be updated by update_dollar_rate()"""
         return self.price * Company._dollar_rate
 
     @classmethod
     async def update_dollar_rate(cls):
+        """Update dollar rate"""
         cls._dollar_rate = await Rate().rate

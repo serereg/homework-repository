@@ -1,9 +1,10 @@
-import aiohttp
 import asyncio
 
-from bs4 import BeautifulSoup
-from decimal import Decimal
+# from decimal import Decimal
 from re import sub
+
+import aiohttp
+from bs4 import BeautifulSoup
 
 
 class Rate:
@@ -27,9 +28,7 @@ class Rate:
     @staticmethod
     def _parse_currency_page(valute: str, page: str):
         soup = BeautifulSoup(page, "lxml")
-        return float(
-            Decimal(sub(r"[^\d.]", ".", soup.find(id=valute).find("value").text))
-        )
+        return float(sub(r"[^\d.]", ".", soup.find(id=valute).find("value").text))
 
     @property
     async def rate(self) -> float:

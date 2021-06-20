@@ -19,7 +19,7 @@ async def smoke_company_repository():
     assert li[0].code == "MMM"
     assert li[0].growth == 31.19
     assert li[0].pne_ratio == 19.91
-    assert round(li[0].profit) == 60
+    assert round(li[0].potential_profit) == 60
 
     assert li[1].growth == 44.93
 

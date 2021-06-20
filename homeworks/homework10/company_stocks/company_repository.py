@@ -4,6 +4,8 @@ import math
 import string
 
 from concurrent.futures import ProcessPoolExecutor
+from decimal import Decimal
+from re import sub
 from typing import Tuple
 from bs4 import BeautifulSoup
 
@@ -47,7 +49,10 @@ class CompanyRepository:
         for row in table_rows:
             name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
-            growth = row.find_all("td")[7].text.split()[1]
+            # growth = row.find_all("td")[7].text.split()[1]
+            growth = float(
+                Decimal(sub(r"[^\d.]", "", row.find_all("td")[7].text.split()[1]))
+            )
 
             additional_info[name] = {
                 "URL": link,
@@ -90,6 +95,8 @@ class CompanyRepository:
         soup = BeautifulSoup(page, "lxml")
 
         price = soup.find("span", {"class": "price-section__current-value"}).text
+        price = float(Decimal(sub(r"[^\d.]", "", price)))
+        print(price)
         code = (
             soup.find("span", {"class": "price-section__category"})
             .find("span")
@@ -137,6 +144,7 @@ class CompanyRepository:
         return await CompanyRepository._fetch(url)
 
     async def get_all_companies(self):
+        """Return object of class Company."""
         if self._cache:
             for item in self._cache:
                 yield item

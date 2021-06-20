@@ -19,7 +19,7 @@ class Company:
         name: str,
         url: str,
         code="",
-        price="",
+        price=0,
         pne_ratio=0,
         growth=0,
         week52low=0,
@@ -41,11 +41,12 @@ class Company:
     def from_blob(cls, data: dict):
         """Create a company and fill attributes from a dictionary"""
         company = Company(data.get("Name", ""), data.get("URL", ""))
-        company.price = data.get("Price", math.nan)
+        company.price = float(data.get("Price", math.nan))
         company.code = data.get("Code", math.nan)
-        company.pne_ratio = data.get("P/E Ratio", math.nan)
-        company.week52low = data.get("52 Week Low", math.nan)
-        company.week52high = data.get("52 Week High", math.nan)
+        company.pne_ratio = float(data.get("P/E Ratio", math.nan))
+        company.growth = float(data.get("Growth", math.nan))
+        company.week52low = float(data.get("52 Week Low", math.nan))
+        company.week52high = float(data.get("52 Week High", math.nan))
         return company
 
     @property

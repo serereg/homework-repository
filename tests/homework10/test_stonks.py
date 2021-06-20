@@ -11,8 +11,17 @@ from homeworks.homework10.company_stocks.rate import Rate
 
 async def smoke_company_repository():
     repo = CompanyRepository()
+    li = []
     async for company in repo.get_all_companies():
-        print(company)
+        li.append(company)
+    assert len(li) == 2
+
+    assert li[0].code == "MMM"
+    assert li[0].growth == 31.19
+    assert li[0].pne_ratio == 19.91
+    assert round(li[0].profit) == 60
+
+    assert li[1].growth == 44.93
 
 
 async def fetch_company(url: str) -> str:
@@ -44,29 +53,3 @@ def test_parsing_dollar_rate(monkeypatch):
     monkeypatch.setattr(Rate, "_fetch", fetch_dollar_page)
     dollar = asyncio.run(Rate().rate)
     assert 72.22 < dollar < 72.23
-
-
-# def test_parse_list_of_companies():
-#     path = (
-#             Path(__file__).parent /
-#             "data/S&P 500 Stock _ S&P 500 Comp"
-#                                     "anies _ S&
-#             P 500 Value _ Markets Insider.html"
-#     )
-#     pages_src = [path.read_text()]
-#     companies = parse_list_of_companies(pages_src)
-#     print(companies)
-#     assert False
-
-
-# def test_parse_company():
-#     path = (
-#             Path(__file__).parent
-#             / "data/MMM Stock _ 3M Stock
-#             Price Today _ Markets Insider.html"
-#     )
-#     blob = path.read_text()
-#     company = Company.from_blob(blob)
-#     print(company)
-#     assert False
-#

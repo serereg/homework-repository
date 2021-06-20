@@ -9,12 +9,6 @@ from company_stocks.company import Company
 from operator import attrgetter
 
 
-def make_report():
-    for company in CompanyRepository("url").get_all_companies():
-        net_profit = company.profit - company.loss
-        print(f"Net profit for {company.name} is {net_profit}")
-
-
 # TODO: use SQL
 def form_top_by_attr(companies: list, attr: str, num=10, reverse=False):
     li_ = [comp for comp in companies if not math.isnan(getattr(comp, attr))]

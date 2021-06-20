@@ -1,4 +1,3 @@
-import asyncio
 import math
 
 from .rate import Rate
@@ -71,4 +70,3 @@ class Company:
     @classmethod
     async def update_dollar_rate(cls):
         cls._dollar_rate = await Rate().rate
-        await asyncio.sleep(0)

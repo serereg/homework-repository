@@ -96,7 +96,6 @@ class CompanyRepository:
 
         price = soup.find("span", {"class": "price-section__current-value"}).text
         price = float(Decimal(sub(r"[^\d.]", "", price)))
-        print(price)
         code = (
             soup.find("span", {"class": "price-section__category"})
             .find("span")

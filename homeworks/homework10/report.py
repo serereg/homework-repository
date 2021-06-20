@@ -1,16 +1,35 @@
 import asyncio
 import json
 import math
-
-from company_stocks.company_repository import CompanyRepository
-from company_stocks.company import Company
-
-# from company_stocks.company import Company
 from operator import attrgetter
+
+from company_stocks.company import Company
+from company_stocks.company_repository import CompanyRepository
 
 
 # TODO: use SQL
-def make_report(companies: list, attr: str, num=10, reverse=False):
+def make_report(companies: list, attr: str, num=10, reverse=False) -> list:
+    """Form top num company by given arrtibute of Company class.
+
+    Args:
+        companies: list of companies.
+        attr: an attribute of company by which companies should be
+            sorted.
+        num: number of companies to be returned.
+        reverse: parameter of sort function.
+
+    Return:
+        list with dictionaries in format:
+            [
+                {
+                    "code": "MMM",
+                    "name": "3M CO.",
+                    "price" | "P/E" | "growth" | "potential profit"
+                        : value,
+                },
+                ...
+            ]
+    """
     li_ = [comp for comp in companies if not math.isnan(getattr(comp, attr))]
     li_.sort(key=attrgetter(attr), reverse=reverse)
 
@@ -18,6 +37,7 @@ def make_report(companies: list, attr: str, num=10, reverse=False):
 
 
 async def write_reports():
+    """Write reports to files."""
     await Company.update_dollar_rate()
 
     li = []
@@ -35,7 +55,7 @@ async def write_reports():
         json.dump(make_report(li, "growth", reverse=True), fo)
 
     with open("top_10_profit.json", "w") as fo:
-        json.dump(make_report(li, "profit", reverse=True), fo)
+        json.dump(make_report(li, "potential_profit", reverse=True), fo)
 
 
 if __name__ == "__main__":

@@ -1,24 +1,26 @@
-import aiohttp
 import asyncio
 import math
 import string
-
 from concurrent.futures import ProcessPoolExecutor
 from decimal import Decimal
 from re import sub
 from typing import Tuple
+
+import aiohttp
 from bs4 import BeautifulSoup
 
 from .company import Company
 
 
 class CompanyRepository:
+    """A class for parsing URL for statistic data."""
+
     def __init__(self, url="https://markets.businessinsider.com"):
         self._common_lists_of_companies_pages = set()
         self._cache = []
         self._url = url
 
-        self.urls = [
+        self._urls = [
             f"""{self._url}/index/components/s&p_500?p={p}""" for p in range(1, 11)
         ]
 
@@ -150,7 +152,7 @@ class CompanyRepository:
         else:
             # create a list of tasks to execute
             # get_data_page(page_number) for page_number in range(10)
-            for url in self.urls:
+            for url in self._urls:
                 self._common_lists_of_companies_pages.add(
                     await CompanyRepository._fetch_company_list(url)
                 )

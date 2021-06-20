@@ -1,9 +1,9 @@
-import aiohttp
 import asyncio
-
-from bs4 import BeautifulSoup
 from decimal import Decimal
 from re import sub
+
+import aiohttp
+from bs4 import BeautifulSoup
 
 
 class Rate:

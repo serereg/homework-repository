@@ -10,7 +10,7 @@ from operator import attrgetter
 
 
 # TODO: use SQL
-def form_top_by_attr(companies: list, attr: str, num=10, reverse=False):
+def make_report(companies: list, attr: str, num=10, reverse=False):
     li_ = [comp for comp in companies if not math.isnan(getattr(comp, attr))]
     li_.sort(key=attrgetter(attr), reverse=reverse)
 
@@ -26,16 +26,16 @@ async def write_reports():
         li.append(company)
 
     with open("top_10_prices.json", "w") as fo:
-        json.dump(form_top_by_attr(li, "price_in_rubles", reverse=True), fo)
+        json.dump(make_report(li, "price_in_rubles", reverse=True), fo)
 
     with open("top_10_pne_ratio.json", "w") as fo:
-        json.dump(form_top_by_attr(li, "pne_ratio"), fo)
+        json.dump(make_report(li, "pne_ratio"), fo)
 
     with open("top_10_growth.json", "w") as fo:
-        json.dump(form_top_by_attr(li, "growth", reverse=True), fo)
+        json.dump(make_report(li, "growth", reverse=True), fo)
 
     with open("top_10_profit.json", "w") as fo:
-        json.dump(form_top_by_attr(li, "profit", reverse=True), fo)
+        json.dump(make_report(li, "profit", reverse=True), fo)
 
 
 if __name__ == "__main__":

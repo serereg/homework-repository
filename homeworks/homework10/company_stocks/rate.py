@@ -25,7 +25,7 @@ class Rate:
                 return await resp.text()
 
     @staticmethod
-    async def _parse_currency_page(valute: str, page: str):
+    def _parse_currency_page(valute: str, page: str):
         soup = BeautifulSoup(page, "lxml")
         return float(
             Decimal(sub(r"[^\d.]", ".", soup.find(id=valute).find("value").text))
@@ -36,7 +36,7 @@ class Rate:
         """Get current currency"""
         if not self._rate:
             page = await Rate._fetch(self._url)
-            self._rate = await Rate._parse_currency_page(self._valute_id, page)
+            self._rate = Rate._parse_currency_page(self._valute_id, page)
         return self._rate
 
 

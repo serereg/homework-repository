@@ -1,4 +1,7 @@
+import asyncio
 import math
+
+from .rate import Rate
 
 
 class Company:
@@ -13,6 +16,8 @@ class Company:
         week52low: 52 Week Low
         week52high: 52 Week High
     """
+
+    _dollar_rate = None
 
     def __init__(
         self,
@@ -58,3 +63,12 @@ class Company:
     def profit(self):
         """float: difference between price at 52 week high and low"""
         return self.week52high - self.week52low
+
+    @property
+    def price_in_rubles(self):
+        return self.price * Company._dollar_rate
+
+    @classmethod
+    async def update_dollar_rate(cls):
+        cls._dollar_rate = await Rate().rate
+        await asyncio.sleep(0)

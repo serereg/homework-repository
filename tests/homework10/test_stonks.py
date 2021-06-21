@@ -15,7 +15,7 @@ from homeworks.homework10.company_stocks.report import make_report
 async def parse_company_repository():
     repo = CompanyRepository()
     li = []
-    async for company in repo.get_all_companies():
+    for company in repo.get_all_companies():
         li.append(company)
     assert len(li) == 2
 
@@ -40,7 +40,7 @@ async def fetch_company_list(*args) -> str:
 def test_company_repository(monkeypatch):
     monkeypatch.setattr(CompanyRepository, "_fetch_company", fetch_company)
     monkeypatch.setattr(CompanyRepository, "_fetch_company_list", fetch_company_list)
-    asyncio.run(parse_company_repository())
+    parse_company_repository()
     # assert False
     assert True
 

@@ -58,12 +58,12 @@ class CompanyRepository:
                 "Growth": growth,
             }
 
-        async def get_comp_page(name_: str, url_: str) -> Tuple[str, str]:
-            return name_, await CompanyRepository._fetch_company(url_)
+        async def get_comp_page(company_name: str, company_url: str) -> Tuple[str, str]:
+            return company_name, await CompanyRepository._fetch_company(company_url)
 
         tasks = [
-            get_comp_page(name_, additional_info[name_]["URL"])
-            for name_ in additional_info
+            get_comp_page(company_name, additional_info[company_name]["URL"])
+            for company_name in additional_info
         ]
 
         names_and_pages = await asyncio.gather(*tasks)

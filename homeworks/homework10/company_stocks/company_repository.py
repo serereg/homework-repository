@@ -59,7 +59,7 @@ class CompanyRepository:
             }
 
         async def get_comp_page(company_name: str, company_url: str) -> Tuple[str, str]:
-            return company_name, await CompanyRepository._fetch_company(company_url)
+            return company_name, await self._fetch_company(company_url)
 
         tasks = [
             get_comp_page(company_name, additional_info[company_name]["URL"])
@@ -71,7 +71,7 @@ class CompanyRepository:
         with ProcessPoolExecutor(max_workers=len(names_and_pages)) as pool:
             # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
-                CompanyRepository._get_company_info,
+                self._get_company_info,
                 names_and_pages,
             )
 
@@ -83,11 +83,9 @@ class CompanyRepository:
                 **parsed_page,
             }
 
-    @staticmethod
-    def _get_company_info(names_and_pages):
-        return names_and_pages[0], CompanyRepository._parse_company_page(
-            names_and_pages[1]
-        )
+    @classmethod
+    def _get_company_info(cls, names_and_pages):
+        return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
 
     @staticmethod
     def _parse_company_page(page):
@@ -131,15 +129,15 @@ class CompanyRepository:
                     raise ValueError(f"Can't open url: {url}")
                 return await resp.text()
 
-    @staticmethod
-    async def _fetch_company(url: str):
+    @classmethod
+    async def _fetch_company(cls, url: str):
         """Mock in easy way of _fetch method"""
-        return await CompanyRepository._fetch(url)
+        return await cls._fetch(url)
 
-    @staticmethod
-    async def _fetch_company_list(url: str):
+    @classmethod
+    async def _fetch_company_list(cls, url: str):
         """Mock in easy way of _fetch method"""
-        return await CompanyRepository._fetch(url)
+        return await cls._fetch(url)
 
     async def get_all_companies(self):
         """Return object of class Company."""

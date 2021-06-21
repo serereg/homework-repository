@@ -27,12 +27,12 @@ async def parse_company_repository():
     assert li[1].growth == 44.93
 
 
-async def fetch_company(url: str) -> str:
+async def fetch_company(*args) -> str:
     path = Path(__file__).parent / "data/MMM Stock _ 3M.html"
     return path.read_text()
 
 
-async def fetch_company_list(url: str) -> str:
+async def fetch_company_list(*args) -> str:
     path = Path(__file__).parent / "data/S&P 500 Stock.html"
     return path.read_text()
 

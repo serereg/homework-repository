@@ -1,6 +1,4 @@
 import asyncio
-
-# from decimal import Decimal
 from re import sub
 
 import aiohttp

@@ -1,8 +1,8 @@
 import asyncio
+import logging
 import math
 import string
 from concurrent.futures import ProcessPoolExecutor
-
 from re import sub
 from typing import Tuple
 
@@ -10,8 +10,6 @@ import aiohttp
 from bs4 import BeautifulSoup
 
 from .company import Company
-
-import logging
 
 
 class CompanyRepository:
@@ -28,40 +26,42 @@ class CompanyRepository:
         ]
 
     @staticmethod
-    async def _fetch(url: str):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                if resp.status != 200:
-                    raise ValueError(f"Can't open url: {url}")
-                return await resp.text()
+    async def _fetch(session: aiohttp.ClientSession, url: str):
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                raise ValueError(f"Can't open url: {url}")
+            return await resp.text()
 
     @classmethod
-    async def _fetch_company(cls, url: str):
+    async def _fetch_company(cls, session, url: str):
         """Mock in easy way of _fetch method"""
-        return await cls._fetch(url)
+        return await cls._fetch(session, url)
 
     async def _get_all_detailed_pages(self, short_infos):
-        async def get_detailed_page(
-            company_name: str, company_url: str
-        ) -> Tuple[str, str]:
-            return company_name, await self._fetch_company(company_url)
+        async with aiohttp.ClientSession() as session:
 
-        tasks = [
-            get_detailed_page(company_name, short_infos[company_name]["URL"])
-            for company_name in short_infos
-        ]
-        return await asyncio.gather(*tasks)
+            async def get_detailed_page(
+                company_name: str, company_url: str
+            ) -> Tuple[str, str]:
+                return company_name, await self._fetch_company(session, company_url)
+
+            tasks = [
+                get_detailed_page(company_name, short_infos[company_name]["URL"])
+                for company_name in short_infos
+            ]
+            return await asyncio.gather(*tasks)
 
     @classmethod
-    async def _fetch_company_list(cls, url: str):
+    async def _fetch_company_list(cls, session, url: str):
         """Mock in easy way of _fetch method"""
-        return await cls._fetch(url)
+        return await cls._fetch(session, url)
 
     async def _get_all_pages_with_tables(self):
-        tasks = [self._fetch_company_list(url) for url in self._urls]
-        # TODO: remove set. Now it is used to simplify testing
-        #  where I can pass less urls
-        self._table_pages = set(await asyncio.gather(*tasks))
+        async with aiohttp.ClientSession() as session:
+            tasks = [self._fetch_company_list(session, url) for url in self._urls]
+            # TODO: remove set. Now it is used to simplify testing
+            #  where I can pass less urls
+            self._table_pages = set(await asyncio.gather(*tasks))
 
     def _parse_table_with_companies(self, page_with_table: str):
         """Parse one of several pages with list of companies

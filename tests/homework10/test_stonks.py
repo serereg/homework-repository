@@ -12,7 +12,7 @@ from homeworks.homework10.company_stocks.rate import Rate
 from homeworks.homework10.company_stocks.report import make_report
 
 
-async def parse_company_repository():
+def parse_company_repository():
     repo = CompanyRepository()
     li = []
     for company in repo.get_all_companies():

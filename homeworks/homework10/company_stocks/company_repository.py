@@ -46,13 +46,11 @@ class CompanyRepository:
             .find_all("tr")
         )
 
-        tasks = []
         additional_info = {}
 
         for row in table_rows:
             name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
-            # growth = row.find_all("td")[7].text.split()[1]
             growth = float(sub(r"[^\d.]", "", row.find_all("td")[7].text.split()[1]))
 
             additional_info[name] = {
@@ -149,8 +147,6 @@ class CompanyRepository:
             for item in self._cache:
                 yield item
         else:
-            # create a list of tasks to execute
-            # get_data_page(page_number) for page_number in range(10)
             for url in self._urls:
                 self._common_lists_of_companies_pages.add(
                     await CompanyRepository._fetch_company_list(url)

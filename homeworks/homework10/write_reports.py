@@ -18,18 +18,21 @@ async def write_reports():
         all_companies.append(company)
 
     path = Path(__file__).parent
+    path_prices = path / "top_10_prices.json"
+    path_pne = path / "top_10_pne_ratio.json"
+    path_growth = path / "top_10_growth.json"
+    path_profit = path / "top_10_profit.json"
 
-    with open(path / "top_10_prices.json", "w") as fo:
-        json.dump(make_report(all_companies, "price_in_rubles", reverse=True), fo)
-
-    with open(path / "top_10_pne_ratio.json", "w") as fo:
-        json.dump(make_report(all_companies, "pne_ratio"), fo)
-
-    with open(path / "top_10_growth.json", "w") as fo:
-        json.dump(make_report(all_companies, "growth", reverse=True), fo)
-
-    with open(path / "top_10_profit.json", "w") as fo:
-        json.dump(make_report(all_companies, "potential_profit", reverse=True), fo)
+    path_prices.write_text(
+        json.dumps(make_report(all_companies, "price_in_rubles", reverse=True))
+    )
+    path_pne.write_text(json.dumps(make_report(all_companies, "pne_ratio")))
+    path_growth.write_text(
+        json.dumps(make_report(all_companies, "growth", reverse=True))
+    )
+    path_profit.write_text(
+        json.dumps(make_report(all_companies, "potential_profit", reverse=True))
+    )
 
 
 if __name__ == "__main__":

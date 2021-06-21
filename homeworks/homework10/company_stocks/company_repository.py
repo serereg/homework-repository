@@ -145,10 +145,10 @@ class CompanyRepository:
             for item in self._cache:
                 yield item
         else:
-            for url in self._urls:
-                self._common_lists_of_companies_pages.add(
-                    await CompanyRepository._fetch_company_list(url)
-                )
+            tasks = [self._fetch_company_list(url) for url in self._urls]
+            # TODO: remove set. Now it is used to simplify testing
+            #  where I can pass less urls
+            self._common_lists_of_companies_pages = set(await asyncio.gather(*tasks))
 
         for list_page in self._common_lists_of_companies_pages:
             # TODO: use yield from

@@ -4,7 +4,7 @@ import math
 import string
 from concurrent.futures import ProcessPoolExecutor
 from re import sub
-from typing import List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -127,11 +127,11 @@ class CompanyRepository:
             "52 Week High": week52high,
         }
 
-    def _parse_detailed_info(
-        self, names_and_pages: List[Tuple[str, str]], names_and_additional_info
+    def _parse_detailed_info_and_add_extra_info(
+        self,
+        names_and_pages: List[Tuple[str, str]],
+        names_and_additional_info: Dict[str, Any],
     ):
-        names = [i[0] for i in names_and_pages]
-
         def isolate_page(names_and_pages):
             for p in names_and_pages:
                 yield p[1]
@@ -144,20 +144,16 @@ class CompanyRepository:
             )
 
         logging.warning("parsing done")
-        for i, parsed_page in enumerate(blobs):
+
+        # merging information
+        for i, blob in enumerate(blobs):
+            name = names_and_pages[i][0]
             yield {
-                "Name": names[i],
-                "URL": names_and_additional_info[names[i]]["URL"],
-                "Growth": names_and_additional_info[names[i]]["Growth"],
-                **parsed_page,
+                "Name": name,
+                "URL": names_and_additional_info[name]["URL"],
+                "Growth": names_and_additional_info[name]["Growth"],
+                **blob,
             }
-        # for name, parsed_page in blobs:
-        #     yield {
-        #         "Name": name,
-        #         "URL": names_and_additional_info[name]["URL"],
-        #         "Growth": names_and_additional_info[name]["Growth"],
-        #         **parsed_page,
-        #     }
 
     def get_all_companies(self):
         """Return object of class Company."""
@@ -177,7 +173,9 @@ class CompanyRepository:
             )
             logging.warning("parsing all company pages")
 
-            blobs = self._parse_detailed_info(detailed_pages, all_companies_short_infos)
+            blobs = self._parse_detailed_info_and_add_extra_info(
+                detailed_pages, all_companies_short_infos
+            )
 
             for company_blob in blobs:
                 company = Company.from_blob(company_blob)

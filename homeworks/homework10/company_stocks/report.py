@@ -30,16 +30,20 @@ def make_report(companies: list, attr: str, num=10, reverse=False) -> list:
     # companies if not math.isnan(getattr(comp, attr))]
     # all_companies.sort(key=attrgetter(attr), reverse=reverse)
 
+    sign = -1.0 if reverse else 1.0
     all_companies: List[Tuple] = []
-    sign = -1 if reverse is True else 1
     for comp in companies:
-        value = getattr(comp, attr)
+        value = float(getattr(comp, attr))
         if value is math.nan:
             continue
-        heapq.heappush(all_companies, (value * sign, comp))
 
-    size = min(num, len(all_companies))
-    top = [heapq.heappop(all_companies)[1] for i in range(size)]
+        # https://stackoverflow.com/questions/53554199/
+        # heapq-push-typeerror-not-supported-between-instances
+        heapq.heappush(all_companies, ((value * sign), id(comp), comp))
+
+    report_size = min(num, len(all_companies))
+    top = [heapq.heappop(all_companies)[2] for i in range(report_size)]
     return [
-        {"code": c.code, "name": c.name, attr: getattr(c, attr)} for c in top[:size]
+        {"code": c.code, "name": c.name, attr: getattr(c, attr)}
+        for c in top[:report_size]
     ]

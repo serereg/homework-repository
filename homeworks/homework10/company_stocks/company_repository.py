@@ -146,7 +146,7 @@ class CompanyRepository:
         return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
 
     def _get_detail_info(self, names_and_pages, additional_info):
-        with ProcessPoolExecutor(max_workers=len(names_and_pages)) as pool:
+        with ProcessPoolExecutor() as pool:
             # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
                 self._get_company_info,

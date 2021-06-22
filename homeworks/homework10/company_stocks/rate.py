@@ -1,5 +1,6 @@
 import asyncio
-from re import sub
+
+# from re import sub
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -26,7 +27,9 @@ class Rate:
     @staticmethod
     def _parse_currency_page(valute: str, page: str):
         soup = BeautifulSoup(page, "lxml")
-        return float(sub(r"[^\d.]", ".", soup.find(id=valute).find("value").text))
+        return float(soup.find(id=valute).find("value").text.replace(",", "."))
+        # return float(sub(r"[^\d.]", ".", soup.
+        # find(id=valute).find("value").text))
 
     @property
     async def rate(self) -> float:

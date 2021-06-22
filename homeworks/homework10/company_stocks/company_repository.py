@@ -135,7 +135,7 @@ class CompanyRepository:
     def _get_company_info(cls, names_and_pages):
         return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
 
-    def _get_detail_info(self, names_and_pages, names_and_additional_info):
+    def _parse_detailed_info(self, names_and_pages, names_and_additional_info):
         with ProcessPoolExecutor() as pool:
             # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
@@ -143,6 +143,7 @@ class CompanyRepository:
                 names_and_pages,
             )
 
+        logging.warning("parsing done")
         for name, parsed_page in blobs:
             yield {
                 "Name": name,
@@ -169,10 +170,7 @@ class CompanyRepository:
             )
 
             logging.warning("parsing all company pages")
-            blobs = self._get_detail_info(detailed_pages, all_companies_short_infos)
-
-            # TODO: change the place
-            logging.warning("parsing done")
+            blobs = self._parse_detailed_info(detailed_pages, all_companies_short_infos)
 
             for company_blob in blobs:
                 company = Company.from_blob(company_blob)

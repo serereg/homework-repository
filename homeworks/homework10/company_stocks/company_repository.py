@@ -4,7 +4,7 @@ import math
 import string
 from concurrent.futures import ProcessPoolExecutor
 from re import sub
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Generator, List, Tuple
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -13,7 +13,10 @@ from .company import Company
 
 
 class CompanyRepository:
-    """A class for parsing URL for statistic data."""
+    """A class for parsing URL for statistic data.
+
+    URL for parsing is https://markets.businessinsider.com.
+    """
 
     def __init__(self, url="https://markets.businessinsider.com"):
         logging.basicConfig(format="%(asctime)s %(message)s")
@@ -22,14 +25,17 @@ class CompanyRepository:
 
     @staticmethod
     async def _fetch(session: aiohttp.ClientSession, url: str) -> str:
+        """Fetch page from given url and opened session."""
         async with session.get(url) as resp:
             if resp.status != 200:
                 raise ValueError(f"Can't open url: {url}")
             return await resp.text()
 
     async def _get_all_detailed_pages(self, name_and_short_info: Dict[str, Dict]):
+        """Return list of tuples with name and page company."""
         async with aiohttp.ClientSession() as session:
 
+            # TODO: Make easier
             async def _get_detailed_page(info: tuple) -> Tuple[str, str]:
                 return info[0], await self._fetch(session, info[1]["URL"])
 
@@ -37,6 +43,7 @@ class CompanyRepository:
             return await asyncio.gather(*tasks)
 
     async def _get_all_table_pages(self):
+        """return a list of pages with tables of companies."""
         urls = [
             f"https://markets.businessinsider.com/index/components/s&p_500?p={p}"
             for p in range(1, 11)
@@ -76,7 +83,7 @@ class CompanyRepository:
             }
         return additional_info
 
-    def _parse_pages_with_tables(self, pages: List[str]):
+    def _parse_pages_with_tables(self, pages: List[str]) -> Dict[str, Any]:
         with ProcessPoolExecutor() as pool:
             list_of_sublists_with_companies = pool.map(self._parse_table, pages)
         name_and_short_info = {}
@@ -85,7 +92,7 @@ class CompanyRepository:
         return name_and_short_info
 
     @staticmethod
-    def _parse_company_page(page):
+    def _parse_company_page(page: str) -> Dict[str, Any]:
         soup = BeautifulSoup(page, "lxml")
 
         price = soup.find("span", {"class": "price-section__current-value"}).text
@@ -122,7 +129,7 @@ class CompanyRepository:
         self,
         names_and_pages: List[Tuple[str, str]],
         names_and_additional_info: Dict[str, Any],
-    ):
+    ) -> Generator[Dict[str, Any], None, None]:
         with ProcessPoolExecutor() as pool:
             blobs = pool.map(
                 self._parse_company_page, map(lambda x: x[1], names_and_pages)
@@ -140,7 +147,7 @@ class CompanyRepository:
                 **blob,
             }
 
-    def get_all_companies(self):
+    def get_all_companies(self) -> Generator[Company, None, None]:
         """Return object of class Company."""
         if self._cache:
             for item in self._cache:

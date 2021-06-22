@@ -27,19 +27,13 @@ class CompanyRepository:
                 raise ValueError(f"Can't open url: {url}")
             return await resp.text()
 
-    async def _get_all_detailed_pages(self, short_infos: dict):
-        async def _get_detailed_page(
-            session, company_name: str, company_url: str
-        ) -> Tuple[str, str]:
-            return company_name, await self._fetch(session, company_url)
-
+    async def _get_all_detailed_pages(self, name_and_short_info: dict):
         async with aiohttp.ClientSession() as session:
-            tasks = [
-                _get_detailed_page(
-                    session, company_name, short_infos[company_name]["URL"]
-                )
-                for company_name in short_infos
-            ]
+
+            async def _get_detailed_page(info: tuple) -> Tuple[str, str]:
+                return info[0], await self._fetch(session, info[1]["URL"])
+
+            tasks = [_get_detailed_page(info) for info in name_and_short_info.items()]
             return await asyncio.gather(*tasks)
 
     async def _get_all_table_pages(self):
@@ -51,7 +45,7 @@ class CompanyRepository:
             tasks = [self._fetch(session, url) for url in urls]
             return await asyncio.gather(*tasks)
 
-    def _parse_table(self, page_with_table: str):
+    def _parse_table(self, page_with_table: str) -> Dict[str, Dict]:
         """Parse one of several pages with list of companies
 
         Args:
@@ -127,20 +121,14 @@ class CompanyRepository:
             "52 Week High": week52high,
         }
 
-    def _parse_detailed_info_and_add_extra_info(
+    def _parse_detailed_info_and_merge_extra_info(
         self,
         names_and_pages: List[Tuple[str, str]],
         names_and_additional_info: Dict[str, Any],
     ):
-        def isolate_page(names_and_pages):
-            for p in names_and_pages:
-                yield p[1]
-
         with ProcessPoolExecutor() as pool:
-            # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
-                self._parse_company_page,
-                isolate_page(names_and_pages),
+                self._parse_company_page, map(lambda x: x[1], names_and_pages)
             )
 
         logging.warning("parsing done")
@@ -173,7 +161,7 @@ class CompanyRepository:
             )
             logging.warning("parsing all company pages")
 
-            blobs = self._parse_detailed_info_and_add_extra_info(
+            blobs = self._parse_detailed_info_and_merge_extra_info(
                 detailed_pages, all_companies_short_infos
             )
 

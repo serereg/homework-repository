@@ -22,7 +22,6 @@ class CompanyRepository:
                 for p in range(1, 11)
             ]
         logging.basicConfig(format="%(asctime)s %(message)s")
-        self._table_pages = set()
         self._cache = []
         self._url = url
         self._urls = urls
@@ -34,38 +33,29 @@ class CompanyRepository:
                 raise ValueError(f"Can't open url: {url}")
             return await resp.text()
 
-    @classmethod
-    async def _fetch_company(cls, session, url: str):
-        """Mock in easy way of _fetch method"""
-        return await cls._fetch(session, url)
-
     async def _get_all_detailed_pages(self, short_infos):
+        async def _get_detailed_page(
+            session, company_name: str, company_url: str
+        ) -> Tuple[str, str]:
+            return company_name, await self._fetch(session, company_url)
+
         async with aiohttp.ClientSession() as session:
-
-            async def get_detailed_page(
-                company_name: str, company_url: str
-            ) -> Tuple[str, str]:
-                return company_name, await self._fetch_company(session, company_url)
-
             tasks = [
-                get_detailed_page(company_name, short_infos[company_name]["URL"])
+                _get_detailed_page(
+                    session, company_name, short_infos[company_name]["URL"]
+                )
                 for company_name in short_infos
             ]
             return await asyncio.gather(*tasks)
 
-    @classmethod
-    async def _fetch_company_list(cls, session, url: str):
-        """Mock in easy way of _fetch method"""
-        return await cls._fetch(session, url)
-
-    async def _get_all_pages_with_tables(self):
+    async def _get_all_table_pages(self):
         async with aiohttp.ClientSession() as session:
-            tasks = [self._fetch_company_list(session, url) for url in self._urls]
+            tasks = [self._fetch(session, url) for url in self._urls]
             # TODO: remove set. Now it is used to simplify testing
             #  where I can pass less urls
-            self._table_pages = set(await asyncio.gather(*tasks))
+            return await asyncio.gather(*tasks)
 
-    def _parse_table_with_companies(self, page_with_table: str):
+    def _parse_table(self, page_with_table: str):
         """Parse one of several pages with list of companies
 
         Args:
@@ -97,11 +87,11 @@ class CompanyRepository:
             }
         return additional_info
 
-    def _parse_pages_with_tables(self):
+    def _parse_pages_with_tables(self, pages):
         with ProcessPoolExecutor() as pool:
             list_of_sublists_with_companies = pool.map(
-                self._parse_table_with_companies,
-                self._table_pages,
+                self._parse_table,
+                pages,  # self._table_pages,
             )
         name_and_short_info = {}
         for i in list_of_sublists_with_companies:
@@ -145,7 +135,7 @@ class CompanyRepository:
     def _get_company_info(cls, names_and_pages):
         return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
 
-    def _get_detail_info(self, names_and_pages, additional_info):
+    def _get_detail_info(self, names_and_pages, names_and_additional_info):
         with ProcessPoolExecutor() as pool:
             # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
@@ -156,8 +146,8 @@ class CompanyRepository:
         for name, parsed_page in blobs:
             yield {
                 "Name": name,
-                "URL": additional_info[name]["URL"],
-                "Growth": additional_info[name]["Growth"],
+                "URL": names_and_additional_info[name]["URL"],
+                "Growth": names_and_additional_info[name]["Growth"],
                 **parsed_page,
             }
 
@@ -168,10 +158,10 @@ class CompanyRepository:
                 yield item
         else:
             logging.warning("getting all tables with companies")
-            asyncio.run(self._get_all_pages_with_tables())
+            table_pages = asyncio.run(self._get_all_table_pages())
 
             logging.warning("parsing all tables")
-            all_companies_short_infos = self._parse_pages_with_tables()
+            all_companies_short_infos = self._parse_pages_with_tables(table_pages)
 
             logging.warning("getting all company pages")
             detailed_pages = asyncio.run(
@@ -181,6 +171,7 @@ class CompanyRepository:
             logging.warning("parsing all company pages")
             blobs = self._get_detail_info(detailed_pages, all_companies_short_infos)
 
+            # TODO: change the place
             logging.warning("parsing done")
 
             for company_blob in blobs:

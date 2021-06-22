@@ -5,6 +5,7 @@ import json
 
 # from unittest.mock import Mock
 from pathlib import Path
+from typing import List
 
 from homeworks.homework10.company_stocks.company import Company
 from homeworks.homework10.company_stocks.company_repository import CompanyRepository
@@ -25,24 +26,28 @@ def parse_company_repository():
     assert round(li[0].potential_profit) == 60
 
     assert li[1].growth == 44.93
+    return True
 
 
-async def fetch_company(*args) -> str:
-    path = Path(__file__).parent / "data/MMM Stock _ 3M.html"
-    return path.read_text()
+async def fetch_companies(*args) -> List:
+    path1 = Path(__file__).parent / "data/MMM Stock _ 3M.html"
+    path2 = Path(__file__).parent / "data/AOS Stock.html"
+    await asyncio.sleep(0)
+    return [("3M", path1.read_text()), ("AO Smith", path2.read_text())]
 
 
-async def fetch_company_list(*args) -> str:
+async def fetch_tables_with_companies(*args) -> List[str]:
     path = Path(__file__).parent / "data/S&P 500 Stock.html"
-    return path.read_text()
+    await asyncio.sleep(0)
+    return [path.read_text()]
 
 
 def test_company_repository(monkeypatch):
-    monkeypatch.setattr(CompanyRepository, "_fetch_company", fetch_company)
-    monkeypatch.setattr(CompanyRepository, "_fetch_company_list", fetch_company_list)
-    parse_company_repository()
-    # assert False
-    assert True
+    monkeypatch.setattr(CompanyRepository, "_get_all_detailed_pages", fetch_companies)
+    monkeypatch.setattr(
+        CompanyRepository, "_get_all_table_pages", fetch_tables_with_companies
+    )
+    assert parse_company_repository() is True
 
 
 async def fetch_dollar_page(url: str) -> str:
@@ -87,8 +92,10 @@ async def form_reports():
 
 
 def test_report(monkeypatch):
-    monkeypatch.setattr(CompanyRepository, "_fetch_company", fetch_company)
-    monkeypatch.setattr(CompanyRepository, "_fetch_company_list", fetch_company_list)
+    monkeypatch.setattr(CompanyRepository, "_get_all_detailed_pages", fetch_companies)
+    monkeypatch.setattr(
+        CompanyRepository, "_get_all_table_pages", fetch_tables_with_companies
+    )
     monkeypatch.setattr(Rate, "_fetch", fetch_dollar_page)
     result = asyncio.run(form_reports())
     assert result == (

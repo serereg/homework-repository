@@ -15,15 +15,17 @@ from .company import Company
 class CompanyRepository:
     """A class for parsing URL for statistic data."""
 
-    def __init__(self, url="https://markets.businessinsider.com"):
+    def __init__(self, url="https://markets.businessinsider.com", urls=None):
+        if urls is None:
+            urls = [
+                f"https://markets.businessinsider.com/index/components/s&p_500?p={p}"
+                for p in range(1, 11)
+            ]
         logging.basicConfig(format="%(asctime)s %(message)s")
         self._table_pages = set()
         self._cache = []
         self._url = url
-
-        self._urls = [
-            f"""{self._url}/index/components/s&p_500?p={p}""" for p in range(1, 11)
-        ]
+        self._urls = urls
 
     @staticmethod
     async def _fetch(session: aiohttp.ClientSession, url: str):
@@ -140,7 +142,6 @@ class CompanyRepository:
             "52 Week High": week52high,
         }
 
-    @classmethod
     def _get_company_info(cls, names_and_pages):
         return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
 

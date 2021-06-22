@@ -15,16 +15,10 @@ from .company import Company
 class CompanyRepository:
     """A class for parsing URL for statistic data."""
 
-    def __init__(self, url="https://markets.businessinsider.com", urls=None):
-        if urls is None:
-            urls = [
-                f"https://markets.businessinsider.com/index/components/s&p_500?p={p}"
-                for p in range(1, 11)
-            ]
+    def __init__(self, url="https://markets.businessinsider.com"):
         logging.basicConfig(format="%(asctime)s %(message)s")
         self._cache = []
         self._url = url
-        self._urls = urls
 
     @staticmethod
     async def _fetch(session: aiohttp.ClientSession, url: str):
@@ -49,8 +43,12 @@ class CompanyRepository:
             return await asyncio.gather(*tasks)
 
     async def _get_all_table_pages(self):
+        urls = [
+            f"https://markets.businessinsider.com/index/components/s&p_500?p={p}"
+            for p in range(1, 11)
+        ]
         async with aiohttp.ClientSession() as session:
-            tasks = [self._fetch(session, url) for url in self._urls]
+            tasks = [self._fetch(session, url) for url in urls]
             # TODO: remove set. Now it is used to simplify testing
             #  where I can pass less urls
             return await asyncio.gather(*tasks)

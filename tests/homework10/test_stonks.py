@@ -33,7 +33,7 @@ async def fetch_companies(*args) -> List:
     path1 = Path(__file__).parent / "data/MMM Stock _ 3M.html"
     path2 = Path(__file__).parent / "data/AOS Stock.html"
     await asyncio.sleep(0)
-    return [("3M", path1.read_text()), ("AO Smith", path2.read_text())]
+    return [path1.read_text(), path2.read_text()]
 
 
 async def fetch_tables_with_companies(*args) -> List[str]:

@@ -4,7 +4,7 @@ import math
 import string
 from concurrent.futures import ProcessPoolExecutor
 from re import sub
-from typing import Any, Dict, Generator, List, Tuple
+from typing import Any, Dict, Generator, List
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -16,6 +16,11 @@ class CompanyRepository:
     """A class for parsing URL for statistic data.
 
     URL for parsing is https://markets.businessinsider.com.
+
+    Todo:
+        1. Convert to use generator in right way.
+        2. Split class in two subclasses with functional
+            of fetch and parsing
     """
 
     def __init__(self, url="https://markets.businessinsider.com"):
@@ -32,18 +37,16 @@ class CompanyRepository:
             return await resp.text()
 
     async def _get_all_detailed_pages(self, name_and_short_info: Dict[str, Dict]):
-        """Return list of tuples with name and page company."""
+        """Return list of pages for each company."""
         async with aiohttp.ClientSession() as session:
-
-            # TODO: Make easier
-            async def _get_detailed_page(info: tuple) -> Tuple[str, str]:
-                return info[0], await self._fetch(session, info[1]["URL"])
-
-            tasks = [_get_detailed_page(info) for info in name_and_short_info.items()]
+            tasks = [
+                self._fetch(session, info[1]["URL"])
+                for info in name_and_short_info.items()
+            ]
             return await asyncio.gather(*tasks)
 
     async def _get_all_table_pages(self):
-        """return a list of pages with tables of companies."""
+        """Return a list of pages with tables of companies."""
         urls = [
             f"https://markets.businessinsider.com/index/components/s&p_500?p={p}"
             for p in range(1, 11)
@@ -125,26 +128,20 @@ class CompanyRepository:
             "52 Week High": week52high,
         }
 
-    def _parse_detailed_info_and_merge_extra_info(
-        self,
-        names_and_pages: List[Tuple[str, str]],
-        names_and_additional_info: Dict[str, Any],
-    ) -> Generator[Dict[str, Any], None, None]:
+    def _parse_detailed_info(self, pages: List[str]):
         with ProcessPoolExecutor() as pool:
-            blobs = pool.map(
-                self._parse_company_page, map(lambda x: x[1], names_and_pages)
-            )
+            blobs = pool.map(self._parse_company_page, pages)
 
         logging.warning("parsing done")
+        return list(blobs)
 
-        # merging information
-        for i, blob in enumerate(blobs):
-            name = names_and_pages[i][0]
+    def _merge_extra_info(self, blobs, names_and_additional_info: Dict[str, Any]):
+        for i, name in enumerate(names_and_additional_info):
             yield {
                 "Name": name,
                 "URL": names_and_additional_info[name]["URL"],
                 "Growth": names_and_additional_info[name]["Growth"],
-                **blob,
+                **blobs[i],
             }
 
     def get_all_companies(self) -> Generator[Company, None, None]:
@@ -165,11 +162,10 @@ class CompanyRepository:
             )
             logging.warning("parsing all company pages")
 
-            blobs = self._parse_detailed_info_and_merge_extra_info(
-                detailed_pages, all_companies_short_infos
-            )
+            blobs_thin = self._parse_detailed_info(detailed_pages)
+            blobs_full = self._merge_extra_info(blobs_thin, all_companies_short_infos)
 
-            for company_blob in blobs:
+            for company_blob in blobs_full:
                 company = Company.from_blob(company_blob)
                 yield company
                 self._cache.append(company)

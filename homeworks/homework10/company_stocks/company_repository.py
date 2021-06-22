@@ -4,7 +4,7 @@ import math
 import string
 from concurrent.futures import ProcessPoolExecutor
 from re import sub
-from typing import Tuple
+from typing import List, Tuple
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -27,7 +27,7 @@ class CompanyRepository:
                 raise ValueError(f"Can't open url: {url}")
             return await resp.text()
 
-    async def _get_all_detailed_pages(self, short_infos):
+    async def _get_all_detailed_pages(self, short_infos: dict):
         async def _get_detailed_page(
             session, company_name: str, company_url: str
         ) -> Tuple[str, str]:
@@ -49,8 +49,6 @@ class CompanyRepository:
         ]
         async with aiohttp.ClientSession() as session:
             tasks = [self._fetch(session, url) for url in urls]
-            # TODO: remove set. Now it is used to simplify testing
-            #  where I can pass less urls
             return await asyncio.gather(*tasks)
 
     def _parse_table(self, page_with_table: str):
@@ -73,7 +71,6 @@ class CompanyRepository:
         )
 
         additional_info = {}
-
         for row in table_rows:
             name = row.find("td", {"class": "table__td table__td--big"}).find("a").text
             link = self._url + row.find("a").get("href")
@@ -130,25 +127,37 @@ class CompanyRepository:
             "52 Week High": week52high,
         }
 
-    def _get_company_info(cls, names_and_pages):
-        return names_and_pages[0], cls._parse_company_page(names_and_pages[1])
+    def _parse_detailed_info(
+        self, names_and_pages: List[Tuple[str, str]], names_and_additional_info
+    ):
+        names = [i[0] for i in names_and_pages]
 
-    def _parse_detailed_info(self, names_and_pages, names_and_additional_info):
+        def isolate_page(names_and_pages):
+            for p in names_and_pages:
+                yield p[1]
+
         with ProcessPoolExecutor() as pool:
             # can't use lambda in pool.map. Don't know the reason
             blobs = pool.map(
-                self._get_company_info,
-                names_and_pages,
+                self._parse_company_page,
+                isolate_page(names_and_pages),
             )
 
         logging.warning("parsing done")
-        for name, parsed_page in blobs:
+        for i, parsed_page in enumerate(blobs):
             yield {
-                "Name": name,
-                "URL": names_and_additional_info[name]["URL"],
-                "Growth": names_and_additional_info[name]["Growth"],
+                "Name": names[i],
+                "URL": names_and_additional_info[names[i]]["URL"],
+                "Growth": names_and_additional_info[names[i]]["Growth"],
                 **parsed_page,
             }
+        # for name, parsed_page in blobs:
+        #     yield {
+        #         "Name": name,
+        #         "URL": names_and_additional_info[name]["URL"],
+        #         "Growth": names_and_additional_info[name]["Growth"],
+        #         **parsed_page,
+        #     }
 
     def get_all_companies(self):
         """Return object of class Company."""
@@ -166,8 +175,8 @@ class CompanyRepository:
             detailed_pages = asyncio.run(
                 self._get_all_detailed_pages(all_companies_short_infos)
             )
-
             logging.warning("parsing all company pages")
+
             blobs = self._parse_detailed_info(detailed_pages, all_companies_short_infos)
 
             for company_blob in blobs:

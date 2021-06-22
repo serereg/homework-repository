@@ -21,13 +21,13 @@ class CompanyRepository:
         self._url = url
 
     @staticmethod
-    async def _fetch(session: aiohttp.ClientSession, url: str):
+    async def _fetch(session: aiohttp.ClientSession, url: str) -> str:
         async with session.get(url) as resp:
             if resp.status != 200:
                 raise ValueError(f"Can't open url: {url}")
             return await resp.text()
 
-    async def _get_all_detailed_pages(self, name_and_short_info: dict):
+    async def _get_all_detailed_pages(self, name_and_short_info: Dict[str, Dict]):
         async with aiohttp.ClientSession() as session:
 
             async def _get_detailed_page(info: tuple) -> Tuple[str, str]:
@@ -76,12 +76,9 @@ class CompanyRepository:
             }
         return additional_info
 
-    def _parse_pages_with_tables(self, pages):
+    def _parse_pages_with_tables(self, pages: List[str]):
         with ProcessPoolExecutor() as pool:
-            list_of_sublists_with_companies = pool.map(
-                self._parse_table,
-                pages,  # self._table_pages,
-            )
+            list_of_sublists_with_companies = pool.map(self._parse_table, pages)
         name_and_short_info = {}
         for i in list_of_sublists_with_companies:
             name_and_short_info.update(i)

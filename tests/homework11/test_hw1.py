@@ -29,3 +29,11 @@ def test_without_key_attribute():
             pass
 
     assert "__key" in str(excinfo.value)
+
+
+# def test_len():
+#     class ColorsEnum(metaclass=SimplifiedEnum):
+#         __keys = ("RED", "BLUE", "ORANGE", "BLACK")
+#
+#     colors = ColorsEnum()
+#     assert 4 == len(colors)

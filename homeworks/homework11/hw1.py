@@ -54,9 +54,17 @@ class SimplifiedEnum(type):  # is a metaclass
     def __new__(cls, name, bases, dct):
         cls_instance = super().__new__(cls, name, bases, dct)
         try:
-            attrs = [*dct[f"_{cls_instance.__name__}__keys"]]
+            attrs = [*dct[f"_{name}__keys"]]
+
             for attr in attrs:
                 setattr(cls_instance, attr, attr)
+
+            setattr(cls_instance, "_len_attrs", len(attrs))
+
+            # def len_(self):
+            #     return self._len_attrs
+            # setattr(cls_instance, "__len__", len_)
+
             return cls_instance
         except KeyError as k:
             raise KeyError("Class must have __key attribute") from k
